@@ -71,7 +71,7 @@ export function Hero() {
             </p>
             <a
               href={profile.employerUrl}
-              className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
+              className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               {profile.employer}
             </a>
