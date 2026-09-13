@@ -35,14 +35,19 @@ This is a **git + handoff** task. Do **not** only congratulate, list manual step
 
 ## Branch sequence (initial build)
 
-| After merge completes | Next branch |
+This table is a handoff map, not a list of branches used by each PR. The first
+column is the PR that has already merged; the second is the branch to create
+for the following PR. The branch used by a PR itself is defined in the
+**Branches** table in `AGENTS.md`.
+
+| Merged PR (completed) | Create this branch for the next PR |
 | --- | --- |
-| PR 1 Foundation | `feat/hero-and-navigation` |
-| PR 2 Core UI | `feat/experience-and-impact` |
-| PR 3 Professional story | `feat/projects-and-case-studies` |
-| PR 4 Projects | `feat/gsap-and-3d-showcase` |
-| PR 5 Interaction | `chore/production-polish` |
-| PR 6 Polish | (no further planned PR in initial build; say so) |
+| PR 1 Foundation | PR 2: `feat/hero-and-navigation` |
+| PR 2 Core UI | PR 3: `feat/experience-and-impact` |
+| PR 3 Professional story | PR 4: `feat/projects-and-case-studies` |
+| PR 4 Projects | PR 5: `feat/gsap-and-3d-showcase` |
+| PR 5 Interaction | PR 6: `chore/production-polish` |
+| PR 6 Polish | No further planned PR in initial build; say so. |
 
 If status in `AGENTS.md` disagrees with the user, trust the user’s merge message and the branch table order.
 
