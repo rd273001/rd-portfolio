@@ -206,6 +206,14 @@ Use short, kebab-case names with a [Conventional Commits](https://www.convention
 
 Do not push feature work directly to `main`; open a PR from the feature branch.
 
+### When the user says "merged"
+
+A merged PR means **sync local git and open the next PR branch** — not only a text handoff.
+
+The Agent must run: `git fetch origin` → `git checkout main` → `git pull origin main` → `git checkout -B <next-branch> main` (next branch from the table above). Then reply with **four numbered handoffs** (what to do next; commit/push readiness; full next-chat prompt including the same four-question closing; model for next PR). See `.cursor/rules/post-merge-workflow.mdc`.
+
+Feature PR chats should end the starter prompt with: *When you finish, tell me: (1) what to do next, (2) commit/push ready, (3) next new-chat prompt, (4) model.*
+
 ### Commits inside a PR
 
 Split a PR into multiple commits when it helps review (logical layers, not arbitrary chunks). Use Conventional Commits, imperative mood, ~72 char subject when practical.
@@ -237,8 +245,8 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] `AGENTS.md`
 - [x] Typed `content/` with verified facts and explicit placeholders
 - [x] PR 1 foundation app (Next.js, theme, primitives, content module)
-- [ ] PR 2 hero + navigation
-- [ ] PR 3 professional story
+- [x] PR 2 hero + navigation
+- [x] PR 3 professional story
 - [ ] PR 4 projects + case studies
 - [ ] PR 5 GSAP + 3D
 - [ ] PR 6 production polish

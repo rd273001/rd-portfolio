@@ -1,0 +1,51 @@
+---
+description: When the user says "merged", sync main and create/checkout the next PR branch from AGENTS.md — do not only reply with instructions.
+alwaysApply: true
+---
+
+# Post-merge workflow ("merged")
+
+When the user says **merged**, **PR merged**, **merged to main**, or clearly means a portfolio PR was merged on GitHub:
+
+This is a **git + handoff** task. Do **not** only congratulate, list manual steps, or paste the next chat prompt without running the workflow below (unless the user explicitly says not to run git commands).
+
+## Steps (run in the repo)
+
+1. Read `AGENTS.md` — **Branches** table and **Current status** — to determine which PR was just finished and which is **next**.
+2. Sync local `main` with remote:
+   - `git fetch origin`
+   - `git checkout main`
+   - `git pull origin main`
+3. Create or reset the **next** feature branch from updated `main` (name from the table):
+   - Prefer: `git checkout -B <next-branch> main`
+   - Do **not** push to `origin/main`.
+   - Do **not** continue feature work on the old merged branch.
+4. End the response with **all four handoff items** (numbered, in this order — same as feature PR completion prompts):
+   1. **Exactly what to do next** — concrete local steps (branch state, optional commits, start new chat, what to implement).
+   2. **Whether the merged PR / current branch is commit/push ready** — for the PR just merged: done on GitHub; for local WIP on the new branch: say clearly if uncommitted or not push-ready yet.
+   3. **Exact copy-paste prompt for the next new Agent chat** — full fenced block including scope, branch line, task, constraints, **and** this closing requirement:
+      ```text
+      When you finish, tell me:
+      1. exactly what to do next
+      2. whether the PR is commit/push ready
+      3. the exact copy-paste prompt for the next new chat (PR N+1)
+      4. which Cursor model to use next
+      ```
+   4. **Which Cursor model to use next** — standard vs frontier per `AGENTS.md` for the **next** PR.
+
+## Branch sequence (initial build)
+
+| After merge completes | Next branch |
+| --- | --- |
+| PR 1 Foundation | `feat/hero-and-navigation` |
+| PR 2 Core UI | `feat/experience-and-impact` |
+| PR 3 Professional story | `feat/projects-and-case-studies` |
+| PR 4 Projects | `feat/gsap-and-3d-showcase` |
+| PR 5 Interaction | `chore/production-polish` |
+| PR 6 Polish | (no further planned PR in initial build; say so) |
+
+If status in `AGENTS.md` disagrees with the user, trust the user’s merge message and the branch table order.
+
+## Conflicts / dirty tree
+
+If pull or checkout fails (uncommitted changes, conflicts), stop and tell the user what blocked the step. Do not force-push or discard their work without explicit approval.
