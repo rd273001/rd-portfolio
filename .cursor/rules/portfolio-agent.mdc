@@ -1,0 +1,1143 @@
+---
+description: Portfolio-specific Cursor Agent workflow, context management, model usage, architecture, and development rules for Ravi Dubey's personal portfolio.
+alwaysApply: true
+---
+
+# RAVI DUBEY PORTFOLIO — AGENT RULES
+
+## 1. PURPOSE
+
+This repository is Ravi Dubey's personal Software Engineer portfolio.
+
+The website is a real product intended for:
+
+* Recruiters
+* HR professionals
+* Engineering managers
+* Founders
+* Professional references
+* Anyone evaluating Ravi for hiring
+
+The portfolio must communicate:
+
+* Software engineering capability
+* Frontend expertise
+* Mobile engineering expertise
+* Production ownership
+* Technical problem solving
+* Measurable engineering impact
+* Product thinking
+* Creativity
+
+This is NOT a generic developer portfolio.
+
+---
+
+# 2. SOURCE OF TRUTH
+
+Treat the repository as the source of truth rather than conversation history.
+
+Before working on a task, inspect only the files relevant to that task.
+
+Permanent project knowledge should live in:
+
+* `AGENTS.md`
+* `.cursor/rules/*.mdc`
+* `/content/*`
+* existing implementation
+
+Do NOT repeatedly ask the user to provide information that already exists in the repository.
+
+Do NOT rely on old chat context when the current code/content provides the answer.
+
+Never invent:
+
+* achievements
+* metrics
+* companies
+* technologies
+* responsibilities
+* project results
+* testimonials
+* users
+* performance numbers
+
+When information is unavailable, use an explicit editable placeholder rather than inventing it.
+
+---
+
+# 3. CONTEXT MANAGEMENT
+
+Optimize for small, focused contexts.
+
+Do NOT unnecessarily load:
+
+* the entire repository
+* unrelated components
+* all content files
+* previous implementation history
+* unrelated project case studies
+
+Before starting a task:
+
+1. Identify the minimum files needed.
+2. Read only those files.
+3. Inspect dependencies only when necessary.
+4. Avoid repeating information already available in repository rules/content.
+5. Prefer targeted exploration over broad repository dumping.
+
+When exploring a large codebase, use repository search/subagent exploration where available instead of pulling the entire codebase into the main context.
+
+Keep the main Agent conversation focused on the current task.
+
+---
+
+# 4. TASK-SCOPED CONVERSATIONS
+
+Prefer one focused Agent conversation per major feature or PR.
+
+Recommended feature conversations:
+
+1. Foundation
+2. Hero + navigation
+3. Experience + impact
+4. Projects + case studies
+5. GSAP storytelling
+6. 3D mobile showcase
+7. Performance + SEO + accessibility
+8. Final QA
+
+When starting a new conversation:
+
+* Read `AGENTS.md`
+* Read this rule
+* Read only the relevant `/content/*` files
+* Inspect the relevant existing implementation
+
+Do not require old conversation history to continue development.
+
+---
+
+# 5. MODEL USAGE STRATEGY
+
+Use model capability according to task complexity.
+
+## Highest-capability model
+
+Use the strongest available frontier model for:
+
+* Initial architecture
+* Major architectural redesign
+* Complex multi-file refactors
+* React Server Component / Client Component boundary problems
+* GSAP + ScrollTrigger architecture
+* React Three Fiber / Three.js architecture
+* GSAP + R3F integration
+* Difficult hydration problems
+* Difficult performance problems
+* Major debugging
+* Production-critical issues
+
+Do NOT waste the strongest model on simple edits.
+
+## Mid-tier capable model
+
+Use the standard strong coding model for most work:
+
+* Normal feature implementation
+* New sections
+* Case studies
+* Responsive layouts
+* Content architecture
+* SEO
+* Accessibility
+* Refactoring
+* Normal debugging
+* Component creation
+
+This should be the default model for serious development.
+
+## Low-cost / fast model
+
+Use the fastest suitable model for:
+
+* Text/content updates
+* Updating metrics
+* Adding a project entry
+* Small styling changes
+* Simple component changes
+* Renaming
+* Simple bug fixes
+* Repetitive changes
+* Formatting
+* Cleanup
+* Non-architectural tasks
+
+## General rule
+
+Never use a frontier model simply because it is available.
+
+Use the least expensive capable model that can reliably complete the task.
+
+---
+
+# 6. SEPARATE THINKING FROM IMPLEMENTATION
+
+For difficult tasks, do not immediately edit files.
+
+First use a planning phase.
+
+For example:
+
+* inspect architecture
+* identify risks
+* propose approach
+* identify affected files
+* explain trade-offs
+
+Then implement the approved approach.
+
+For complex tasks, prefer:
+
+PLAN → REVIEW → IMPLEMENT → TEST
+
+rather than:
+
+PROMPT → MASSIVE UNCONTROLLED IMPLEMENTATION
+
+Do not over-plan trivial changes.
+
+---
+
+# 7. USE CHECKPOINTS
+
+For major features:
+
+1. Inspect
+2. Plan
+3. Implement
+4. Run checks
+5. Fix issues
+6. Summarize
+7. Commit / checkpoint
+
+Do not combine unrelated features into the same change.
+
+---
+
+# 8. GITHUB / PR STRATEGY
+
+The initial portfolio build should be approximately 5–6 logical PR-sized changes.
+
+Target structure:
+
+### PR 1
+
+Foundation
+
+* Next.js setup
+* TypeScript
+* Tailwind
+* global styles
+* fonts
+* theme
+* base architecture
+* reusable primitives
+
+### PR 2
+
+Core portfolio
+
+* navigation
+* hero
+* profile
+* CTA
+* mobile navigation
+* responsive foundation
+
+### PR 3
+
+Professional story
+
+* experience
+* engineering impact
+* career journey
+* metrics
+* skills
+* education
+
+### PR 4
+
+Projects
+
+* DFC App
+* AptiBooster
+* Certificate Generator
+* project architecture
+* case-study system
+
+### PR 5
+
+Creative interaction
+
+* GSAP
+* ScrollTrigger
+* 3D mobile showcase
+* advanced interactions
+
+### PR 6
+
+Production polish
+
+* SEO
+* accessibility
+* performance
+* loading/error states
+* testing
+* final responsive QA
+
+Do not create unnecessary commits.
+
+Do not create artificial issues, reviews, or activity merely to increase GitHub contributions.
+
+Prefer meaningful commits and PRs.
+
+Target fewer than approximately 20 portfolio-related GitHub contribution events on a single day where practical.
+
+---
+
+# 9. MOBILE-FIRST REQUIREMENT
+
+The entire website MUST be mobile-first.
+
+Never design desktop first and patch mobile later.
+
+Base styles must represent the mobile experience.
+
+Then progressively enhance for:
+
+* Tablet
+* Laptop
+* Desktop
+* Large desktop
+
+The mobile experience must be intentionally designed.
+
+Never rely on:
+
+* hover-only behavior
+* desktop-only interactions
+* tiny controls
+* horizontal scrolling
+* desktop layouts squeezed into mobile
+
+Test at:
+
+320px
+360px
+375px
+390px
+414px
+768px
+1024px
+1280px
+1440px
+1920px
+
+Also test intermediate widths.
+
+---
+
+# 10. DESIGN DIRECTION
+
+Target:
+
+70% Vercel + Stripe
+20% interactive storytelling
+10% Apple-style product presentation
+
+The result must feel:
+
+* premium
+* modern
+* clean
+* technical
+* sophisticated
+* memorable
+
+Avoid:
+
+* generic developer templates
+* neon cyberpunk
+* particle backgrounds
+* random 3D objects
+* excessive glassmorphism
+* excessive gradients
+* animation everywhere
+* visual clutter
+
+Every visual element should have a purpose.
+
+---
+
+# 11. IDENTITY
+
+Ravi Dubey
+
+Current title:
+
+Software Engineer 1 (Mobile)
+
+Overall identity:
+
+Software Engineer
+
+Positioning:
+
+Software Engineer specializing in Web & Mobile Experiences
+
+Primary:
+
+* React
+* React Native
+* TypeScript
+* JavaScript
+
+Additional:
+
+* Node.js
+* Express.js
+* MongoDB
+* MySQL
+* Java
+* Spring Boot
+* Hibernate
+* REST APIs
+
+Do NOT reduce Ravi's identity to only:
+
+"React Native Developer"
+
+---
+
+# 12. PRIORITY OF PROFESSIONAL WORK
+
+Highest priority:
+
+1. DFC App
+2. AptiBooster
+
+Secondary:
+
+3. Inkyst contribution
+4. IKIOR internship
+
+Technical/personal showcase:
+
+5. Certificate Generator
+6. Other projects
+
+Do not give every project equal visual prominence.
+
+---
+
+# 13. DFC APP SOURCE OF TRUTH
+
+DFC App:
+
+* Production application
+* 10K+ downloads
+* Software Engineer 1 (Mobile)
+* production ownership/maintenance
+
+Key work:
+
+* onboarding modernization
+* TypeScript
+* TanStack Query
+* authentication/API integration
+* error handling
+* user feedback
+* Firebase Crashlytics
+* Firebase Analytics
+* Firebase Performance Monitoring
+* OneSignal
+* Razorpay
+* Zoom Meeting SDK
+* Android App Bundle optimization
+* ProGuard/R8
+* resource optimization
+* Dynamic Feature Modules
+
+Verified onboarding:
+
+~80% legacy implementation replaced
+
+~85–90% onboarding codebase modernization/improvement
+
+Verified previous optimization:
+
+21.02 MB → 15 MB
+
+6.02 MB saved
+
+28.6% reduction
+
+Verified production Zoom delivery result:
+
+* Zoom Meeting SDK moved out of base delivery
+* Android Dynamic Feature Module / on-demand delivery
+* 161 MB reduction versus previous release
+* 15.9 MB new-install download size
+* 8 second download time
+* 90 second improvement versus previous release
+
+IMPORTANT:
+
+The 161 MB represents removal of the large Zoom SDK footprint from base application delivery through on-demand delivery.
+
+Do NOT describe it as simply "compressed the app by 161 MB".
+
+The architectural change is part of the achievement.
+
+---
+
+# 14. APTIBOOSTER SOURCE OF TRUTH
+
+Production application.
+
+1K+ downloads.
+
+Substantial development from scratch.
+
+Key work:
+
+* Razorpay Subscription
+* Global Search
+* OneSignal
+* Firebase Analytics
+* Crashlytics
+
+Verified release optimization:
+
+23.7 MB → 20.4 MB
+
+3.3 MB reduction
+
+approximately 13.9%
+
+Do not invent additional business metrics.
+
+---
+
+# 15. IKIOR SOURCE OF TRUTH
+
+Software Engineer Intern
+
+May 2023 – Nov 2023
+
+Facts:
+
+* React Native
+* React
+* Redux Toolkit
+* Context API
+* JavaScript
+* Figma
+* responsive/pixel-perfect UI
+* 20–25% performance improvement
+
+Keep this section concise.
+
+Do not overstate the product's later state.
+
+Do not present it as one of Ravi's flagship products.
+
+---
+
+# 16. INKYST SOURCE OF TRUTH
+
+Position as:
+
+Independent Frontend Contribution
+
+Facts:
+
+* voluntary/free contribution
+* selected web page implementations
+* Figma → responsive React/TypeScript UI
+* production website contribution
+* website may currently be unavailable
+
+Do not claim ownership.
+
+---
+
+# 17. CERTIFICATE GENERATOR SOURCE OF TRUTH
+
+This is a personal learning/full-stack project.
+
+Do not present it as employment.
+
+Facts:
+
+* MERN
+* REST APIs
+* CRUD
+* PDF generation
+* pdf-lib
+* Google Drive API
+* Redux Toolkit
+* Tailwind CSS
+* JavaScript
+* 350+ requests
+* 260+ generated certificates
+
+Live:
+
+https://certificate-generator1.netlify.app/
+
+GitHub:
+
+https://github.com/rd273001/Certificate_Generator
+
+---
+
+# 18. CONTENT ARCHITECTURE
+
+Professional content MUST live outside UI components.
+
+Use:
+
+`/content/profile.ts`
+`/content/experience.ts`
+`/content/projects.ts`
+`/content/metrics.ts`
+`/content/skills.ts`
+`/content/education.ts`
+`/content/certifications.ts`
+`/content/achievements.ts`
+`/content/testimonials.ts`
+`/content/socials.ts`
+`/content/site.ts`
+
+Use strong TypeScript types.
+
+Components must consume content data.
+
+Do NOT hardcode:
+
+* metrics
+* download counts
+* dates
+* job titles
+* project descriptions
+* achievements
+* certification data
+* professional links
+
+inside components.
+
+---
+
+# 19. METRIC UPDATES
+
+Metrics must be designed for future updates.
+
+For example:
+
+```ts
+{
+  id: "dfc-zoom-delivery",
+  value: "161 MB",
+  label: "Base delivery reduction",
+  status: "verified",
+  project: "dfc-app"
+}
+```
+
+Another:
+
+```ts
+{
+  id: "dfc-bundle-optimization",
+  previous: "21.02 MB",
+  current: "15 MB",
+  reduction: "6.02 MB",
+  percentage: "28.6%",
+  status: "verified"
+}
+```
+
+If future verified results change:
+
+* edit content
+* do not edit UI
+
+The same source should power:
+
+* hero metrics
+* impact dashboard
+* project pages
+* timelines
+* achievement cards
+
+Avoid duplicating the same metric in multiple files unless necessary.
+
+---
+
+# 20. ANIMATION STRATEGY
+
+Use Framer Motion for:
+
+* micro-interactions
+* reveals
+* cards
+* hover interactions
+* dialogs
+* small transitions
+
+Use GSAP + ScrollTrigger for:
+
+* career journey
+* large scroll storytelling
+* pinned sections
+* major transitions
+
+Use React Three Fiber for:
+
+* 3D mobile showcase
+
+Do not use multiple systems to fight over the same property.
+
+Animations must serve:
+
+* storytelling
+* interaction
+* hierarchy
+* delight
+
+---
+
+# 21. 3D MOBILE SHOWCASE
+
+The 3D experience should represent Ravi's mobile engineering work.
+
+Use:
+
+* React Three Fiber
+* Three.js
+* Drei
+
+Display actual:
+
+* DFC App screenshots
+* AptiBooster screenshots
+
+Potential interactions:
+
+* pointer tilt
+* scroll-driven transitions
+* project selection
+* screen changes
+
+Do NOT add 3D merely for decoration.
+
+---
+
+# 22. 3D PERFORMANCE
+
+Because WebGL is expensive:
+
+* lazy-load 3D
+* dynamically import heavy components
+* avoid unnecessary React state per frame
+* use refs for high-frequency animation
+* optimize assets
+* control pixel ratio
+* reduce complexity on mobile
+* respect reduced motion
+* provide static fallback
+* provide WebGL fallback
+
+The initial page should not be blocked by the 3D scene.
+
+---
+
+# 23. SERVER / CLIENT ARCHITECTURE
+
+Use Server Components by default.
+
+Use Client Components only for:
+
+* browser APIs
+* stateful interactions
+* animation requiring client execution
+* WebGL
+* event-heavy components
+
+Do not mark large page trees as `"use client"` without a reason.
+
+When a Client Component is necessary, keep the boundary as small as practical.
+
+---
+
+# 24. PERFORMANCE
+
+Prioritize:
+
+* fast initial render
+* low hydration cost
+* optimized images
+* lazy loading
+* dynamic imports
+* sensible client boundaries
+* minimal JavaScript
+* optimized fonts
+* optimized 3D
+* optimized animation
+
+Do not optimize prematurely.
+
+Measure before making complicated performance changes.
+
+---
+
+# 25. ACCESSIBILITY
+
+Always support:
+
+* semantic HTML
+* keyboard navigation
+* focus management
+* visible focus states
+* ARIA when needed
+* sufficient color contrast
+* reduced motion
+* accessible dialogs
+* touch accessibility
+
+Important functionality must not depend on hover.
+
+---
+
+# 26. SEO
+
+Implement:
+
+* Metadata API
+* title templates
+* descriptions
+* Open Graph
+* canonical URLs
+* robots
+* sitemap
+* favicon
+* structured data where appropriate
+
+Canonical domain:
+
+`https://ravidubey.in`
+
+---
+
+# 27. LEARNING MODE
+
+When the user is specifically trying to learn a feature:
+
+Do NOT just provide generated code.
+
+Explain:
+
+1. what is being built
+2. why
+3. architecture
+4. relevant Next.js concepts
+5. important code
+6. trade-offs
+7. alternatives
+8. performance implications
+
+Especially explain:
+
+* Server vs Client Components
+* App Router
+* GSAP
+* ScrollTrigger
+* R3F
+* Three.js
+* animation lifecycle
+* React state vs refs
+* hydration
+* lazy loading
+
+The objective is that Ravi understands the codebase rather than merely owning AI-generated code.
+
+---
+
+# 28. PRODUCTION MODE
+
+When the user explicitly asks for:
+
+* quick implementation
+* one-shot implementation
+* deployment-ready changes
+* urgent fixes
+
+prioritize efficient implementation.
+
+Do not turn a simple production task into a long lesson.
+
+Briefly explain important decisions after implementation.
+
+---
+
+# 29. TESTING / VALIDATION
+
+Before finishing a substantial task:
+
+* run TypeScript checks
+* run lint
+* run relevant tests
+* run production build when applicable
+* check affected routes
+* test responsive behavior
+* verify links
+* verify images
+* check animation cleanup
+* check console errors
+
+Do not claim success without actually checking.
+
+---
+
+# 30. CHANGE SCOPE
+
+Stay within the requested task.
+
+Do NOT refactor unrelated code merely because you notice it.
+
+If an unrelated issue is important:
+
+* mention it
+* do not silently expand scope
+
+Avoid large context-consuming changes unrelated to the current task.
+
+---
+
+# 31. FILE READING STRATEGY
+
+Read the minimum required files.
+
+For a metric change:
+
+Read the metric/content files and relevant consuming component.
+
+Do NOT load the whole repository.
+
+For a component bug:
+
+Read that component, its direct dependencies, and relevant styles.
+
+For architecture changes:
+
+Broaden inspection only when necessary.
+
+---
+
+# 32. NEW CHAT / CONTINUATION STRATEGY
+
+A new Agent conversation should be able to continue the project without old chat history.
+
+At the beginning of a new feature task:
+
+1. Read this rule.
+2. Read `AGENTS.md`.
+3. Read relevant content.
+4. Inspect current implementation.
+5. State understanding briefly.
+6. Plan only if the task is complex.
+7. Implement.
+
+Do not request old conversation history unless repository information is genuinely missing.
+
+---
+
+# 33. CONTEXT COMPRESSION
+
+If a conversation becomes large:
+
+* summarize
+* preserve important decisions in repository documentation
+* start a fresh focused conversation when appropriate
+
+Do not continue indefinitely in one context simply for continuity.
+
+Permanent architectural decisions belong in:
+
+* `AGENTS.md`
+* relevant `.mdc` rule
+* project documentation
+
+not only in conversation history.
+
+---
+
+# 34. WHEN TO USE A SUBAGENT / EXPLORATION
+
+Use repository exploration/subagents for:
+
+* finding relevant files
+* understanding a large feature
+* tracing dependencies
+* locating hardcoded metrics
+* locating animation ownership
+* identifying all consumers of a component
+
+Do not dump broad exploration results into the primary context if a focused answer is enough.
+
+---
+
+# 35. WHEN TO USE THE MOST POWERFUL MODEL
+
+Reserve the most capable model for tasks involving:
+
+* architecture
+* 3D
+* GSAP + R3F
+* difficult performance issues
+* difficult hydration issues
+* large refactors
+* production-breaking bugs
+* ambiguous multi-file design decisions
+
+Use cheaper capable models for everything else.
+
+---
+
+# 36. WHEN TO USE FAST/CHEAP MODEL
+
+Use fast models for:
+
+* content edits
+* metrics
+* styling adjustments
+* renames
+* adding simple project entries
+* simple bug fixes
+* repetitive changes
+* formatting
+* cleanup
+
+Do not spend premium reasoning budget on trivial work.
+
+---
+
+# 37. COMPLEX TASK WORKFLOW
+
+For major tasks use:
+
+PLAN
+→
+IMPLEMENT
+→
+TEST
+→
+FIX
+→
+SUMMARIZE
+
+The plan should identify:
+
+* affected files
+* architecture
+* risks
+* dependencies
+
+Do not produce a huge speculative plan for a small task.
+
+---
+
+# 38. SMALL TASK WORKFLOW
+
+For small tasks:
+
+Inspect
+→
+Implement
+→
+Verify
+
+Do not create unnecessary planning overhead.
+
+---
+
+# 39. DO NOT OVER-USE ANIMATIONS
+
+Do not add animations simply because the site uses GSAP or Framer Motion.
+
+If a static solution is clearer and better:
+
+use the static solution.
+
+A recruiter must be able to understand the site without waiting for animations.
+
+---
+
+# 40. FILE ENDINGS
+
+For `.md`, `.mdc`, and similar documentation:
+
+* Do not add an extra blank line at EOF
+
+For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`:
+
+* Normal single final newline is fine
+* Do not add a second blank line at EOF
+
+---
+
+# 41. DO NOT OVER-ENGINEER
+
+Prefer:
+
+* simple
+* typed
+* reusable
+* understandable
+* maintainable
+
+over:
+
+* unnecessary abstractions
+* excessive hooks
+* giant generic components
+* complicated state management
+* unnecessary libraries
+
+---
+
+# 42. FINAL QUALITY STANDARD
+
+The portfolio should feel like:
+
+"A real product designed and engineered by a thoughtful Software Engineer."
+
+Not:
+
+"An AI generated portfolio demonstrating every trendy technology."
+
+The creative technology must strengthen Ravi's story rather than distract from it.
+
+The viewer should quickly understand:
+
+* who Ravi is
+* what he builds
+* what he owns
+* what he has shipped
+* what he improved
+* what measurable results he created
+* how to contact him
+
+Then the interactive experience should make them want to explore further.
