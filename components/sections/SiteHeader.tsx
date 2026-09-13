@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import type { NavigationItem, Social } from "@/content/types";
@@ -32,9 +33,9 @@ export function SiteHeader({
   return (
     <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur">
       <div className="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a
-          href="#top"
-          className="inline-flex min-h-11 items-center gap-3 rounded-md text-sm font-semibold tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+        <Link
+          href="/"
+          className="inline-flex min-h-11 items-center gap-3 rounded-md text-sm font-semibold tracking-tight focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label={brand}
         >
           <span
@@ -44,7 +45,7 @@ export function SiteHeader({
             {initials}
           </span>
           <span>{brand}</span>
-        </a>
+        </Link>
 
         <nav
           className="hidden items-center gap-6 md:flex"
@@ -54,7 +55,7 @@ export function SiteHeader({
             <a
               key={item.id}
               href={item.href}
-              className="rounded-md py-2 text-sm text-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              className="rounded-md py-2 text-sm text-muted transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {item.label}
             </a>
@@ -62,7 +63,7 @@ export function SiteHeader({
           {contact ? (
             <a
               href={contact.href}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              className="inline-flex min-h-11 items-center justify-center rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {contact.label}
             </a>
@@ -92,7 +93,7 @@ export function SiteHeader({
               <a
                 key={item.id}
                 href={item.href}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-muted transition-colors hover:bg-accent hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                className="rounded-lg px-3 py-3 text-sm font-medium text-muted transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 onClick={closeMenu}
               >
                 {item.label}
@@ -101,7 +102,7 @@ export function SiteHeader({
             {contact ? (
               <a
                 href={contact.href}
-                className="mt-2 inline-flex min-h-11 items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                className="mt-2 inline-flex min-h-11 items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 onClick={closeMenu}
               >
                 {contact.label}

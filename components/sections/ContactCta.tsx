@@ -63,7 +63,7 @@ export function ContactCta() {
                       href={social.href}
                       target={isWebUrl ? "_blank" : undefined}
                       rel={isWebUrl ? "noreferrer" : undefined}
-                      className="rounded-md text-sm text-background/70 underline decoration-background/30 underline-offset-4 transition-colors hover:text-background focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-background"
+                      className="rounded-md text-sm text-background/70 underline decoration-background/30 underline-offset-4 transition-colors hover:text-background focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground"
                     >
                       {social.label}
                     </a>

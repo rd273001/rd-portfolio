@@ -13,27 +13,32 @@ export const site: Site = {
     {
       id: "about",
       label: "About",
-      href: "#about",
+      href: "/#about",
     },
     {
       id: "impact",
       label: "Impact",
-      href: "#impact",
+      href: "/#impact",
     },
     {
       id: "experience",
       label: "Experience",
-      href: "#experience",
+      href: "/#experience",
+    },
+    {
+      id: "work",
+      label: "Work",
+      href: "/#work",
     },
     {
       id: "skills",
       label: "Skills",
-      href: "#skills",
+      href: "/#skills",
     },
     {
       id: "contact",
       label: "Contact",
-      href: "#contact",
+      href: "/#contact",
     },
   ],
   contact: {

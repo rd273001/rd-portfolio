@@ -162,10 +162,32 @@ export const projects: Project[] = [
   },
 ];
 
+const caseStudyProjectIds = new Set<Project["id"]>([
+  "dfc-app",
+  "aptibooster",
+  "certificate-generator",
+]);
+
 export function getProject(id: Project["id"]): Project | undefined {
   return projects.find((project) => project.id === id);
 }
 
 export function getProjectsByProminence(): Project[] {
   return [...projects].sort((a, b) => a.prominence - b.prominence);
+}
+
+export function getCaseStudyProjects(): Project[] {
+  return getProjectsByProminence().filter((project) =>
+    caseStudyProjectIds.has(project.id),
+  );
+}
+
+export function getCaseStudyProject(id: string): Project | undefined {
+  const project = projects.find((item) => item.id === id);
+
+  if (!project || !caseStudyProjectIds.has(project.id)) {
+    return undefined;
+  }
+
+  return project;
 }

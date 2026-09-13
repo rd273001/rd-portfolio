@@ -4,5 +4,6 @@ export { EducationSection } from "./EducationSection";
 export { ExperienceSection } from "./ExperienceSection";
 export { Hero } from "./Hero";
 export { ImpactDashboard } from "./ImpactDashboard";
+export { ProjectsSection } from "./ProjectsSection";
 export { SiteHeader } from "./SiteHeader";
 export { SkillsSection } from "./SkillsSection";

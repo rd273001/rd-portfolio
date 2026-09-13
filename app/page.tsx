@@ -5,6 +5,7 @@ import {
   ExperienceSection,
   Hero,
   ImpactDashboard,
+  ProjectsSection,
   SiteHeader,
   SkillsSection,
 } from "@/components/sections";
@@ -28,6 +29,7 @@ export default function Home() {
         <ImpactDashboard />
         <ExperienceSection />
         <CareerJourney />
+        <ProjectsSection />
         <SkillsSection />
         <EducationSection />
         <ContactCta />
