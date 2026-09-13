@@ -139,6 +139,12 @@ export type Social = {
   status: VerificationStatus;
 };
 
+export type NavigationItem = {
+  id: string;
+  label: string;
+  href: string;
+};
+
 export type Site = {
   name: string;
   domain: string;
@@ -147,4 +153,11 @@ export type Site = {
   defaultTitle: string;
   description: string;
   locale: string;
+  navigation: NavigationItem[];
+  contact: {
+    title: string;
+    description: string;
+    primarySocialId: string;
+    secondarySocialId: string;
+  };
 };
