@@ -35,7 +35,7 @@ export function ContactCta() {
               {primaryCta ? (
                 <Button
                   href={primaryCta.href}
-                  className="!bg-background !text-foreground hover:opacity-90 focus-visible:outline-background"
+                  className="bg-background text-foreground hover:opacity-90 focus-visible:outline-background"
                 >
                   {primaryCta.label}
                 </Button>
@@ -44,7 +44,7 @@ export function ContactCta() {
                 <Button
                   href={secondaryCta.href}
                   variant="secondary"
-                  className="!border-background/25 !bg-transparent !text-background hover:!bg-background/10 focus-visible:outline-background"
+                  className="border-background/25 bg-transparent text-background hover:bg-background/10 focus-visible:outline-background"
                 >
                   {secondaryCta.label}
                 </Button>
