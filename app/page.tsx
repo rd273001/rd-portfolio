@@ -1,4 +1,13 @@
-import { ContactCta, Hero, SiteHeader } from "@/components/sections";
+import {
+  CareerJourney,
+  ContactCta,
+  EducationSection,
+  ExperienceSection,
+  Hero,
+  ImpactDashboard,
+  SiteHeader,
+  SkillsSection,
+} from "@/components/sections";
 import { site } from "@/content/site";
 import { socials } from "@/content/socials";
 
@@ -16,6 +25,11 @@ export default function Home() {
       />
       <main id="top">
         <Hero />
+        <ImpactDashboard />
+        <ExperienceSection />
+        <CareerJourney />
+        <SkillsSection />
+        <EducationSection />
         <ContactCta />
       </main>
       <footer className="border-t border-border py-6">

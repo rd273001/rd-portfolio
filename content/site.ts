@@ -16,6 +16,21 @@ export const site: Site = {
       href: "#about",
     },
     {
+      id: "impact",
+      label: "Impact",
+      href: "#impact",
+    },
+    {
+      id: "experience",
+      label: "Experience",
+      href: "#experience",
+    },
+    {
+      id: "skills",
+      label: "Skills",
+      href: "#skills",
+    },
+    {
       id: "contact",
       label: "Contact",
       href: "#contact",
