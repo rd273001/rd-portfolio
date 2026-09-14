@@ -247,8 +247,8 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR 1 foundation app (Next.js, theme, primitives, content module)
 - [x] PR 2 hero + navigation
 - [x] PR 3 professional story
-- [ ] PR 4 projects + case studies
-- [ ] PR 5 GSAP + 3D
+- [x] PR 4 projects + case studies
+- [x] PR 5 GSAP + 3D
 - [ ] PR 6 production polish
 
 ### Local Windows note
@@ -263,6 +263,11 @@ Production build uses Webpack (`next build --webpack`) because Turbopack still f
 
 `next.config.ts` sets `agentRules: false` so `next dev` does not rewrite this file.
 
+PR 5 keeps the R3F scene behind complete DFC App and AptiBooster screenshot
+sets. Both apps now have real `/screenshots/...` WebP paths, so the work
+section can request the lazy Three.js chunk (with static / reduced-motion /
+WebGL fallbacks still in place).
+
 ## Placeholders that still need Ravi
 
 Search `TODO_` in `content/`. Do not fill these from conversation memory. Examples:
@@ -272,5 +277,4 @@ Search `TODO_` in `content/`. Do not fill these from conversation memory. Exampl
 - Certification rows
 - Testimonials
 - Headshot / OG image
-- App screenshots for the 3D showcase
 - Preferred public email if `ravidubey.personal@gmail.com` should not be the canonical contact

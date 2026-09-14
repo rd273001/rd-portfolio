@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -245,9 +246,17 @@ export default async function ProjectCaseStudyPage({
                       {visibleScreenshots.map((screenshot) => (
                         <li
                           key={screenshot}
-                          className="rounded-2xl border border-border bg-background p-4 text-sm text-muted"
+                          className="overflow-hidden rounded-2xl border border-border bg-background"
                         >
-                          {screenshot}
+                          <div className="relative aspect-[9/19.5] w-full">
+                            <Image
+                              src={screenshot}
+                              alt={`${project.name} production screen`}
+                              fill
+                              sizes="(min-width: 1024px) 280px, 45vw"
+                              className="object-cover object-top"
+                            />
+                          </div>
                         </li>
                       ))}
                     </ul>
