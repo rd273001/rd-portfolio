@@ -8,7 +8,13 @@ Built with Next.js (App Router), TypeScript, and Tailwind CSS. Professional copy
 
 - Next.js 16 · React 19 · TypeScript
 - Tailwind CSS 4
-- Framer Motion, GSAP, and React Three Fiber are planned for later PRs (see roadmap below)
+- GSAP + ScrollTrigger for responsive career storytelling
+- React Three Fiber + Drei for the screenshot-gated mobile showcase
+
+The work section lazy-loads the WebGL phone when DFC App and AptiBooster
+have real screenshot files, the viewport is desktop-width, WebGL is
+available, and reduced motion is off. Otherwise the same screenshots
+render as a static product presentation.
 
 ## Local development
 
@@ -40,6 +46,7 @@ Production builds use Webpack (`npm run build`) on this setup. See `AGENTS.md` f
 | `npm run start` | Serve production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript (`tsc --noEmit`) |
+| `npm run build:phone-model` | Rebuild `public/models/android-phone.glb` |
 
 ## Repository layout
 
@@ -54,15 +61,15 @@ AGENTS.md            Architecture, PR plan, agent prompts
 
 ## Content
 
-Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that still need real data (education, dates, testimonials, screenshots). Do not invent metrics or employers in components.
+Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that still need real data (education, dates, testimonials). Do not invent metrics or employers in components.
 
 ## Roadmap (initial build)
 
-1. **Foundation** — Next.js, theme, content module, primitives *(current)*
-2. Hero, navigation, CTA
-3. Experience, impact, skills, education
-4. Projects and case studies
-5. GSAP storytelling and 3D mobile showcase
+1. **Foundation** — Next.js, theme, content module, primitives
+2. **Core portfolio** — hero, navigation, CTA
+3. **Professional story** — experience, impact, skills, education
+4. **Projects** — selected work and case studies
+5. **Creative interaction** — GSAP storytelling and 3D mobile showcase *(current)*
 6. SEO, accessibility, performance, QA
 
 Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.

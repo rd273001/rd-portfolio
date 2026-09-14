@@ -44,7 +44,11 @@ export const projects: Project[] = [
       "dfc-zoom-time-improvement",
     ],
     caseStudyHref: "/work/dfc-app",
-    screenshots: ["TODO_DFC_SCREENSHOTS"],
+    screenshots: [
+      "/screenshots/dfc-app/student-onboarding.webp",
+      "/screenshots/dfc-app/zoom-on-demand.webp",
+      "/screenshots/dfc-app/student-batches.webp",
+    ],
   },
   {
     id: "aptibooster",
@@ -75,7 +79,12 @@ export const projects: Project[] = [
     ],
     metricIds: ["aptibooster-downloads", "aptibooster-bundle-optimization"],
     caseStudyHref: "/work/aptibooster",
-    screenshots: ["TODO_APTIBOOSTER_SCREENSHOTS"],
+    screenshots: [
+      "/screenshots/aptibooster/test-session.webp",
+      "/screenshots/aptibooster/test-overview.webp",
+      "/screenshots/aptibooster/test-analysis.webp",
+      "/screenshots/aptibooster/question-review.webp",
+    ],
   },
   {
     id: "inkyst",

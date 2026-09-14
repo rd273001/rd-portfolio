@@ -2,6 +2,7 @@ import { Button, Container } from "@/components/primitives";
 import { getMetricsByIds } from "@/content/metrics";
 import { getCaseStudyProjects } from "@/content/projects";
 import type { Project } from "@/content/types";
+import { MobileShowcase } from "./mobile-showcase/MobileShowcase";
 
 const projectKindLabels: Record<Project["kind"], string> = {
   "production-app": "Production app",
@@ -35,7 +36,9 @@ export function ProjectsSection() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5">
+        <MobileShowcase />
+
+        <div className="mt-12 grid gap-5">
           {featuredProject ? (
             <ProjectCard project={featuredProject} isFeatured />
           ) : null}
