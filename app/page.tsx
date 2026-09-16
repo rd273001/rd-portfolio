@@ -6,24 +6,13 @@ import {
   Hero,
   ImpactDashboard,
   ProjectsSection,
-  SiteHeader,
   SkillsSection,
 } from "@/components/sections";
 import { site } from "@/content/site";
-import { socials } from "@/content/socials";
 
 export default function Home() {
-  const contact = socials.find(
-    (social) => social.id === site.contact.primarySocialId,
-  );
-
   return (
     <div className="min-h-screen">
-      <SiteHeader
-        brand={site.name}
-        navigation={site.navigation}
-        contact={contact}
-      />
       <main id="top">
         <Hero />
         <ImpactDashboard />

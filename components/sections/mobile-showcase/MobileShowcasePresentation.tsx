@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Button } from "@/components/primitives";
+import { phoneFrontLayout } from "./phoneFrontLayout";
 import type { MobileShowcaseProject } from "./types";
 
 type MobileShowcasePresentationProps = {
@@ -71,6 +72,88 @@ export function MobileShowcaseHeader() {
   );
 }
 
+export function ProductPhonePlaceholder({
+  project,
+  screenshotIndex = 0,
+}: {
+  project: MobileShowcaseProject;
+  screenshotIndex?: number;
+}) {
+  const screenshot = project.screenshots[screenshotIndex];
+
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <div
+        className="relative w-auto max-w-full"
+        style={{
+          height: phoneFrontLayout.viewportHeight,
+          aspectRatio: phoneFrontLayout.aspectRatio,
+          containerType: "size",
+        }}
+      >
+        <div
+          className="relative box-border flex h-full w-full flex-col overflow-hidden"
+          style={{
+            background: phoneFrontLayout.frame.background,
+            borderRadius: phoneFrontLayout.frame.borderRadius,
+            padding: phoneFrontLayout.frame.padding,
+            boxShadow: phoneFrontLayout.frame.boxShadow,
+          }}
+        >
+          <div
+            className="relative box-border flex min-h-0 w-full flex-1 flex-col overflow-hidden"
+            style={{
+              backgroundColor: phoneFrontLayout.colors.glassBezel,
+              borderRadius: phoneFrontLayout.glass.borderRadius,
+              boxShadow: phoneFrontLayout.glass.boxShadow,
+              padding: phoneFrontLayout.glass.padding,
+            }}
+          >
+            <div
+              className="relative box-border min-h-0 w-full flex-1 overflow-hidden"
+              style={{
+                backgroundColor: phoneFrontLayout.colors.display,
+                borderRadius: phoneFrontLayout.screen.borderRadius,
+              }}
+            >
+              {screenshot ? (
+                <Image
+                  src={screenshot}
+                  alt=""
+                  fill
+                  sizes="40vw"
+                  quality={95}
+                  className="object-fill"
+                  priority
+                />
+              ) : null}
+              <span
+                className="absolute left-1/2 flex items-center justify-center rounded-full"
+                style={{
+                  top: phoneFrontLayout.punchHole.centerTop,
+                  width: phoneFrontLayout.punchHole.size,
+                  aspectRatio: "1",
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: phoneFrontLayout.colors.punchHole,
+                }}
+              >
+                <span
+                  className="block rounded-full"
+                  style={{
+                    width: phoneFrontLayout.punchHole.lensSize,
+                    aspectRatio: "1",
+                    backgroundColor: phoneFrontLayout.colors.punchLens,
+                  }}
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function MobileProjectPhone({
   project,
   screenshotIndex = 0,
@@ -82,7 +165,7 @@ export function MobileProjectPhone({
 
   return (
     <div className="mx-auto w-full max-w-68 rounded-[2.75rem] border border-background/20 bg-background/10 p-2 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.9)]">
-      <div className="relative aspect-[9/19.5] overflow-hidden rounded-[2.25rem] bg-background text-foreground">
+      <div className="relative aspect-9/19.5 overflow-hidden rounded-[2.25rem] bg-background text-foreground">
         {screenshot ? (
           <Image
             src={screenshot}

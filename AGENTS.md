@@ -268,6 +268,32 @@ sets. Both apps now have real `/screenshots/...` WebP paths, so the work
 section can request the lazy Three.js chunk (with static / reduced-motion /
 WebGL fallbacks still in place).
 
+### Android showcase visual contract
+
+Do not re-ask Ravi for these. Keep them unless he changes them.
+
+- No G logo on the back. Keep silhouette, camera bar, and marks original enough for possible commercial use / licensing. Camera bar must read as a generic premium Android slab, not a retail OEM clone.
+- Back **RD** mark (later): original lettering, not a G-style OEM mark. Same *role* as a small centered back brand, different design. No OEM brand colors, no G geometry.
+- Back glass: charcoal `#1e1e1e`, even satin sheen. Not void black, not light/blue grey, not HDRI blobs/circles/zig-zags.
+- Back metal rim: same side-frame metal wrapping over the rear curve. Visible as a thin reflecting lip (not a second color, not a thick bezel). Glass sits on the back cap so that wrap is not covered.
+- Corner radii are concentric CSS-style: inner = outer − inset. Frame → glass → screen, and frame → back glass. Never pick an inner radius independently.
+- Front display bezel: keep very thin; only nudge it, never a thick black frame.
+- Camera island: true stadium. Left and right ends must match. No metal crescent on the left (side antenna must not wrap onto the back at the island).
+- Lenses: dark glass with real reflection. Do not wash them to blue-grey.
+- Volume and power: raised nubs, readable even from a straight-on back view.
+- Mic on top only. Bottom: USB-C + two speakers. No extra bottom pin.
+- Side metal must stay readable. Buttons sit on the rail face.
+
+### Android showcase — later PRs (do not implement until asked)
+
+- Front **notch / punch-hole**: change or refine the selfie cutout.
+- **USB-C** charging port: more realistic cavity, contacts, and edge detail.
+- **Speakers and mics**: tighter grille / hole detailing (bottom speakers + top mic).
+- **Camera lens holes and layout**: refine wells, rings, and spacing on the island.
+- Original **RD** back logo: custom mark, not an OEM G copy, so the model stays usable commercially without trademark conflict with other phone brands.
+- **Hanging lamp** above the phone: a lamp on a rope/cord, throwing a limelight onto the device. Keep it purposeful, lazy-loaded, and off when reduced-motion / no-WebGL.
+- Other small chassis fixes as they come up. Do not start these in the current polish pass unless Ravi asks.
+
 ## Placeholders that still need Ravi
 
 Search `TODO_` in `content/`. Do not fill these from conversation memory. Examples:

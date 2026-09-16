@@ -2,6 +2,8 @@
 
 Portrait production captures (~9:19.5). The site only uses the WebP files listed in `content/projects.ts`.
 
+Capture at **device resolution** (1080×2340 or larger), then export WebP around quality 80–90. Do not downscale to ~472×1024 — that is what makes the 3D screen look soft.
+
 ## DFC App → `public/screenshots/dfc-app/`
 
 | File | Screen |

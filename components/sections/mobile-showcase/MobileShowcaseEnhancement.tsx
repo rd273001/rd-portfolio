@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import {
   Component,
+  useCallback,
   useEffect,
   useReducer,
   useRef,
@@ -14,6 +15,7 @@ import { Button } from "@/components/primitives";
 import {
   MobileProjectPhone,
   MobileShowcaseHeader,
+  ProductPhonePlaceholder,
 } from "./MobileShowcasePresentation";
 import type { MobileShowcaseProject } from "./types";
 
@@ -88,12 +90,122 @@ class SceneErrorBoundary extends Component<
 function detectWebGLSupport() {
   try {
     const canvas = document.createElement("canvas");
-    return Boolean(
-      canvas.getContext("webgl2") ?? canvas.getContext("webgl"),
-    );
+    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+
+    if (!gl) {
+      return false;
+    }
+
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
   } catch {
     return false;
   }
+}
+
+const SCROLL_QUIET_MS = 280;
+const MOUNT_QUIET_MS = 220;
+
+function useScrollQuiet() {
+  const [quiet, setQuiet] = useState(false);
+
+  useEffect(() => {
+    let timerId: number | undefined;
+
+    const bump = () => {
+      setQuiet(false);
+      if (timerId !== undefined) {
+        window.clearTimeout(timerId);
+      }
+      timerId = window.setTimeout(() => {
+        setQuiet(true);
+      }, SCROLL_QUIET_MS);
+    };
+
+    bump();
+    window.addEventListener("scroll", bump, { passive: true });
+    window.addEventListener("wheel", bump, { passive: true });
+
+    return () => {
+      if (timerId !== undefined) {
+        window.clearTimeout(timerId);
+      }
+      window.removeEventListener("scroll", bump);
+      window.removeEventListener("wheel", bump);
+    };
+  }, []);
+
+  return quiet;
+}
+
+function useQuietIdle(enabled: boolean) {
+  const [isIdle, setIsIdle] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || isIdle) {
+      return;
+    }
+
+    let cancelled = false;
+    let quietTimerId: number | undefined;
+    let idleId: number | undefined;
+    let fallbackId: number | undefined;
+
+    const clearScheduledMount = () => {
+      if (quietTimerId !== undefined) {
+        window.clearTimeout(quietTimerId);
+        quietTimerId = undefined;
+      }
+      if (idleId !== undefined && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId);
+        idleId = undefined;
+      }
+      if (fallbackId !== undefined) {
+        window.clearTimeout(fallbackId);
+        fallbackId = undefined;
+      }
+    };
+
+    const mount = () => {
+      if (!cancelled) {
+        setIsIdle(true);
+      }
+    };
+
+    const scheduleMountAfterQuietScroll = () => {
+      clearScheduledMount();
+      quietTimerId = window.setTimeout(() => {
+        quietTimerId = undefined;
+        if (cancelled) {
+          return;
+        }
+
+        if (typeof window.requestIdleCallback === "function") {
+          idleId = window.requestIdleCallback(mount, { timeout: 1500 });
+          return;
+        }
+
+        fallbackId = window.setTimeout(mount, 240);
+      }, MOUNT_QUIET_MS);
+    };
+
+    const onScroll = () => {
+      scheduleMountAfterQuietScroll();
+    };
+
+    scheduleMountAfterQuietScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", onScroll, { passive: true });
+
+    return () => {
+      cancelled = true;
+      clearScheduledMount();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onScroll);
+    };
+  }, [enabled, isIdle]);
+
+  return isIdle;
 }
 
 function getScreenLabel(screenshot: string) {
@@ -121,7 +233,8 @@ export function MobileShowcaseEnhancement({
   });
   const [isNearViewport, setIsNearViewport] = useState(false);
   const [sceneFailed, setSceneFailed] = useState(false);
-  const sceneFailCountRef = useRef(0);
+  const [sceneWarmed, setSceneWarmed] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
   const [capabilities, setCapabilities] = useState<SceneCapabilities>({
     evaluated: false,
     motionAllowed: false,
@@ -140,21 +253,45 @@ export function MobileShowcaseEnhancement({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const near = entry.isIntersecting;
-
-        if (near) {
-          sceneFailCountRef.current = 0;
-          setSceneFailed(false);
+        if (!entry.isIntersecting) {
+          return;
         }
 
-        setIsNearViewport(near);
+        setIsNearViewport(true);
       },
-      { rootMargin: "320px 0px" },
+      { rootMargin: "160px 0px" },
     );
 
     observer.observe(root);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!isNearViewport) {
+      return;
+    }
+
+    void import("./MobileShowcaseScene");
+
+    const glb = document.createElement("link");
+    glb.rel = "prefetch";
+    glb.as = "fetch";
+    glb.href = "/models/android-phone.glb?v=back-metal-lip";
+    glb.crossOrigin = "anonymous";
+    document.head.appendChild(glb);
+
+    const hdri = document.createElement("link");
+    hdri.rel = "prefetch";
+    hdri.as = "fetch";
+    hdri.href = "/hdri/studio_small_08_1k.hdr";
+    hdri.crossOrigin = "anonymous";
+    document.head.appendChild(hdri);
+
+    return () => {
+      glb.remove();
+      hdri.remove();
+    };
+  }, [isNearViewport]);
 
   useEffect(() => {
     const motionQuery = window.matchMedia(
@@ -186,6 +323,33 @@ export function MobileShowcaseEnhancement({
     };
   }, []);
 
+  const canEvaluateScene =
+    capabilities.evaluated &&
+    capabilities.motionAllowed &&
+    capabilities.desktopLayout &&
+    capabilities.webglSupported &&
+    isNearViewport &&
+    !sceneFailed;
+  const sceneMountAllowed = useQuietIdle(canEvaluateScene);
+  const scrollQuiet = useScrollQuiet();
+
+  const handleSceneReady = useCallback(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setSceneWarmed(true);
+      });
+    });
+  }, []);
+
+  const handleContextLost = useCallback(() => {
+    setSceneWarmed(false);
+    setSceneReady(false);
+  }, []);
+
+  if (sceneWarmed && scrollQuiet && !sceneReady) {
+    setSceneReady(true);
+  }
+
   const activeProject = projects[state.projectIndex] ?? projects[0];
   const activeScreenshot =
     activeProject?.screenshots[state.screenIndex] ??
@@ -195,32 +359,19 @@ export function MobileShowcaseEnhancement({
     return null;
   }
 
-  const canRenderScene =
-    capabilities.evaluated &&
-    capabilities.motionAllowed &&
-    capabilities.desktopLayout &&
-    capabilities.webglSupported &&
-    isNearViewport &&
-    !sceneFailed;
+  const canRenderScene = canEvaluateScene && sceneMountAllowed;
 
   const markSceneFailed = () => {
-    sceneFailCountRef.current += 1;
+    setSceneWarmed(false);
+    setSceneReady(false);
     setSceneFailed(true);
-
-    if (sceneFailCountRef.current < 2) {
-      window.setTimeout(() => setSceneFailed(false), 250);
-    }
   };
 
   const selectProject = (projectIndex: number) => {
-    sceneFailCountRef.current = 0;
-    setSceneFailed(false);
     dispatch({ type: "select-project", projectIndex });
   };
 
   const selectScreen = (screenIndex: number) => {
-    sceneFailCountRef.current = 0;
-    setSceneFailed(false);
     dispatch({ type: "select-screen", screenIndex });
   };
 
@@ -245,7 +396,7 @@ export function MobileShowcaseEnhancement({
                 type="button"
                 aria-pressed={index === state.projectIndex}
                 onClick={() => selectProject(index)}
-                className="min-h-11 rounded-full border border-background/25 px-4 text-sm font-medium transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
+                className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-4 text-center text-sm font-medium transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
               >
                 {project.name}
               </button>
@@ -301,7 +452,7 @@ export function MobileShowcaseEnhancement({
                       type="button"
                       aria-pressed={index === state.screenIndex}
                       onClick={() => selectScreen(index)}
-                      className="min-h-11 rounded-full border border-background/25 px-3 text-sm transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
+                      className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-3 text-center text-sm font-medium transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
                     >
                       {getScreenLabel(screenshot)}
                     </button>
@@ -310,10 +461,10 @@ export function MobileShowcaseEnhancement({
               </div>
             ) : null}
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center lg:flex-col xl:flex-row xl:items-center">
               <Button
                 href={activeProject.caseStudyHref}
-                className="bg-background text-foreground focus-visible:outline-background"
+                className="w-full bg-background text-foreground focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
               >
                 Read case study
               </Button>
@@ -321,7 +472,7 @@ export function MobileShowcaseEnhancement({
                 <Button
                   href={activeProject.storeUrl}
                   variant="secondary"
-                  className="border-background/30 text-background hover:bg-background/10 focus-visible:outline-background"
+                  className="w-full border-background/30 text-background hover:bg-background/10 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
                 >
                   View on Play Store
                 </Button>
@@ -330,9 +481,18 @@ export function MobileShowcaseEnhancement({
           </div>
         </div>
 
-        <div className="relative min-h-144 overflow-hidden border-t border-background/15 bg-[#181818] p-8 lg:min-h-176 lg:border-l lg:border-t-0">
-          <div className={canRenderScene ? "invisible" : undefined}>
+        <div className="relative min-h-144 overflow-hidden border-t border-background/15 bg-[#050505] p-8 lg:min-h-176 lg:border-l lg:border-t-0">
+          <div className="lg:hidden">
             <MobileProjectPhone
+              project={activeProject}
+              screenshotIndex={state.screenIndex}
+            />
+          </div>
+
+          <div
+            className={`pointer-events-none absolute inset-0 z-10 hidden items-center justify-center transition-opacity duration-500 lg:flex ${sceneReady ? "opacity-0" : "opacity-100"}`}
+          >
+            <ProductPhonePlaceholder
               project={activeProject}
               screenshotIndex={state.screenIndex}
             />
@@ -340,18 +500,25 @@ export function MobileShowcaseEnhancement({
 
           {canRenderScene ? (
             <>
-              <div className="absolute inset-0" aria-hidden="true">
+              <div
+                className={`absolute inset-0 hidden lg:block contain-[layout_paint] transition-opacity duration-500 ${sceneReady ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                aria-hidden={!sceneReady}
+              >
                 <SceneErrorBoundary onError={markSceneFailed}>
                   <MobileShowcaseScene
                     screenshot={activeScreenshot}
                     enableDrag
-                    onContextLost={markSceneFailed}
+                    playIntro={sceneReady}
+                    onContextLost={handleContextLost}
+                    onReady={handleSceneReady}
                   />
                 </SceneErrorBoundary>
               </div>
-              <p className="pointer-events-none absolute bottom-5 left-5 right-5 text-center text-xs text-background/55">
-                Drag to rotate the Android device.
-              </p>
+              {sceneReady ? (
+                <p className="pointer-events-none absolute bottom-5 left-5 right-5 hidden text-center text-xs text-background/55 lg:block">
+                  Drag to rotate the Android device.
+                </p>
+              ) : null}
             </>
           ) : null}
         </div>

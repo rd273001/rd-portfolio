@@ -99,6 +99,9 @@ export function CareerJourneyMotion({
           }
 
           if (conditions.desktop) {
+            const headerOffset = 96;
+            const bottomGap = () =>
+              Number.parseFloat(getComputedStyle(section).paddingBottom) || 80;
             const stickyDistance = () =>
               Math.max(list.offsetHeight - intro.offsetHeight, 0);
 
@@ -109,9 +112,10 @@ export function CareerJourneyMotion({
                 ScrollTrigger.create({
                   id: "career-journey-pin",
                   trigger: intro,
-                  start: "top top+=96",
+                  start: `top top+=${headerOffset}`,
                   endTrigger: work,
-                  end: () => `top top+=${96 + intro.offsetHeight}`,
+                  end: () =>
+                    `top top+=${headerOffset + intro.offsetHeight + bottomGap()}`,
                   pin: true,
                   pinSpacing: false,
                   anticipatePin: 1,
