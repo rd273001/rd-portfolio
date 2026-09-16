@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Button, Container } from "@/components/primitives";
-import { SiteHeader } from "@/components/sections";
 import { getMetricsByIds } from "@/content/metrics";
 import {
   getCaseStudyProject,
   getCaseStudyProjects,
 } from "@/content/projects";
 import { site } from "@/content/site";
-import { socials } from "@/content/socials";
 import type { Project } from "@/content/types";
 
 type ProjectPageProps = {
@@ -63,9 +62,6 @@ export default async function ProjectCaseStudyPage({
     notFound();
   }
 
-  const contact = socials.find(
-    (social) => social.id === site.contact.primarySocialId,
-  );
   const metrics = getMetricsByIds(project.metricIds).filter(
     (metric) => metric.status === "verified",
   );
@@ -75,11 +71,6 @@ export default async function ProjectCaseStudyPage({
 
   return (
     <div className="min-h-screen">
-      <SiteHeader
-        brand={site.name}
-        navigation={site.navigation}
-        contact={contact}
-      />
       <main id="top">
         <section className="py-14 sm:py-20">
           <Container>
@@ -245,9 +236,17 @@ export default async function ProjectCaseStudyPage({
                       {visibleScreenshots.map((screenshot) => (
                         <li
                           key={screenshot}
-                          className="rounded-2xl border border-border bg-background p-4 text-sm text-muted"
+                          className="overflow-hidden rounded-2xl border border-border bg-background"
                         >
-                          {screenshot}
+                          <div className="relative aspect-[9/19.5] w-full">
+                            <Image
+                              src={screenshot}
+                              alt={`${project.name} production screen`}
+                              fill
+                              sizes="(min-width: 1024px) 280px, 45vw"
+                              className="object-cover object-top"
+                            />
+                          </div>
                         </li>
                       ))}
                     </ul>
