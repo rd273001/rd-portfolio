@@ -21,12 +21,18 @@ type SharedProps = {
 type ButtonAsButton = SharedProps & {
   href?: undefined;
   type?: "button" | "submit";
+  onClick?: () => void;
 };
 
 type ButtonAsLink = SharedProps & {
   href: string;
   type?: never;
+  onClick?: never;
 };
+
+function isHttpHref(href: string) {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
 
 export function Button({
   children,
@@ -42,25 +48,43 @@ export function Button({
   );
 
   if ("href" in props && props.href) {
-    const isExternal = props.href.startsWith("http") || props.href.startsWith("mailto:");
+    const opensInNewTab = isHttpHref(props.href);
+    const content = (
+      <>
+        {children}
+        {opensInNewTab ? (
+          <span className="sr-only"> (opens in a new tab)</span>
+        ) : null}
+      </>
+    );
 
-    if (isExternal) {
+    if (props.href.startsWith("http") || props.href.startsWith("mailto:")) {
       return (
-        <a href={props.href} className={classes}>
-          {children}
+        <a
+          href={props.href}
+          className={classes}
+          {...(opensInNewTab
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
+          {content}
         </a>
       );
     }
 
     return (
       <Link href={props.href} className={classes}>
-        {children}
+        {content}
       </Link>
     );
   }
 
   return (
-    <button type={props.type ?? "button"} className={classes}>
+    <button
+      type={props.type ?? "button"}
+      className={classes}
+      onClick={props.onClick}
+    >
       {children}
     </button>
   );

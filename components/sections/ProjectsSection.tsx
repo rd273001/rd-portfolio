@@ -21,7 +21,7 @@ export function ProjectsSection() {
   const [featuredProject, ...supportingProjects] = projects;
 
   return (
-    <section id="work" className="border-t border-border py-16 sm:py-20">
+    <section id="work" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
       <Container>
         <div className="max-w-2xl">
           <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">

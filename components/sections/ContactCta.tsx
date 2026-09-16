@@ -15,7 +15,7 @@ export function ContactCta() {
   );
 
   return (
-    <section id="contact" className="border-t border-border py-16 sm:py-20">
+    <section id="contact" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
       <Container>
         <div className="rounded-3xl bg-foreground px-6 py-10 text-background sm:px-10 sm:py-14 lg:px-14">
           <div className="max-w-2xl">
@@ -62,10 +62,13 @@ export function ContactCta() {
                     <a
                       href={social.href}
                       target={isWebUrl ? "_blank" : undefined}
-                      rel={isWebUrl ? "noreferrer" : undefined}
+                      rel={isWebUrl ? "noopener noreferrer" : undefined}
                       className="rounded-md text-sm text-background/70 underline decoration-background/30 underline-offset-4 transition-colors hover:text-background focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground"
                     >
                       {social.label}
+                      {isWebUrl ? (
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      ) : null}
                     </a>
                   </li>
                 );

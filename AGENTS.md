@@ -249,7 +249,11 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR 3 professional story
 - [x] PR 4 projects + case studies
 - [x] PR 5 GSAP + 3D
-- [ ] PR 6 production polish
+- [x] PR 6 production polish
+
+PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
+sitemap, icons, skip-to-content, and route loading/error/not-found states.
+Reduced-motion and 3D fallbacks remain as shipped in PR 5.
 
 ### Local Windows note
 
@@ -302,5 +306,5 @@ Search `TODO_` in `content/`. Do not fill these from conversation memory. Exampl
 - Education rows
 - Certification rows
 - Testimonials
-- Headshot / OG image
+- Headshot / photo OG image (typographic OG cards are in place until then)
 - Preferred public email if `ravidubey.personal@gmail.com` should not be the canonical contact
