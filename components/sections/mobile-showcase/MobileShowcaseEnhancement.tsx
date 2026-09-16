@@ -396,7 +396,7 @@ export function MobileShowcaseEnhancement({
                 type="button"
                 aria-pressed={index === state.projectIndex}
                 onClick={() => selectProject(index)}
-                className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-4 text-center text-sm font-medium transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
+                className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-4 text-center text-sm font-medium transition-[color,background-color,opacity] hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:hover:bg-background aria-pressed:hover:opacity-90"
               >
                 {project.name}
               </button>
@@ -452,7 +452,7 @@ export function MobileShowcaseEnhancement({
                       type="button"
                       aria-pressed={index === state.screenIndex}
                       onClick={() => selectScreen(index)}
-                      className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-3 text-center text-sm font-medium transition-colors hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground"
+                      className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-3 text-center text-sm font-medium transition-[color,background-color,opacity] hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:hover:bg-background aria-pressed:hover:opacity-90"
                     >
                       {getScreenLabel(screenshot)}
                     </button>
@@ -490,6 +490,7 @@ export function MobileShowcaseEnhancement({
           </div>
 
           <div
+            aria-hidden="true"
             className={`pointer-events-none absolute inset-0 z-10 hidden items-center justify-center transition-opacity duration-500 lg:flex ${sceneReady ? "opacity-0" : "opacity-100"}`}
           >
             <ProductPhonePlaceholder

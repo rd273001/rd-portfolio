@@ -16,7 +16,7 @@ export function Hero() {
   const canShowStartDate = profile.currentRoleStartedStatus === "verified";
 
   return (
-    <section id="about" className="overflow-hidden py-16 sm:py-20 lg:py-28">
+    <section id="about" className="scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-28">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start lg:gap-16">
           <div>
@@ -71,9 +71,12 @@ export function Hero() {
             </p>
             <a
               href={profile.employerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               {profile.employer}
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
             {canShowLocation || canShowStartDate ? (
               <dl className="mt-8 space-y-4 border-t border-border pt-5 text-sm text-muted">

@@ -9,7 +9,7 @@ export function SkillsSection() {
   }
 
   return (
-    <section id="skills" className="border-t border-border py-16 sm:py-20">
+    <section id="skills" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:items-start lg:gap-16">
           <div>

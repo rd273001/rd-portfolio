@@ -34,7 +34,7 @@ export function ExperienceSection() {
   }
 
   return (
-    <section id="experience" className="border-t border-border py-16 sm:py-20">
+    <section id="experience" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
       <Container>
         <div className="max-w-2xl">
           <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
@@ -66,10 +66,11 @@ export function ExperienceSection() {
                       <a
                         href={item.companyUrl}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                       >
                         {item.company}
+                        <span className="sr-only"> (opens in a new tab)</span>
                       </a>
                     ) : (
                       <p className="mt-2 text-base text-muted">

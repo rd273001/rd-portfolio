@@ -16,6 +16,9 @@ have real screenshot files, the viewport is desktop-width, WebGL is
 available, and reduced motion is off. Otherwise the same screenshots
 render as a static product presentation.
 
+SEO, robots, sitemap, and generated Open Graph images live in `app/`.
+Canonical domain is `https://ravidubey.in`.
+
 ## Local development
 
 ```bash
@@ -52,7 +55,7 @@ Production builds use Webpack (`npm run build`) on this setup. See `AGENTS.md` f
 
 ```text
 app/                 Routes, layout, global styles
-components/          UI (primitives now; sections per PR)
+components/          UI primitives and page sections
 content/             Typed profile, projects, metrics, etc.
 lib/                 Shared helpers
 .cursor/rules/       Cursor Agent rules for this repo
@@ -69,8 +72,8 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 2. **Core portfolio** — hero, navigation, CTA
 3. **Professional story** — experience, impact, skills, education
 4. **Projects** — selected work and case studies
-5. **Creative interaction** — GSAP storytelling and 3D mobile showcase *(current)*
-6. SEO, accessibility, performance, QA
+5. **Creative interaction** — GSAP storytelling and 3D mobile showcase
+6. **Production polish** — SEO, accessibility, performance, QA *(current)*
 
 Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.
 

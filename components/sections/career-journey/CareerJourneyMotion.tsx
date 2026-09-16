@@ -171,7 +171,7 @@ export function CareerJourneyMotion({
     <section
       ref={sectionRef}
       id="journey"
-      className="border-t border-border py-16 sm:py-20"
+      className="scroll-mt-20 border-t border-border py-16 sm:py-20"
     >
       {children}
     </section>
