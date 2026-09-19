@@ -34,12 +34,21 @@ export function Hero() {
             </p>
 
             {primaryCta || secondaryCta ? (
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 {primaryCta ? (
-                  <Button href={primaryCta.href}>{primaryCta.label}</Button>
+                  <Button
+                    href={primaryCta.href}
+                    className="w-full px-6 sm:w-auto sm:min-w-36"
+                  >
+                    {primaryCta.label}
+                  </Button>
                 ) : null}
                 {secondaryCta ? (
-                  <Button href={secondaryCta.href} variant="secondary">
+                  <Button
+                    href={secondaryCta.href}
+                    variant="secondary"
+                    className="w-full px-6 sm:w-auto sm:min-w-36"
+                  >
                     {secondaryCta.label}
                   </Button>
                 ) : null}
@@ -73,7 +82,7 @@ export function Hero() {
               href={profile.employerUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="mt-2 inline-flex rounded-md text-base text-muted underline decoration-border underline-offset-4 transition-colors [@media(hover:hover)]:hover:text-foreground active:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               {profile.employer}
               <span className="sr-only"> (opens in a new tab)</span>
