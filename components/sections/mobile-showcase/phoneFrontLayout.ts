@@ -1,16 +1,16 @@
 /**
  * Front-face layout for the 2D loading frame. Keep in sync with
  * `scripts/build-android-phone-glb.mjs` finish + front insets and frame bbox
- * (~2.45 × 4.81).
+ * (~2.215 × 4.80, aspect 9:19.5 — matches production screenshots).
  *
  * Rim / radius lengths use `cqw` from a `container-type: size` wrapper so every
  * inset is the same physical width. Padding % would be the parent panel, and
  * `% / %` radii would not stay concentric with that inset.
  */
-const frameW = 2.45;
-const frameH = 4.81;
-const bodyWidth = 2.34;
-const bodyRadius = 0.31;
+const frameW = 2.215;
+const frameH = 4.8;
+const bodyWidth = 2.135;
+const bodyRadius = 0.29;
 const frontFrameRim = 0.012;
 const displayBezel = 0.054;
 
@@ -37,8 +37,13 @@ const cqw = (value: number) => `${((value / frameW) * 100).toFixed(4)}cqw`;
 const pctOfWidth = (value: number, width: number) =>
   `${(value / width) * 100}%`;
 
+/** Front aspect — GLB body + Work panel placeholder + screenshot stacks. */
+const phoneAspectRatio = "9 / 19.5";
+
 export const phoneFrontLayout = {
-  aspectRatio: `${frameW} / ${frameH}`,
+  aspectRatio: phoneAspectRatio,
+  /** Alias kept for stack callers; same as `aspectRatio` after GLB narrow pass. */
+  stackAspectRatio: phoneAspectRatio,
   viewportHeight: `${viewportHeightPct.toFixed(2)}%`,
   colors: {
     /** `finish.frame` in build-android-phone-glb.mjs — lit metal, not a flat grey band */
