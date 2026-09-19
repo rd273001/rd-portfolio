@@ -18,12 +18,18 @@ import {
   ProductPhonePlaceholder,
 } from "./MobileShowcasePresentation";
 import type { MobileShowcaseProject } from "./types";
+import {
+  runInBackground,
+  yieldToMain,
+  yieldUntilQuiet,
+} from "./sceneScheduler";
 
 const MobileShowcaseScene = dynamic(
   () =>
-    import("./MobileShowcaseScene").then(
-      (module) => module.MobileShowcaseScene,
-    ),
+    import(
+      /* webpackPrefetch: true */
+      "./MobileShowcaseScene"
+    ).then((module) => module.MobileShowcaseScene),
   {
     ssr: false,
     loading: () => null,
@@ -42,9 +48,7 @@ type ShowcaseAction =
 type SceneCapabilities = {
   evaluated: boolean;
   motionAllowed: boolean;
-  pointerFine: boolean;
   desktopLayout: boolean;
-  webglSupported: boolean;
 };
 
 type SceneErrorBoundaryProps = {
@@ -90,122 +94,103 @@ class SceneErrorBoundary extends Component<
 function detectWebGLSupport() {
   try {
     const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-
-    if (!gl) {
-      return false;
-    }
-
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return true;
+    return Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
   } catch {
     return false;
   }
 }
 
-const SCROLL_QUIET_MS = 280;
-const MOUNT_QUIET_MS = 220;
-
-function useScrollQuiet() {
-  const [quiet, setQuiet] = useState(false);
-
-  useEffect(() => {
-    let timerId: number | undefined;
-
-    const bump = () => {
-      setQuiet(false);
-      if (timerId !== undefined) {
-        window.clearTimeout(timerId);
-      }
-      timerId = window.setTimeout(() => {
-        setQuiet(true);
-      }, SCROLL_QUIET_MS);
-    };
-
-    bump();
-    window.addEventListener("scroll", bump, { passive: true });
-    window.addEventListener("wheel", bump, { passive: true });
-
-    return () => {
-      if (timerId !== undefined) {
-        window.clearTimeout(timerId);
-      }
-      window.removeEventListener("scroll", bump);
-      window.removeEventListener("wheel", bump);
-    };
-  }, []);
-
-  return quiet;
-}
-
-function useQuietIdle(enabled: boolean) {
-  const [isIdle, setIsIdle] = useState(false);
+/**
+ * Download and parse Three.js / GLB / HDR in the background after first paint.
+ * Do not wait for the Work section or a scroll pause — that just delayed the hitch.
+ */
+function useBackgroundSceneAssets(
+  enabled: boolean,
+  onUnsupported: (failed: boolean) => void,
+) {
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!enabled || isIdle) {
+    if (!enabled || ready) {
       return;
     }
 
     let cancelled = false;
-    let quietTimerId: number | undefined;
-    let idleId: number | undefined;
-    let fallbackId: number | undefined;
 
-    const clearScheduledMount = () => {
-      if (quietTimerId !== undefined) {
-        window.clearTimeout(quietTimerId);
-        quietTimerId = undefined;
+    const glb = document.createElement("link");
+    glb.rel = "prefetch";
+    glb.as = "fetch";
+    glb.href = "/models/android-phone.glb?v=aspect-9-19.5";
+    glb.crossOrigin = "anonymous";
+    document.head.appendChild(glb);
+
+    const hdri = document.createElement("link");
+    hdri.rel = "prefetch";
+    hdri.as = "fetch";
+    hdri.href = "/hdri/studio_small_08_1k.hdr";
+    hdri.crossOrigin = "anonymous";
+    document.head.appendChild(hdri);
+
+    runInBackground(() => {
+      if (cancelled) {
+        return;
       }
-      if (idleId !== undefined && typeof window.cancelIdleCallback === "function") {
-        window.cancelIdleCallback(idleId);
-        idleId = undefined;
+
+      if (!detectWebGLSupport()) {
+        onUnsupported(true);
+        return;
       }
-      if (fallbackId !== undefined) {
-        window.clearTimeout(fallbackId);
-        fallbackId = undefined;
-      }
-    };
 
-    const mount = () => {
-      if (!cancelled) {
-        setIsIdle(true);
-      }
-    };
+      void import("./MobileShowcaseScene")
+        .then(async (module) => {
+          await yieldToMain();
+          if (cancelled) {
+            return;
+          }
 
-    const scheduleMountAfterQuietScroll = () => {
-      clearScheduledMount();
-      quietTimerId = window.setTimeout(() => {
-        quietTimerId = undefined;
-        if (cancelled) {
-          return;
-        }
-
-        if (typeof window.requestIdleCallback === "function") {
-          idleId = window.requestIdleCallback(mount, { timeout: 1500 });
-          return;
-        }
-
-        fallbackId = window.setTimeout(mount, 240);
-      }, MOUNT_QUIET_MS);
-    };
-
-    const onScroll = () => {
-      scheduleMountAfterQuietScroll();
-    };
-
-    scheduleMountAfterQuietScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("wheel", onScroll, { passive: true });
+          module.preloadShowcaseAssets();
+          setReady(true);
+        })
+        .catch(() => {
+          if (!cancelled) {
+            onUnsupported(true);
+          }
+        });
+    });
 
     return () => {
       cancelled = true;
-      clearScheduledMount();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("wheel", onScroll);
+      glb.remove();
+      hdri.remove();
     };
-  }, [enabled, isIdle]);
+  }, [enabled, onUnsupported, ready]);
 
-  return isIdle;
+  return ready;
+}
+
+function useYieldingCanvasMount(enabled: boolean) {
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || allowed) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      await yieldUntilQuiet();
+      if (!cancelled) {
+        setAllowed(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allowed, enabled]);
+
+  return allowed;
 }
 
 function getScreenLabel(screenshot: string) {
@@ -238,9 +223,7 @@ export function MobileShowcaseEnhancement({
   const [capabilities, setCapabilities] = useState<SceneCapabilities>({
     evaluated: false,
     motionAllowed: false,
-    pointerFine: false,
     desktopLayout: false,
-    webglSupported: false,
   });
 
   useEffect(() => {
@@ -259,7 +242,7 @@ export function MobileShowcaseEnhancement({
 
         setIsNearViewport(true);
       },
-      { rootMargin: "160px 0px" },
+      { rootMargin: "480px 0px" },
     );
 
     observer.observe(root);
@@ -267,71 +250,37 @@ export function MobileShowcaseEnhancement({
   }, []);
 
   useEffect(() => {
-    if (!isNearViewport) {
-      return;
-    }
-
-    void import("./MobileShowcaseScene");
-
-    const glb = document.createElement("link");
-    glb.rel = "prefetch";
-    glb.as = "fetch";
-    glb.href = "/models/android-phone.glb?v=back-metal-lip";
-    glb.crossOrigin = "anonymous";
-    document.head.appendChild(glb);
-
-    const hdri = document.createElement("link");
-    hdri.rel = "prefetch";
-    hdri.as = "fetch";
-    hdri.href = "/hdri/studio_small_08_1k.hdr";
-    hdri.crossOrigin = "anonymous";
-    document.head.appendChild(hdri);
-
-    return () => {
-      glb.remove();
-      hdri.remove();
-    };
-  }, [isNearViewport]);
-
-  useEffect(() => {
     const motionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
-    const pointerQuery = window.matchMedia("(pointer: fine)");
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
-    const webglSupported = detectWebGLSupport();
 
     const updateCapabilities = () => {
       setCapabilities({
         evaluated: true,
         motionAllowed: !motionQuery.matches,
-        pointerFine: pointerQuery.matches,
         desktopLayout: desktopQuery.matches,
-        webglSupported,
       });
     };
 
     updateCapabilities();
     motionQuery.addEventListener("change", updateCapabilities);
-    pointerQuery.addEventListener("change", updateCapabilities);
     desktopQuery.addEventListener("change", updateCapabilities);
 
     return () => {
       motionQuery.removeEventListener("change", updateCapabilities);
-      pointerQuery.removeEventListener("change", updateCapabilities);
       desktopQuery.removeEventListener("change", updateCapabilities);
     };
   }, []);
 
-  const canEvaluateScene =
+  const canWarmAssets =
     capabilities.evaluated &&
     capabilities.motionAllowed &&
     capabilities.desktopLayout &&
-    capabilities.webglSupported &&
-    isNearViewport &&
     !sceneFailed;
-  const sceneMountAllowed = useQuietIdle(canEvaluateScene);
-  const scrollQuiet = useScrollQuiet();
+  const assetsReady = useBackgroundSceneAssets(canWarmAssets, setSceneFailed);
+  const canEvaluateScene = canWarmAssets && isNearViewport && assetsReady;
+  const sceneMountAllowed = useYieldingCanvasMount(canEvaluateScene);
 
   const handleSceneReady = useCallback(() => {
     requestAnimationFrame(() => {
@@ -346,7 +295,7 @@ export function MobileShowcaseEnhancement({
     setSceneReady(false);
   }, []);
 
-  if (sceneWarmed && scrollQuiet && !sceneReady) {
+  if (sceneWarmed && !sceneReady) {
     setSceneReady(true);
   }
 
@@ -395,8 +344,13 @@ export function MobileShowcaseEnhancement({
                 key={project.id}
                 type="button"
                 aria-pressed={index === state.projectIndex}
+                onPointerUp={(event) => {
+                  if (event.pointerType === "touch") {
+                    selectProject(index);
+                  }
+                }}
                 onClick={() => selectProject(index)}
-                className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-4 text-center text-sm font-medium transition-[color,background-color,opacity] hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:hover:bg-background aria-pressed:hover:opacity-90"
+                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background"
               >
                 {project.name}
               </button>
@@ -451,8 +405,13 @@ export function MobileShowcaseEnhancement({
                       key={screenshot}
                       type="button"
                       aria-pressed={index === state.screenIndex}
+                      onPointerUp={(event) => {
+                        if (event.pointerType === "touch") {
+                          selectScreen(index);
+                        }
+                      }}
                       onClick={() => selectScreen(index)}
-                      className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-background/25 px-3 text-center text-sm font-medium transition-[color,background-color,opacity] hover:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:hover:bg-background aria-pressed:hover:opacity-90"
+                      className="inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-3 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background"
                     >
                       {getScreenLabel(screenshot)}
                     </button>
@@ -464,7 +423,7 @@ export function MobileShowcaseEnhancement({
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center lg:flex-col xl:flex-row xl:items-center">
               <Button
                 href={activeProject.caseStudyHref}
-                className="w-full bg-background text-foreground focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
+                className="w-full bg-background text-foreground active:opacity-90 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
               >
                 Read case study
               </Button>
@@ -472,7 +431,7 @@ export function MobileShowcaseEnhancement({
                 <Button
                   href={activeProject.storeUrl}
                   variant="secondary"
-                  className="w-full border-background/30 text-background hover:bg-background/10 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
+                  className="w-full border-background/45 text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
                 >
                   View on Play Store
                 </Button>
