@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
+import { AndroidPhoneFrame } from "@/components/sections/mobile-showcase/AndroidPhoneFrame";
 import { getMetricsByIds } from "@/content/metrics";
 import {
   getCaseStudyProject,
@@ -246,21 +246,16 @@ export default async function ProjectCaseStudyPage({
                   <h3 className="text-lg font-semibold tracking-[-0.03em]">
                     Screenshots
                   </h3>
-                  <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <ul className="mt-6 grid justify-items-center gap-6 sm:grid-cols-2">
                     {visibleScreenshots.map((screenshot, index) => (
-                      <li
-                        key={screenshot}
-                        className="overflow-hidden rounded-2xl border border-border bg-background"
-                      >
-                        <div className="relative aspect-9/19.5 w-full">
-                          <Image
-                            src={screenshot}
-                            alt={`${project.name} production screen ${index + 1}`}
-                            fill
-                            sizes="(min-width: 1024px) 280px, 45vw"
-                            className="object-cover object-top"
-                          />
-                        </div>
+                      <li key={screenshot} className="w-full max-w-68">
+                        <AndroidPhoneFrame
+                          screenshot={screenshot}
+                          alt={`${project.name} production screen ${index + 1}`}
+                          size="stack"
+                          sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"
+                          priority={index === 0}
+                        />
                       </li>
                     ))}
                   </ul>

@@ -489,9 +489,11 @@ function buildPhone() {
   const backGlassMat = getBackSatin();
   const cameraBarMat = getSoftGlass(0x121416);
 
-  const bodyWidth = 2.34;
+  // Target front bbox ~9:19.5 (matches production screenshots / 2D stack frames).
+  // Previous 2.34×4.72 read a bit wide/short next to those screens.
+  const bodyWidth = 2.135;
   const bodyHeight = 4.72;
-  const bodyRadius = 0.31;
+  const bodyRadius = 0.29;
   const bodyBevel = 0.04;
 
   // Midframe construction
@@ -747,6 +749,13 @@ mkdirSync(outDir, { recursive: true });
 const outFile = join(outDir, "android-phone.glb");
 writeFileSync(outFile, Buffer.from(glb));
 
+const phone = scene.children[0];
+const frameMesh = phone?.getObjectByName("Frame");
+frameMesh?.geometry.computeBoundingBox();
+const frameBox = frameMesh?.geometry.boundingBox;
+const frontW = frameBox ? frameBox.max.x - frameBox.min.x : size.x;
+const frontH = frameBox ? frameBox.max.y - frameBox.min.y : size.y;
+
 console.log(
-  `Wrote ${outFile} (${Buffer.from(glb).byteLength} bytes, size ${size.x.toFixed(2)} x ${size.y.toFixed(2)} x ${size.z.toFixed(2)})`
+  `Wrote ${outFile} (${Buffer.from(glb).byteLength} bytes, size ${size.x.toFixed(2)} x ${size.y.toFixed(2)} x ${size.z.toFixed(2)}; front ${frontW.toFixed(3)} x ${frontH.toFixed(3)}, aspect ${(frontW / frontH).toFixed(4)} vs 9/19.5=${(9 / 19.5).toFixed(4)})`,
 );
