@@ -1,28 +1,105 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { Component, useRef, type ReactNode } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+let motionPluginsReady = false;
+
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP, ScrollTrigger);
+  try {
+    gsap.registerPlugin(useGSAP, ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    motionPluginsReady = true;
+  } catch {
+    motionPluginsReady = false;
+  }
 }
 
 type CareerJourneyMotionProps = {
   children: ReactNode;
 };
 
-export function CareerJourneyMotion({
-  children,
-}: CareerJourneyMotionProps) {
+function showStaticJourney(progress: HTMLElement, steps: HTMLElement[]) {
+  try {
+    gsap.set(progress, { clearProps: "transform" });
+    gsap.set(steps, { clearProps: "opacity,visibility,transform" });
+  } catch {
+    progress.style.transform = "";
+    for (const step of steps) {
+      step.style.opacity = "";
+      step.style.visibility = "";
+      step.style.transform = "";
+    }
+  }
+}
+
+function createJourneyTimeline({
+  list,
+  progress,
+  steps,
+  start,
+  end,
+  scrub,
+  stepY,
+}: {
+  list: HTMLElement;
+  progress: HTMLElement;
+  steps: HTMLElement[];
+  start: string;
+  end: string;
+  scrub: number;
+  stepY: number;
+}) {
+  gsap.set(progress, { scaleY: 0, transformOrigin: "top center" });
+
+  const duration = Math.max(steps.length, 1);
+  const timeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: list,
+      start,
+      end,
+      scrub,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  timeline.to(
+    progress,
+    {
+      scaleY: 1,
+      duration,
+      ease: "none",
+    },
+    0,
+  );
+
+  steps.forEach((step, index) => {
+    timeline.fromTo(
+      step,
+      { autoAlpha: 0.4, y: stepY },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "none",
+      },
+      index,
+    );
+  });
+
+  return timeline;
+}
+
+function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
       const section = sectionRef.current;
 
-      if (!section) {
+      if (!section || !motionPluginsReady) {
         return;
       }
 
@@ -40,129 +117,105 @@ export function CareerJourneyMotion({
         return;
       }
 
-      const media = gsap.matchMedia();
+      const showStatic = () => showStaticJourney(progress, steps);
 
-      media.add(
-        {
-          reduceMotion: "(prefers-reduced-motion: reduce)",
-          compact: "(max-width: 1023px)",
-          desktop: "(min-width: 1024px)",
-        },
-        (context) => {
-          const conditions = context.conditions as {
-            reduceMotion?: boolean;
-            compact?: boolean;
-            desktop?: boolean;
-          };
+      try {
+        const media = gsap.matchMedia();
 
-          if (conditions.reduceMotion) {
-            gsap.set([progress, ...steps], { clearProps: "all" });
-            return;
-          }
+        media.add("(prefers-reduced-motion: reduce)", () => {
+          showStatic();
+        });
 
-          gsap.set(progress, {
-            scaleY: 0,
-            transformOrigin: "top center",
-          });
-
-          if (conditions.compact) {
-            gsap.to(progress, {
-              scaleY: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: list,
+        media.add(
+          "(max-width: 1023px) and (prefers-reduced-motion: no-preference)",
+          () => {
+            try {
+              createJourneyTimeline({
+                list,
+                progress,
+                steps,
                 start: "top 82%",
-                end: "bottom 42%",
+                end: "bottom 22%",
                 scrub: 0.35,
-              },
-            });
-
-            steps.forEach((step) => {
-              gsap.fromTo(
-                step,
-                { autoAlpha: 0, y: 24 },
-                {
-                  autoAlpha: 1,
-                  y: 0,
-                  duration: 0.55,
-                  ease: "power2.out",
-                  scrollTrigger: {
-                    trigger: step,
-                    start: "top 88%",
-                    toggleActions: "play none none reverse",
-                  },
-                },
-              );
-            });
-
-            return;
-          }
-
-          if (conditions.desktop) {
-            const headerOffset = 96;
-            const bottomGap = () =>
-              Number.parseFloat(getComputedStyle(section).paddingBottom) || 80;
-            const stickyDistance = () =>
-              Math.max(list.offsetHeight - intro.offsetHeight, 0);
-
-            if (stickyDistance() > 0) {
-              const work = document.getElementById("work");
-
-              if (work) {
-                ScrollTrigger.create({
-                  id: "career-journey-pin",
-                  trigger: intro,
-                  start: `top top+=${headerOffset}`,
-                  endTrigger: work,
-                  end: () =>
-                    `top top+=${headerOffset + intro.offsetHeight + bottomGap()}`,
-                  pin: true,
-                  pinSpacing: false,
-                  anticipatePin: 1,
-                  invalidateOnRefresh: true,
-                });
-              }
+                stepY: 16,
+              });
+            } catch {
+              showStatic();
             }
+          },
+        );
 
-            const duration = Math.max(steps.length, 1);
-            const timeline = gsap.timeline({
-              scrollTrigger: {
-                trigger: list,
+        media.add(
+          "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+          () => {
+            try {
+              const headerOffset = 96;
+              const bottomGap = () =>
+                Number.parseFloat(getComputedStyle(section).paddingBottom) ||
+                80;
+              const stickyDistance = () =>
+                Math.max(list.offsetHeight - intro.offsetHeight, 0);
+
+              if (stickyDistance() > 0) {
+                const work = document.getElementById("work");
+
+                if (work) {
+                  try {
+                    ScrollTrigger.create({
+                      id: "career-journey-pin",
+                      trigger: intro,
+                      start: `top top+=${headerOffset}`,
+                      endTrigger: work,
+                      end: () =>
+                        `top top+=${headerOffset + intro.offsetHeight + bottomGap()}`,
+                      pin: true,
+                      pinSpacing: false,
+                      anticipatePin: 1,
+                      invalidateOnRefresh: true,
+                    });
+                  } catch {
+                    // Pin is optional; keep the scroll timeline.
+                  }
+                }
+              }
+
+              createJourneyTimeline({
+                list,
+                progress,
+                steps,
                 start: "top 72%",
                 end: "bottom 48%",
                 scrub: 0.5,
-                invalidateOnRefresh: true,
-              },
-            });
+                stepY: 32,
+              });
+            } catch {
+              showStatic();
+            }
+          },
+        );
 
-            timeline.to(
-              progress,
-              {
-                scaleY: 1,
-                duration,
-                ease: "none",
-              },
-              0,
-            );
-
-            steps.forEach((step, index) => {
-              timeline.fromTo(
-                step,
-                { autoAlpha: 0.4, y: 32 },
-                {
-                  autoAlpha: 1,
-                  y: 0,
-                  duration: 0.7,
-                  ease: "none",
-                },
-                index,
-              );
-            });
+        const refresh = () => {
+          try {
+            ScrollTrigger.refresh();
+          } catch {
+            showStatic();
           }
-        },
-      );
+        };
+        const refreshId = window.requestAnimationFrame(refresh);
+        window.addEventListener("load", refresh);
 
-      return () => media.revert();
+        return () => {
+          window.cancelAnimationFrame(refreshId);
+          window.removeEventListener("load", refresh);
+          try {
+            media.revert();
+          } catch {
+            showStatic();
+          }
+        };
+      } catch {
+        showStatic();
+      }
     },
     { scope: sectionRef },
   );
@@ -175,5 +228,37 @@ export function CareerJourneyMotion({
     >
       {children}
     </section>
+  );
+}
+
+class JourneyMotionBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+export function CareerJourneyMotion({ children }: CareerJourneyMotionProps) {
+  const staticSection = (
+    <section
+      id="journey"
+      className="scroll-mt-20 border-t border-border py-16 sm:py-20"
+    >
+      {children}
+    </section>
+  );
+
+  return (
+    <JourneyMotionBoundary fallback={staticSection}>
+      <CareerJourneyMotionInner>{children}</CareerJourneyMotionInner>
+    </JourneyMotionBoundary>
   );
 }
