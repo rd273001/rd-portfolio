@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
+import { BrandMark } from "@/components/primitives";
 import type { NavigationItem, Social } from "@/content/types";
 
 type SiteHeaderProps = {
@@ -11,51 +12,51 @@ type SiteHeaderProps = {
   contact?: Social;
 };
 
-function getInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part.charAt(0))
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 export function SiteHeader({
   brand,
   navigation,
   contact,
 }: SiteHeaderProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const initials = getInitials(brand);
+  const menuRef = useRef<HTMLDetailsElement>(null);
 
-  const closeMenu = () => setIsMenuOpen(false);
+  const closeMenu = () => {
+    if (menuRef.current) {
+      menuRef.current.open = false;
+    }
+  };
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    const menu = menuRef.current;
+
+    if (!menu) {
       return;
     }
 
+    const onToggle = () => {
+      document.body.style.overflow = menu.open ? "hidden" : "";
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsMenuOpen(false);
+        closeMenu();
       }
     };
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    menu.addEventListener("toggle", onToggle);
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = "";
+      menu.removeEventListener("toggle", onToggle);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isMenuOpen]);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 768px)");
     const onChange = () => {
       if (media.matches) {
-        setIsMenuOpen(false);
+        closeMenu();
       }
     };
 
@@ -65,19 +66,16 @@ export function SiteHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50">
+      <div className="header-glass-fill pointer-events-none absolute inset-0" aria-hidden />
+      <div className="relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-md text-sm font-semibold tracking-tight focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="inline-flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md text-sm font-semibold tracking-tight focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background md:gap-3 md:text-base"
           aria-label={brand}
+          onClick={closeMenu}
         >
-          <span
-            aria-hidden="true"
-            className="grid size-8 place-items-center rounded-lg border border-border bg-surface font-mono text-xs font-medium"
-          >
-            {initials}
-          </span>
+          <BrandMark className="md:size-9" />
           <span>{brand}</span>
         </Link>
 
@@ -89,7 +87,7 @@ export function SiteHeader({
             <a
               key={item.id}
               href={item.href}
-              className="rounded-md py-2 text-sm text-muted transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="rounded-md py-2 text-sm text-muted transition-colors [@media(hover:hover)]:hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {item.label}
             </a>
@@ -97,54 +95,62 @@ export function SiteHeader({
           {contact ? (
             <a
               href={contact.href}
-              className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {contact.label}
             </a>
           ) : null}
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg border border-border bg-surface text-sm font-medium focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-navigation"
-          aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
-          onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+        <details
+          ref={menuRef}
+          className="group relative md:hidden"
+          suppressHydrationWarning
         >
-          <span aria-hidden="true">{isMenuOpen ? "Close" : "Menu"}</span>
-        </button>
-      </div>
+          <summary className="inline-flex min-h-11 min-w-19 cursor-pointer touch-manipulation list-none items-center justify-center overflow-hidden rounded-lg border border-border bg-surface px-4 text-sm font-medium text-foreground transition-[transform,background-color,color,border-color,opacity] duration-150 [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:group-open:hover:bg-foreground [@media(hover:hover)]:group-open:hover:opacity-90 active:scale-[0.98] active:bg-accent group-open:border-foreground group-open:bg-foreground group-open:text-background group-open:active:bg-foreground group-open:active:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <span className="group-open:hidden">Menu</span>
+            <span className="hidden group-open:inline">Close</span>
+          </summary>
 
-      {isMenuOpen ? (
-        <nav
-          id="mobile-navigation"
-          className="border-t border-border bg-surface px-4 py-3 md:hidden"
-          aria-label="Mobile navigation"
-        >
-          <div className="mx-auto flex max-w-5xl flex-col gap-1">
-            {navigation.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-muted transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                onClick={closeMenu}
-              >
-                {item.label}
-              </a>
-            ))}
-            {contact ? (
-              <a
-                href={contact.href}
-                className="mt-2 inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                onClick={closeMenu}
-              >
-                {contact.label}
-              </a>
-            ) : null}
+          <div className="fixed inset-x-0 top-16 z-40">
+            <button
+              type="button"
+              aria-label="Dismiss navigation"
+              className="mobile-menu-overlay fixed inset-0 top-16 z-0"
+              onClick={closeMenu}
+            />
+            <nav
+              id="mobile-navigation"
+              className="mobile-menu-glass relative z-10 mx-3 mt-3 max-h-[calc(100dvh-5.5rem)] rounded-2xl"
+              aria-label="Mobile navigation"
+            >
+              <div className="overflow-y-auto px-3 pb-6 pt-3">
+              <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-1">
+                {navigation.map((item) => (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    className="flex min-h-12 w-full touch-manipulation items-center justify-center rounded-lg px-3 py-3.5 text-center text-base font-medium text-foreground transition-[transform,background-color] duration-150 [@media(hover:hover)]:hover:bg-foreground/6 active:scale-[0.98] active:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                {contact ? (
+                  <a
+                    href={contact.href}
+                    className="mt-3 inline-flex min-h-12 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    onClick={closeMenu}
+                  >
+                    {contact.label}
+                  </a>
+                ) : null}
+              </div>
+              </div>
+            </nav>
           </div>
-        </nav>
-      ) : null}
+        </details>
+      </div>
     </header>
   );
 }
