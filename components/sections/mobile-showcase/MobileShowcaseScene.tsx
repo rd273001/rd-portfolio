@@ -4,7 +4,6 @@ import {
   Suspense,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -13,6 +12,7 @@ import {
 import {
   ContactShadows,
   Environment,
+  useEnvironment,
   useGLTF,
 } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -28,12 +28,16 @@ import {
   MeshPhysicalMaterial,
   SRGBColorSpace,
   setConsoleFunction,
+  type Camera,
   type Group,
   type Mesh,
+  type Scene,
   type Texture,
+  type WebGLRenderer,
 } from "three";
 
 import { cn } from "@/lib/cn";
+import { yieldUntilQuiet } from "./sceneScheduler";
 
 setConsoleFunction((type, message, ...rest) => {
   const text = [message, ...rest].map(String).join(" ");
@@ -59,7 +63,8 @@ type MobileShowcaseSceneProps = {
   onReady: () => void;
 };
 
-const MODEL_URL = "/models/android-phone.glb?v=back-metal-lip";
+const MODEL_URL = "/models/android-phone.glb?v=aspect-9-19.5";
+const HDR_URL = "/hdri/studio_small_08_1k.hdr";
 const restPose = { x: 0.12, y: -0.52 };
 const frontPose = { x: 0, y: 0 };
 const introLeft = { x: 0, y: 0.42 };
@@ -98,6 +103,25 @@ function introTarget(elapsed: number) {
   }
 
   return restPose;
+}
+
+async function compileScene(
+  gl: WebGLRenderer,
+  scene: Scene,
+  camera: Camera,
+) {
+  await yieldUntilQuiet();
+
+  const renderer = gl as WebGLRenderer & {
+    compileAsync?: (scene: Scene, camera: Camera) => Promise<unknown>;
+  };
+
+  if (typeof renderer.compileAsync === "function") {
+    await renderer.compileAsync(scene, camera);
+    return;
+  }
+
+  renderer.compile(scene, camera);
 }
 
 function ContextLifecycle({
@@ -247,19 +271,35 @@ function getScreenshotSrc(screenshot: string) {
   }).props.src;
 }
 
-function createScreenMap(image: HTMLImageElement) {
+const SCREEN_MAP_MAX_WIDTH = 720;
+
+async function createScreenMap(image: HTMLImageElement) {
+  const scale = Math.min(1, SCREEN_MAP_MAX_WIDTH / Math.max(image.naturalWidth, 1));
+  const width = Math.max(1, Math.round(image.naturalWidth * scale));
+  const height = Math.max(1, Math.round(image.naturalHeight * scale));
   const canvas = document.createElement("canvas");
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-  const context = canvas.getContext("2d");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d", { alpha: false });
 
   if (!context) {
     return null;
   }
 
   context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = "high";
-  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  context.imageSmoothingQuality = "medium";
+
+  if (typeof createImageBitmap === "function") {
+    const bitmap = await createImageBitmap(image, {
+      resizeWidth: width,
+      resizeHeight: height,
+      resizeQuality: "medium",
+    });
+    context.drawImage(bitmap, 0, 0);
+    bitmap.close();
+  } else {
+    context.drawImage(image, 0, 0, width, height);
+  }
 
   const map = new CanvasTexture(canvas);
   map.colorSpace = SRGBColorSpace;
@@ -298,29 +338,32 @@ function ScreenTexture({
   const src = getScreenshotSrc(screenshot);
   const readyRef = useRef(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let cancelled = false;
     let map: Texture | null = null;
     const image = new window.Image();
     image.decoding = "async";
 
     const handleLoad = () => {
-      if (cancelled) {
-        return;
-      }
+      void createScreenMap(image)
+        .then((nextMap) => {
+          if (cancelled || !nextMap) {
+            nextMap?.dispose();
+            return;
+          }
 
-      map?.dispose();
-      map = createScreenMap(image);
-      if (!map) {
-        return;
-      }
+          map?.dispose();
+          map = nextMap;
+          applyScreenMap(root, map);
 
-      applyScreenMap(root, map);
-
-      if (!readyRef.current) {
-        readyRef.current = true;
-        onTextureReady();
-      }
+          if (!readyRef.current) {
+            readyRef.current = true;
+            onTextureReady();
+          }
+        })
+        .catch(() => {
+          /* Keep the 2D placeholder if the screen map cannot be created. */
+        });
     };
 
     image.src = src;
@@ -341,34 +384,78 @@ function ScreenTexture({
   return null;
 }
 
-function RevealAfterDraw({
+function CompileAfterEnvironment({ onReady }: { onReady: () => void }) {
+  const { gl, scene, camera, invalidate } = useThree();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      await compileScene(gl, scene, camera);
+      await yieldUntilQuiet();
+      if (cancelled) {
+        return;
+      }
+
+      invalidate();
+      onReady();
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [camera, gl, invalidate, onReady, scene]);
+
+  return null;
+}
+
+function ShowcaseWarmup({
   textureReady,
   onReady,
 }: {
   textureReady: boolean;
   onReady: () => void;
 }) {
-  const frames = useRef(0);
-  const sent = useRef(false);
-  const invalidate = useThree((state) => state.invalidate);
+  const { gl, scene, camera } = useThree();
+  const [environmentEnabled, setEnvironmentEnabled] = useState(false);
 
-  useFrame(() => {
-    if (!textureReady || sent.current) {
+  useEffect(() => {
+    if (!textureReady) {
       return;
     }
 
-    frames.current += 1;
+    let cancelled = false;
 
-    if (frames.current < 3) {
-      invalidate();
-      return;
-    }
+    void (async () => {
+      await compileScene(gl, scene, camera);
+      await yieldUntilQuiet();
+      if (!cancelled) {
+        setEnvironmentEnabled(true);
+      }
+    })();
 
-    sent.current = true;
-    onReady();
-  });
+    return () => {
+      cancelled = true;
+    };
+  }, [camera, gl, scene, textureReady]);
 
-  return null;
+  if (!environmentEnabled) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <Environment files={HDR_URL} environmentIntensity={0.9} />
+      <ContactShadows
+        position={[0, -1.98, 0]}
+        opacity={0.28}
+        scale={7}
+        blur={2.8}
+        far={3.8}
+      />
+      <CompileAfterEnvironment onReady={onReady} />
+    </Suspense>
+  );
 }
 
 function GltfPhone({
@@ -405,20 +492,21 @@ function ProductPhone({
   playIntro,
   stageRef,
   onGrabbingChange,
-  onReady,
+  onTextureReady,
 }: Pick<
   MobileShowcaseSceneProps,
   "screenshot" | "enableDrag" | "playIntro"
 > & {
   stageRef: RefObject<HTMLDivElement | null>;
   onGrabbingChange: (grabbing: boolean) => void;
-  onReady: () => void;
+  onTextureReady: () => void;
 }) {
   const groupRef = useRef<Group>(null);
   const [textureReady, setTextureReady] = useState(false);
   const handleTextureReady = useCallback(() => {
     setTextureReady(true);
-  }, []);
+    onTextureReady();
+  }, [onTextureReady]);
   const targetRotation = useRef({ ...frontPose });
   const introStarted = useRef(false);
   const intro = useRef({
@@ -614,15 +702,7 @@ function ProductPhone({
             onTextureReady={handleTextureReady}
           />
         </Suspense>
-        <RevealAfterDraw textureReady={textureReady} onReady={onReady} />
       </group>
-      <ContactShadows
-        position={[0, -1.98, 0]}
-        opacity={0.28}
-        scale={7}
-        blur={2.8}
-        far={3.8}
-      />
     </group>
   );
 }
@@ -636,6 +716,10 @@ export function MobileShowcaseScene({
 }: MobileShowcaseSceneProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const [grabbing, setGrabbing] = useState(false);
+  const [textureReady, setTextureReady] = useState(false);
+  const handleTextureReady = useCallback(() => {
+    setTextureReady(true);
+  }, []);
 
   return (
     <div
@@ -649,7 +733,7 @@ export function MobileShowcaseScene({
         className="h-full w-full"
         frameloop={playIntro || grabbing ? "always" : "demand"}
         camera={{ position: [0.1, 0.04, 10.2], fov: 26 }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         gl={{
           alpha: true,
           antialias: true,
@@ -664,12 +748,6 @@ export function MobileShowcaseScene({
         <directionalLight position={[6, 0.4, 0.2]} intensity={0.24} />
         <directionalLight position={[0.2, 7.2, 4.5]} intensity={0.22} color="#f5f3ef" />
         <directionalLight position={[0.35, 3.2, -6]} intensity={0.16} color="#f2f2f4" />
-        <Suspense fallback={null}>
-          <Environment
-            files="/hdri/studio_small_08_1k.hdr"
-            environmentIntensity={0.9}
-          />
-        </Suspense>
 
         <ContextLifecycle onContextLost={onContextLost} />
         <ProductPhone
@@ -678,11 +756,15 @@ export function MobileShowcaseScene({
           playIntro={playIntro}
           stageRef={stageRef}
           onGrabbingChange={setGrabbing}
-          onReady={onReady}
+          onTextureReady={handleTextureReady}
         />
+        <ShowcaseWarmup textureReady={textureReady} onReady={onReady} />
       </Canvas>
     </div>
   );
 }
 
-useGLTF.preload(MODEL_URL);
+export function preloadShowcaseAssets() {
+  useGLTF.preload(MODEL_URL);
+  useEnvironment.preload({ files: HDR_URL });
+}

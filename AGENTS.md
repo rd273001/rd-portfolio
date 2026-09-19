@@ -298,6 +298,33 @@ Do not re-ask Ravi for these. Keep them unless he changes them.
 - **Hanging lamp** above the phone: a lamp on a rope/cord, throwing a limelight onto the device. Keep it purposeful, lazy-loaded, and off when reduced-motion / no-WebGL.
 - Other small chassis fixes as they come up. Do not start these in the current polish pass unless Ravi asks.
 
+### Android showcase — performance optimization PR (planned)
+
+Dedicated PR only. **Goal:** reduce first-visit jank and main-thread cost while keeping the showcase **visually the same** at desktop Work size (no softer metal, no mushy screenshots, no visible LOD). Do not trade quality for bytes without a side-by-side check at 1280px+ on the Work panel.
+
+**Showcase modes (no video hero):** Desktop uses live WebGL 3D when viable. The 2D `AndroidPhoneFrame` is the **only** fallback — loading cover, mobile layout, `prefers-reduced-motion`, missing WebGL, or scene error (`SceneErrorBoundary` / context lost). Do **not** add pre-rendered video or image-sequence replacements for the 3D phone. Once WebGL is ready on desktop, **always** reveal 3D and keep it — do not leave users on the 2D frame forever after fast scrolling.
+
+**Baseline (measure again at PR start):**
+
+- `public/models/android-phone.glb` — ~6 MB, procedural export from `scripts/build-android-phone-glb.mjs` (high `curveSegments` / bevel counts).
+- `public/hdri/studio_small_08_1k.hdr` — ~1.5 MB; runtime PMREM via drei `Environment`.
+- Screen texture in `MobileShowcaseScene.tsx` — capped for GPU upload (`SCREEN_MAP_MAX_WIDTH`); 2D frame uses full WebP via Next/Image.
+
+**Optimization backlog (priority order):**
+
+1. **Geometry in the builder** — Lower tessellation in `build-android-phone-glb.mjs` (e.g. extrude `curveSegments` 64→~24, bevel segments, screen shape segments). Rebuild GLB; compare silhouette and camera bar at Work panel size before accepting.
+2. **GLB transport compression** — Post-process export with `@gltf-transform/cli` (quantize + **meshopt** or **draco**). Wire decoder in `MobileShowcaseScene` / `useGLTF` if needed. Target much smaller download + faster parse; verify materials still match after `applyBackGlassFinish`.
+3. **Lighting / IBL** — Replace or supplement runtime HDR with a **small pre-baked cubemap** or lighter preset so first frame avoids heavy HDR decode + PMREM on the critical path. Match current metal/glass look; keep `Android showcase visual contract` colors.
+4. **Shader warm-up** — Keep `compileAsync` + yield-to-input (`sceneScheduler.ts`); extend only if profiling shows remaining hitches.
+5. **Load scheduling** — Background preload on desktop (`MobileShowcaseEnhancement.tsx`) is in place; tune `rootMargin` / idle yielding only with Performance panel evidence — no “wait for scroll pause” before revealing 3D.
+6. **Screenshots** — Keep source WebPs; only raise 3D screen-map resolution if a blind A/B shows softness **on the 3D plane** (not the 2D frame).
+
+**Out of scope for this PR:** video or image-sequence heroes, removing desktop WebGL, or cosmetic chassis items listed under “later PRs” above.
+
+**Validation:** hard refresh → scroll from hero through Work with short pauses and continuous scroll; 3D must appear when ready. Lighthouse / Performance recording on Work section; compare GLB transfer size and long tasks before vs after. `npm run build:phone-model` + production build on Windows webpack path.
+
+**Suggested branch:** `perf/android-showcase-assets` (or similar). **Model:** frontier only if decoder + material regressions are hard; otherwise standard.
+
 ## Placeholders that still need Ravi
 
 Search `TODO_` in `content/`. Do not fill these from conversation memory. Examples:
