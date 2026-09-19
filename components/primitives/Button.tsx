@@ -5,9 +5,9 @@ import { cn } from "@/lib/cn";
 
 const variants = {
   primary:
-    "bg-foreground text-background hover:opacity-90 focus-visible:outline-foreground",
+    "bg-foreground text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:outline-foreground",
   secondary:
-    "border border-border bg-transparent text-foreground hover:bg-accent focus-visible:outline-foreground",
+    "border border-foreground/20 bg-transparent text-foreground transition-[transform,background-color,border-color] duration-150 [@media(hover:hover)]:hover:border-foreground/25 [@media(hover:hover)]:hover:bg-accent active:scale-[0.98] active:border-foreground/25 active:bg-accent focus-visible:outline-foreground",
 } as const;
 
 type ButtonVariant = keyof typeof variants;
@@ -41,7 +41,7 @@ export function Button({
   ...props
 }: ButtonAsButton | ButtonAsLink) {
   const classes = cn(
-    "inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full px-5 text-center text-sm font-medium transition-opacity",
+    "inline-flex min-h-11 min-w-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full px-5 text-center text-sm font-medium duration-150",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
     variants[variant],
     className,
