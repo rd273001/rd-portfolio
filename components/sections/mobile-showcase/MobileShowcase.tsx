@@ -1,4 +1,4 @@
-import { getMetricsByIds } from "@/content/metrics";
+import { getWorkShowcaseMetrics } from "@/content/metrics";
 import { getProjectsByProminence } from "@/content/projects";
 import { MobileShowcaseEnhancement } from "./MobileShowcaseEnhancement";
 import { MobileShowcasePresentation } from "./MobileShowcasePresentation";
@@ -11,22 +11,14 @@ export function MobileShowcase() {
     .filter((project) => project.kind === "production-app")
     .slice(0, requiredProjectCount)
     .map<MobileShowcaseProject>((project) => {
-      const projectMetrics = getMetricsByIds(project.metricIds)
-        .filter((metric) => metric.status === "verified")
-        .sort(
-          (first, second) =>
-            Number(second.surfaces.includes("hero")) -
-            Number(first.surfaces.includes("hero")),
-        )
-        .slice(0, 2)
-        .map((metric) => ({
-          id: metric.id,
-          label: metric.label,
-          value: metric.value,
-          previous: metric.previous,
-          current: metric.current,
-          percentage: metric.percentage,
-        }));
+      const projectMetrics = getWorkShowcaseMetrics(project.id).map((metric) => ({
+        id: metric.id,
+        label: metric.label,
+        value: metric.percentage ?? metric.value,
+        previous: metric.previous,
+        current: metric.current,
+        percentage: metric.percentage,
+      }));
 
       return {
         id: project.id,

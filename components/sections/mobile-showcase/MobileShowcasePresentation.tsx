@@ -86,7 +86,6 @@ export function ProductPhonePlaceholder({
       alt=""
       size="panel"
       sizes="40vw"
-      priority
     />
   );
 }
@@ -107,7 +106,6 @@ export function MobileProjectPhone({
       alt={`${project.name} production app screen`}
       size="stack"
       sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"
-      priority={screenshotIndex === 0}
     />
   );
 }

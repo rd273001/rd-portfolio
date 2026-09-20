@@ -48,4 +48,7 @@ export const site: Site = {
     primarySocialId: "email",
     secondarySocialId: "linkedin",
   },
+  features: {
+    mobile3DShowcase: false,
+  },
 };

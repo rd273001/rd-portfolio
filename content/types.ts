@@ -161,4 +161,11 @@ export type Site = {
     primarySocialId: string;
     secondarySocialId: string;
   };
+  features: {
+    /**
+     * Experimental: attempt the WebGL phone on capable mobile devices.
+     * AndroidPhoneFrame remains the fallback when this is off or ineligible.
+     */
+    mobile3DShowcase: boolean;
+  };
 };
