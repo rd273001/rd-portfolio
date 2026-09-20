@@ -19,8 +19,8 @@ export function ImpactDashboard() {
             Measurable improvements across shipped mobile products.
           </h2>
           <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
-            Verified production results from release optimization, delivery
-            architecture, and active app ownership.
+            Verified production results from DFC and AptiBooster — release
+            optimization and measured delivery improvements.
           </p>
         </div>
 
@@ -32,13 +32,12 @@ export function ImpactDashboard() {
             >
               <dt className="text-sm leading-5 text-muted">{metric.label}</dt>
               <dd className="mt-4 text-3xl font-semibold tracking-[-0.04em]">
-                {metric.value}
+                {metric.percentage ?? metric.value}
               </dd>
 
               {metric.previous && metric.current ? (
                 <p className="mt-3 text-sm leading-6 text-muted">
                   {metric.previous} to {metric.current}
-                  {metric.percentage ? ` (${metric.percentage})` : ""}
                 </p>
               ) : null}
 

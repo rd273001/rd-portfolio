@@ -88,13 +88,17 @@ UI reads from `content/`. Metrics are defined once in `content/metrics.ts` and r
 
 Priority / visual weight:
 
-1. DFC App
+1. DFC (Play Store listing: Dnyandeep Foundation Centre; do not brand it “DFC App”)
 2. AptiBooster
 3. Inkyst (independent contribution — do not claim ownership)
 4. IKIOR internship (concise, not flagship)
 5. Certificate Generator (personal/learning, not employment)
 
 Identity: Software Engineer specializing in Web & Mobile Experiences. Do not reduce this to “React Native Developer”.
+
+Impact dashboard: production DFC and AptiBooster metrics only. Do not put Certificate Generator or IKIOR numbers there.
+
+Do not invent a debugging-effort percentage. The Crashlytics contextual logger is a verified narrative achievement until Crashlytics history can support a measured range.
 
 DFC 161 MB: that figure is Zoom Meeting SDK moved out of base delivery via Android Dynamic Feature Module / on-demand delivery. Never say the app was “compressed by 161 MB”.
 

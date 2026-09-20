@@ -3,6 +3,7 @@ export type VerificationStatus = "verified" | "placeholder";
 export type MetricSurface =
   | "hero"
   | "impact"
+  | "work"
   | "project"
   | "timeline"
   | "achievement";
