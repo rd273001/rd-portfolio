@@ -13,12 +13,13 @@ export const experience: Experience[] = [
     kind: "production-app",
     prominence: 1,
     summary:
-      "Production ownership of the DFC App and AptiBooster, from feature work through Play Store release and maintenance.",
+      "Production ownership of DFC and AptiBooster, from feature work through Play Store release and maintenance.",
     highlights: [
-      "Own and maintain two production Android apps: DFC App and AptiBooster.",
-      "Modernized DFC onboarding with TypeScript, TanStack Query, authentication/API integration, and stronger error handling.",
-      "Moved Zoom Meeting SDK out of base delivery with an Android Dynamic Feature Module.",
-      "Integrated Firebase Crashlytics, Analytics, Performance Monitoring, OneSignal, and Razorpay.",
+      "Own and maintain two production Android apps: DFC and AptiBooster.",
+      "Shipped a new DFC codebase on the existing Play listing and built the full onboarding flow with TypeScript, TanStack Query, authentication/API integration, and stronger error handling.",
+      "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus axios interceptors that log only the errors that should be logged.",
+      "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module.",
+      "Built AptiBooster so scoring, peer comparison, and analysis all derive from one timed test attempt.",
     ],
     technologies: [
       "React Native",
@@ -29,13 +30,7 @@ export const experience: Experience[] = [
       "Razorpay",
       "Zoom Meeting SDK",
     ],
-    metricIds: [
-      "dfc-downloads",
-      "dfc-bundle-optimization",
-      "dfc-zoom-delivery",
-      "aptibooster-downloads",
-      "aptibooster-bundle-optimization",
-    ],
+    metricIds: [],
     projectIds: ["dfc-app", "aptibooster"],
   },
   {
@@ -63,7 +58,7 @@ export const experience: Experience[] = [
       "JavaScript",
       "Figma",
     ],
-    metricIds: ["ikior-performance"],
+    metricIds: [],
     projectIds: ["ikior"],
   },
 ];

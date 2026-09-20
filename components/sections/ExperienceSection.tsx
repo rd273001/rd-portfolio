@@ -1,6 +1,5 @@
 import { Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
-import { getMetricsByIds } from "@/content/metrics";
 import type { Experience } from "@/content/types";
 
 function getVisibleDateRange(item: Experience) {
@@ -48,9 +47,6 @@ export function ExperienceSection() {
         <div className="mt-10 space-y-5">
           {visibleExperience.map((item) => {
             const dateRange = getVisibleDateRange(item);
-            const metrics = getMetricsByIds(item.metricIds).filter(
-              (metric) => metric.status === "verified",
-            );
 
             return (
               <article
@@ -102,21 +98,6 @@ export function ExperienceSection() {
                       </li>
                     ))}
                   </ul>
-                ) : null}
-
-                {metrics.length > 0 ? (
-                  <dl className="mt-7 grid gap-3 border-t border-border pt-6 sm:grid-cols-3">
-                    {metrics.slice(0, 3).map((metric) => (
-                      <div key={metric.id}>
-                        <dt className="text-xs leading-5 text-muted">
-                          {metric.label}
-                        </dt>
-                        <dd className="mt-1 text-lg font-semibold tracking-tight">
-                          {metric.value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
                 ) : null}
 
                 {item.technologies.length > 0 ? (

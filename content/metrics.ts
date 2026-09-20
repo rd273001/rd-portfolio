@@ -1,17 +1,28 @@
-import type { Metric } from "./types";
+import type { Metric, ProjectId } from "./types";
 
+/**
+ * Surface roles:
+ * - hero: three identity/scale metrics only
+ * - impact: production DFC and AptiBooster results that are not already in the hero
+ *   (not personal projects, not internship stats)
+ * - work: 1–2 project-specific metrics in the mobile showcase
+ * - project: optional single ProjectCard metric (omit when hero/impact already cover it)
+ * - timeline / achievement: narrative surfaces, not extra dashboards
+ *
+ * Case-study pages read `project.metricIds`, not surfaces, so they can stay complete.
+ */
 export const metrics: Metric[] = [
   {
     id: "dfc-downloads",
-    label: "DFC App downloads",
+    label: "DFC downloads",
     value: "10K+",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["hero", "impact", "project"],
+    surfaces: ["hero"],
   },
   {
     id: "dfc-bundle-optimization",
-    label: "DFC App bundle reduction",
+    label: "DFC previous release optimization",
     value: "6.02 MB",
     previous: "21.02 MB",
     current: "15 MB",
@@ -19,24 +30,7 @@ export const metrics: Metric[] = [
     percentage: "28.6%",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["impact", "project", "achievement"],
-  },
-  {
-    id: "dfc-onboarding-legacy-replaced",
-    label: "DFC onboarding legacy replaced",
-    value: "~80%",
-    status: "verified",
-    project: "dfc-app",
-    surfaces: ["project", "timeline"],
-  },
-  {
-    id: "dfc-onboarding-modernization",
-    label: "DFC onboarding modernization",
-    value: "~85–90%",
-    status: "verified",
-    project: "dfc-app",
-    note: "Onboarding codebase modernization and improvement.",
-    surfaces: ["project", "timeline"],
+    surfaces: ["impact", "achievement"],
   },
   {
     id: "dfc-zoom-delivery",
@@ -45,7 +39,7 @@ export const metrics: Metric[] = [
     status: "verified",
     project: "dfc-app",
     note: "Zoom Meeting SDK moved out of the base download with an Android Dynamic Feature Module / on-demand delivery. This is not simple compression of the app binary.",
-    surfaces: ["hero", "impact", "project", "achievement"],
+    surfaces: ["hero", "work", "achievement"],
   },
   {
     id: "dfc-zoom-new-install-size",
@@ -53,7 +47,7 @@ export const metrics: Metric[] = [
     value: "15.9 MB",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["impact", "project"],
+    surfaces: [],
   },
   {
     id: "dfc-zoom-download-time",
@@ -61,7 +55,7 @@ export const metrics: Metric[] = [
     value: "8 seconds",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["project"],
+    surfaces: [],
   },
   {
     id: "dfc-zoom-time-improvement",
@@ -69,7 +63,7 @@ export const metrics: Metric[] = [
     value: "90 seconds",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["impact", "project", "achievement"],
+    surfaces: [],
   },
   {
     id: "aptibooster-downloads",
@@ -77,11 +71,11 @@ export const metrics: Metric[] = [
     value: "1K+",
     status: "verified",
     project: "aptibooster",
-    surfaces: ["hero", "impact", "project"],
+    surfaces: ["hero"],
   },
   {
     id: "aptibooster-bundle-optimization",
-    label: "AptiBooster release size reduction",
+    label: "AptiBooster release optimization",
     value: "3.3 MB",
     previous: "23.7 MB",
     current: "20.4 MB",
@@ -89,7 +83,7 @@ export const metrics: Metric[] = [
     percentage: "13.9%",
     status: "verified",
     project: "aptibooster",
-    surfaces: ["impact", "project", "achievement"],
+    surfaces: ["impact", "work", "achievement"],
   },
   {
     id: "ikior-performance",
@@ -97,15 +91,15 @@ export const metrics: Metric[] = [
     value: "20–25%",
     status: "verified",
     project: "ikior",
-    surfaces: ["timeline", "project"],
+    surfaces: ["timeline"],
   },
   {
     id: "certificate-generator-requests",
-    label: "Certificate requests",
+    label: "Certificate Generator requests",
     value: "350+",
     status: "verified",
     project: "certificate-generator",
-    surfaces: ["project"],
+    surfaces: [],
   },
   {
     id: "certificate-generator-issued",
@@ -113,7 +107,7 @@ export const metrics: Metric[] = [
     value: "260+",
     status: "verified",
     project: "certificate-generator",
-    surfaces: ["project"],
+    surfaces: [],
   },
 ];
 
@@ -131,4 +125,17 @@ export function getMetricsForSurface(surface: Metric["surfaces"][number]): Metri
   return metrics.filter(
     (metric) => metric.status === "verified" && metric.surfaces.includes(surface),
   );
+}
+
+/** Optional single ProjectCard metric. Case studies still use `project.metricIds`. */
+export function getProjectCardMetric(projectId: ProjectId): Metric | undefined {
+  return getMetricsForSurface("project").find(
+    (metric) => metric.project === projectId,
+  );
+}
+
+export function getWorkShowcaseMetrics(projectId: ProjectId): Metric[] {
+  return getMetricsForSurface("work")
+    .filter((metric) => metric.project === projectId)
+    .slice(0, 2);
 }

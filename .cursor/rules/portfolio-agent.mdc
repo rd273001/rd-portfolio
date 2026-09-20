@@ -424,7 +424,7 @@ Do NOT reduce Ravi's identity to only:
 
 Highest priority:
 
-1. DFC App
+1. DFC
 2. AptiBooster
 
 Secondary:
@@ -441,9 +441,13 @@ Do not give every project equal visual prominence.
 
 ---
 
-# 13. DFC APP SOURCE OF TRUTH
+# 13. DFC SOURCE OF TRUTH
 
-DFC App:
+Product name in UI: **DFC**.
+Play Store listing: **Dnyandeep Foundation Centre**.
+Do not brand it as “DFC App” (that launcher label is not the portfolio name).
+
+DFC:
 
 * Production application
 * 10K+ downloads
@@ -452,13 +456,16 @@ DFC App:
 
 Key work:
 
-* onboarding modernization
+* mobile revamp on the existing Play listing (new codebase; not a refactor of legacy onboarding)
+* onboarding implemented in the new app (TypeScript, TanStack Query, auth/API)
 * TypeScript
 * TanStack Query
 * authentication/API integration
 * error handling
 * user feedback
-* Firebase Crashlytics
+* student, teacher, and admin roles
+* initial-load / lazy-loading startup work (no measured time delta yet)
+* Firebase Crashlytics contextual logger (stack trace, API URL, component; selective axios interceptors) — shared with AptiBooster
 * Firebase Analytics
 * Firebase Performance Monitoring
 * OneSignal
@@ -469,11 +476,9 @@ Key work:
 * resource optimization
 * Dynamic Feature Modules
 
-Verified onboarding:
+Do NOT invent a debugging-effort percentage. Describe the logger until a measured range exists.
 
-~80% legacy implementation replaced
-
-~85–90% onboarding codebase modernization/improvement
+Do not describe DFC onboarding as “~80% legacy replaced” or “~85–90% modernization” — the product was rebuilt; onboarding was implemented in the new codebase.
 
 Verified previous optimization:
 
@@ -517,6 +522,14 @@ Key work:
 * OneSignal
 * Firebase Analytics
 * Crashlytics
+* Contextual Crashlytics logger (shared with DFC; selective axios interceptors)
+* Live test client as the source of truth for scoring, peer comparison, and analysis
+* HTML + LaTeX / MathJax exam rendering (`math-tex`) in test, review, and flashcards
+* Chapter-based trial: first 2 chapters per subject across tests, flashcards, and search
+
+Do not turn telemetry field counts, API counts, route counts, or Bloom tags into metric cards.
+
+Verified hard numbers on AptiBooster pages: 1K+ downloads and the release-size reduction only, unless a new figure is measured.
 
 Verified release optimization:
 

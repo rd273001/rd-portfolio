@@ -13,7 +13,7 @@ export const profile: Profile = {
   locationStatus: "placeholder",
   headline: "Software Engineer specializing in Web & Mobile Experiences",
   summary:
-    "I build and own production web and mobile experiences. At DFC I maintain the DFC App and AptiBooster — including onboarding modernization, payments, notifications, and Android delivery work with verified Play Console results.",
+    "I build and own production web and mobile experiences. At Dnyandeep Foundation Centre I maintain DFC and AptiBooster — including the DFC mobile revamp, payments, notifications, and Android delivery work with verified Play Console results.",
   currentRoleStarted: "TODO_CURRENT_ROLE_START",
   currentRoleStartedStatus: "placeholder",
 };

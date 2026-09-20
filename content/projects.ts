@@ -3,12 +3,12 @@ import type { Project } from "./types";
 export const projects: Project[] = [
   {
     id: "dfc-app",
-    name: "DFC App",
+    name: "DFC",
     kind: "production-app",
     prominence: 1,
     tagline: "Production education app with on-demand Zoom delivery.",
     summary:
-      "Production application with 10K+ downloads. I own and maintain the mobile experience, including onboarding modernization and Android delivery architecture.",
+      "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. I own the revamp on the existing listing — a new mobile codebase with onboarding, role-based access, and Android delivery architecture.",
     role: "Software Engineer 1 (Mobile) · production ownership",
     downloads: "10K+",
     storeUrl:
@@ -20,6 +20,7 @@ export const projects: Project[] = [
       "Firebase Crashlytics",
       "Firebase Analytics",
       "Firebase Performance Monitoring",
+      "Axios",
       "OneSignal",
       "Razorpay",
       "Zoom Meeting SDK",
@@ -28,16 +29,17 @@ export const projects: Project[] = [
       "Dynamic Feature Modules",
     ],
     highlights: [
-      "Replaced ~80% of the legacy onboarding implementation.",
-      "Modernized ~85–90% of the onboarding codebase.",
+      "Shipped a new DFC codebase on the existing Play listing, replacing the legacy JavaScript app with TypeScript, TanStack Query, and modern API and auth patterns.",
+      "Designed and implemented the full student onboarding flow in the new app — not a refactor of the old onboarding code.",
+      "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus axios interceptors that log only the errors that should be logged.",
+      "Shipped student, teacher, and admin roles in the same product.",
+      "Improved initial load with lazy loading and startup-path refactors.",
       "Optimized the Android App Bundle from 21.02 MB to 15 MB (6.02 MB / 28.6%).",
       "Moved Zoom Meeting SDK out of base delivery with a Dynamic Feature Module: 161 MB base-delivery reduction, 15.9 MB new-install size, 8 second module download, 90 second improvement versus the previous release.",
     ],
     metricIds: [
       "dfc-downloads",
       "dfc-bundle-optimization",
-      "dfc-onboarding-legacy-replaced",
-      "dfc-onboarding-modernization",
       "dfc-zoom-delivery",
       "dfc-zoom-new-install-size",
       "dfc-zoom-download-time",
@@ -55,9 +57,10 @@ export const projects: Project[] = [
     name: "AptiBooster",
     kind: "production-app",
     prominence: 2,
-    tagline: "Production aptitude app built substantially from scratch.",
+    tagline:
+      "Every insight traces back to telemetry captured during a single timed test attempt.",
     summary:
-      "Production application with 1K+ downloads. Substantial development from scratch, including subscriptions, global search, and release-size work.",
+      "Production aptitude app with 1K+ downloads, built substantially from scratch. Scoring, peer comparison, and analysis are derived from one live test client rather than a separate analytics product.",
     role: "Software Engineer 1 (Mobile) · substantial development from scratch",
     downloads: "1K+",
     storeUrl:
@@ -65,16 +68,17 @@ export const projects: Project[] = [
     technologies: [
       "React Native",
       "Razorpay Subscription",
+      "MathJax",
       "Global Search",
       "OneSignal",
       "Firebase Analytics",
       "Crashlytics",
     ],
     highlights: [
-      "Built substantially from scratch.",
-      "Razorpay Subscription integration.",
-      "Global Search.",
-      "OneSignal, Firebase Analytics, and Crashlytics.",
+      "Every insight in the app is built from one timed test attempt’s telemetry, not from a separate analytics product.",
+      "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and full analysis.",
+      "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search, with Razorpay unlocking the rest of the syllabus and full analysis.",
+      "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
     ],
     metricIds: ["aptibooster-downloads", "aptibooster-bundle-optimization"],
