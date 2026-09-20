@@ -254,7 +254,6 @@ export default async function ProjectCaseStudyPage({
                           alt={`${project.name} production screen ${index + 1}`}
                           size="stack"
                           sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"
-                          priority={index === 0}
                         />
                       </li>
                     ))}

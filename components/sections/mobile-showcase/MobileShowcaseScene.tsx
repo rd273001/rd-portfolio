@@ -58,6 +58,7 @@ setConsoleFunction((type, message, ...rest) => {
 type MobileShowcaseSceneProps = {
   screenshot: string;
   enableDrag: boolean;
+  idleMotion?: boolean;
   playIntro: boolean;
   onContextLost: () => void;
   onReady: () => void;
@@ -489,13 +490,14 @@ function GltfPhone({
 function ProductPhone({
   screenshot,
   enableDrag,
+  idleMotion = false,
   playIntro,
   stageRef,
   onGrabbingChange,
   onTextureReady,
 }: Pick<
   MobileShowcaseSceneProps,
-  "screenshot" | "enableDrag" | "playIntro"
+  "screenshot" | "enableDrag" | "idleMotion" | "playIntro"
 > & {
   stageRef: RefObject<HTMLDivElement | null>;
   onGrabbingChange: (grabbing: boolean) => void;
@@ -511,6 +513,9 @@ function ProductPhone({
   const introStarted = useRef(false);
   const intro = useRef({
     active: false,
+    elapsed: 0,
+  });
+  const idle = useRef({
     elapsed: 0,
   });
   const drag = useRef({
@@ -642,6 +647,12 @@ function ProductPhone({
         targetRotation.current.x = restPose.x;
         targetRotation.current.y = restPose.y;
       }
+    } else if (idleMotion && !drag.current.active) {
+      idle.current.elapsed += dt;
+      targetRotation.current.y =
+        restPose.y + Math.sin(idle.current.elapsed * 0.32) * 0.16;
+      targetRotation.current.x =
+        restPose.x + Math.sin(idle.current.elapsed * 0.21) * 0.035;
     } else if (!drag.current.active) {
       targetRotation.current.y += drag.current.vx;
       targetRotation.current.x = MathUtils.clamp(
@@ -679,6 +690,7 @@ function ProductPhone({
     const stillMoving =
       intro.current.active ||
       drag.current.active ||
+      idleMotion ||
       Math.abs(drag.current.vx) > 0 ||
       Math.abs(drag.current.vy) > 0 ||
       Math.abs(group.rotation.x - targetRotation.current.x) > 0.0004 ||
@@ -710,6 +722,7 @@ function ProductPhone({
 export function MobileShowcaseScene({
   screenshot,
   enableDrag,
+  idleMotion = false,
   playIntro,
   onContextLost,
   onReady,
@@ -725,19 +738,22 @@ export function MobileShowcaseScene({
     <div
       ref={stageRef}
       className={cn(
-        "h-full w-full select-none touch-none",
-        grabbing ? "cursor-grabbing" : "cursor-grab",
+        "h-full w-full select-none",
+        enableDrag ? "touch-none" : null,
+        enableDrag ? (grabbing ? "cursor-grabbing" : "cursor-grab") : null,
       )}
+      style={enableDrag ? undefined : { pointerEvents: "none" }}
     >
       <Canvas
         className="h-full w-full"
-        frameloop={playIntro || grabbing ? "always" : "demand"}
+        style={enableDrag ? undefined : { pointerEvents: "none" }}
+        frameloop={playIntro || grabbing || idleMotion ? "always" : "demand"}
         camera={{ position: [0.1, 0.04, 10.2], fov: 26 }}
-        dpr={[1, 1.5]}
+        dpr={idleMotion ? 1 : [1, 1.5]}
         gl={{
           alpha: true,
           antialias: true,
-          powerPreference: "high-performance",
+          powerPreference: idleMotion ? "default" : "high-performance",
           toneMapping: ACESFilmicToneMapping,
           toneMappingExposure: 1.05,
         }}
@@ -753,6 +769,7 @@ export function MobileShowcaseScene({
         <ProductPhone
           screenshot={screenshot}
           enableDrag={enableDrag}
+          idleMotion={idleMotion}
           playIntro={playIntro}
           stageRef={stageRef}
           onGrabbingChange={setGrabbing}

@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import { Button } from "@/components/primitives";
+import { site } from "@/content/site";
 import {
   MobileProjectPhone,
   MobileShowcaseHeader,
@@ -26,10 +27,7 @@ import {
 
 const MobileShowcaseScene = dynamic(
   () =>
-    import(
-      /* webpackPrefetch: true */
-      "./MobileShowcaseScene"
-    ).then((module) => module.MobileShowcaseScene),
+    import("./MobileShowcaseScene").then((module) => module.MobileShowcaseScene),
   {
     ssr: false,
     loading: () => null,
@@ -49,6 +47,14 @@ type SceneCapabilities = {
   evaluated: boolean;
   motionAllowed: boolean;
   desktopLayout: boolean;
+  webglSupported: boolean;
+  dataSaver: boolean;
+  lowMemory: boolean;
+};
+
+type NavigatorHints = Navigator & {
+  deviceMemory?: number;
+  connection?: { saveData?: boolean };
 };
 
 type SceneErrorBoundaryProps = {
@@ -98,6 +104,18 @@ function detectWebGLSupport() {
   } catch {
     return false;
   }
+}
+
+function getNavigatorHints() {
+  const nav = navigator as NavigatorHints;
+
+  return {
+    dataSaver: Boolean(nav.connection?.saveData),
+    lowMemory:
+      typeof nav.deviceMemory === "number" && nav.deviceMemory > 0
+        ? nav.deviceMemory < 4
+        : false,
+  };
 }
 
 /**
@@ -218,12 +236,14 @@ export function MobileShowcaseEnhancement({
   });
   const [isNearViewport, setIsNearViewport] = useState(false);
   const [sceneFailed, setSceneFailed] = useState(false);
-  const [sceneWarmed, setSceneWarmed] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
   const [capabilities, setCapabilities] = useState<SceneCapabilities>({
     evaluated: false,
     motionAllowed: false,
     desktopLayout: false,
+    webglSupported: false,
+    dataSaver: false,
+    lowMemory: false,
   });
 
   useEffect(() => {
@@ -256,10 +276,15 @@ export function MobileShowcaseEnhancement({
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
 
     const updateCapabilities = () => {
+      const hints = getNavigatorHints();
+
       setCapabilities({
         evaluated: true,
         motionAllowed: !motionQuery.matches,
         desktopLayout: desktopQuery.matches,
+        webglSupported: detectWebGLSupport(),
+        dataSaver: hints.dataSaver,
+        lowMemory: hints.lowMemory,
       });
     };
 
@@ -273,11 +298,26 @@ export function MobileShowcaseEnhancement({
     };
   }, []);
 
-  const canWarmAssets =
-    capabilities.evaluated &&
+  const mobile3DRequested = site.features.mobile3DShowcase;
+  const mobileCapable =
+    capabilities.webglSupported &&
     capabilities.motionAllowed &&
-    capabilities.desktopLayout &&
+    !capabilities.dataSaver &&
+    !capabilities.lowMemory;
+  const mobile3DEligible =
+    capabilities.evaluated &&
+    mobile3DRequested &&
+    !capabilities.desktopLayout &&
+    mobileCapable &&
     !sceneFailed;
+  const canWarmDesktop =
+    capabilities.evaluated &&
+    capabilities.desktopLayout &&
+    capabilities.motionAllowed &&
+    capabilities.webglSupported &&
+    !sceneFailed;
+  const canWarmMobile = mobile3DEligible && isNearViewport;
+  const canWarmAssets = canWarmDesktop || canWarmMobile;
   const assetsReady = useBackgroundSceneAssets(canWarmAssets, setSceneFailed);
   const canEvaluateScene = canWarmAssets && isNearViewport && assetsReady;
   const sceneMountAllowed = useYieldingCanvasMount(canEvaluateScene);
@@ -285,19 +325,15 @@ export function MobileShowcaseEnhancement({
   const handleSceneReady = useCallback(() => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        setSceneWarmed(true);
+        setSceneReady(true);
       });
     });
   }, []);
 
   const handleContextLost = useCallback(() => {
-    setSceneWarmed(false);
     setSceneReady(false);
+    setSceneFailed(true);
   }, []);
-
-  if (sceneWarmed && !sceneReady) {
-    setSceneReady(true);
-  }
 
   const activeProject = projects[state.projectIndex] ?? projects[0];
   const activeScreenshot =
@@ -311,7 +347,6 @@ export function MobileShowcaseEnhancement({
   const canRenderScene = canEvaluateScene && sceneMountAllowed;
 
   const markSceneFailed = () => {
-    setSceneWarmed(false);
     setSceneReady(false);
     setSceneFailed(true);
   };
@@ -441,7 +476,7 @@ export function MobileShowcaseEnhancement({
         </div>
 
         <div className="relative min-h-144 overflow-hidden border-t border-background/15 bg-[#050505] p-8 lg:min-h-176 lg:border-l lg:border-t-0">
-          <div className="lg:hidden">
+          <div className={mobile3DEligible ? "hidden" : "lg:hidden"}>
             <MobileProjectPhone
               project={activeProject}
               screenshotIndex={state.screenIndex}
@@ -450,31 +485,49 @@ export function MobileShowcaseEnhancement({
 
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-0 z-10 hidden items-center justify-center transition-opacity duration-500 lg:flex ${sceneReady ? "opacity-0" : "opacity-100"}`}
+            className={`pointer-events-none absolute inset-0 z-10 items-center justify-center transition-opacity duration-500 ${
+              mobile3DEligible ? "flex" : "hidden lg:flex"
+            } ${sceneReady ? "opacity-0" : "opacity-100"}`}
           >
-            <ProductPhonePlaceholder
-              project={activeProject}
-              screenshotIndex={state.screenIndex}
-            />
+            {mobile3DEligible ? (
+              <MobileProjectPhone
+                project={activeProject}
+                screenshotIndex={state.screenIndex}
+              />
+            ) : (
+              <ProductPhonePlaceholder
+                project={activeProject}
+                screenshotIndex={state.screenIndex}
+              />
+            )}
           </div>
 
           {canRenderScene ? (
             <>
               <div
-                className={`absolute inset-0 hidden lg:block contain-[layout_paint] transition-opacity duration-500 ${sceneReady ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                className={`absolute inset-0 contain-[layout_paint] transition-opacity duration-500 ${
+                  mobile3DEligible ? "block" : "hidden lg:block"
+                } ${
+                  sceneReady
+                    ? capabilities.desktopLayout
+                      ? "pointer-events-auto opacity-100"
+                      : "pointer-events-none opacity-100"
+                    : "pointer-events-none opacity-0"
+                }`}
                 aria-hidden={!sceneReady}
               >
                 <SceneErrorBoundary onError={markSceneFailed}>
                   <MobileShowcaseScene
                     screenshot={activeScreenshot}
-                    enableDrag
+                    enableDrag={capabilities.desktopLayout}
+                    idleMotion={!capabilities.desktopLayout}
                     playIntro={sceneReady}
                     onContextLost={handleContextLost}
                     onReady={handleSceneReady}
                   />
                 </SceneErrorBoundary>
               </div>
-              {sceneReady ? (
+              {sceneReady && capabilities.desktopLayout ? (
                 <p className="pointer-events-none absolute bottom-5 left-5 right-5 hidden text-center text-xs text-background/55 lg:block">
                   Drag to rotate the Android device.
                 </p>
