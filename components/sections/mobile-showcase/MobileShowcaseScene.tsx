@@ -55,10 +55,13 @@ setConsoleFunction((type, message, ...rest) => {
   }
 });
 
+type ShowcasePerformanceProfile = "desktop" | "mobile";
+
 type MobileShowcaseSceneProps = {
   screenshot: string;
   enableDrag: boolean;
   idleMotion?: boolean;
+  performanceProfile?: ShowcasePerformanceProfile;
   playIntro: boolean;
   onContextLost: () => void;
   onReady: () => void;
@@ -723,6 +726,7 @@ export function MobileShowcaseScene({
   screenshot,
   enableDrag,
   idleMotion = false,
+  performanceProfile = "desktop",
   playIntro,
   onContextLost,
   onReady,
@@ -730,6 +734,7 @@ export function MobileShowcaseScene({
   const stageRef = useRef<HTMLDivElement>(null);
   const [grabbing, setGrabbing] = useState(false);
   const [textureReady, setTextureReady] = useState(false);
+  const isMobileProfile = performanceProfile === "mobile";
   const handleTextureReady = useCallback(() => {
     setTextureReady(true);
   }, []);
@@ -747,13 +752,17 @@ export function MobileShowcaseScene({
       <Canvas
         className="h-full w-full"
         style={enableDrag ? undefined : { pointerEvents: "none" }}
-        frameloop={playIntro || grabbing || idleMotion ? "always" : "demand"}
+        frameloop={
+          playIntro || grabbing || idleMotion ? "always" : "demand"
+        }
         camera={{ position: [0.1, 0.04, 10.2], fov: 26 }}
-        dpr={idleMotion ? 1 : [1, 1.5]}
+        dpr={isMobileProfile || idleMotion ? 1 : [1, 1.5]}
         gl={{
           alpha: true,
-          antialias: true,
-          powerPreference: idleMotion ? "default" : "high-performance",
+          antialias: !isMobileProfile,
+          powerPreference: isMobileProfile || idleMotion
+            ? "default"
+            : "high-performance",
           toneMapping: ACESFilmicToneMapping,
           toneMappingExposure: 1.05,
         }}
