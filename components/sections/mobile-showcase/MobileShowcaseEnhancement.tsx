@@ -54,8 +54,30 @@ type SceneCapabilities = {
 
 type NavigatorHints = Navigator & {
   deviceMemory?: number;
+  hardwareConcurrency?: number;
   connection?: { saveData?: boolean };
 };
+
+/** Experimental mobile WebGL — conservative; 4 GB class phones stay on 2D. */
+function isMobileWebGLViable() {
+  const nav = navigator as NavigatorHints;
+
+  if (nav.connection?.saveData) {
+    return false;
+  }
+
+  const memory = nav.deviceMemory;
+  if (typeof memory !== "number" || memory < 6) {
+    return false;
+  }
+
+  const cores = nav.hardwareConcurrency;
+  if (typeof cores === "number" && cores > 0 && cores < 8) {
+    return false;
+  }
+
+  return true;
+}
 
 type SceneErrorBoundaryProps = {
   children: ReactNode;
@@ -303,7 +325,8 @@ export function MobileShowcaseEnhancement({
     capabilities.webglSupported &&
     capabilities.motionAllowed &&
     !capabilities.dataSaver &&
-    !capabilities.lowMemory;
+    !capabilities.lowMemory &&
+    isMobileWebGLViable();
   const mobile3DEligible =
     capabilities.evaluated &&
     mobile3DRequested &&
@@ -455,10 +478,10 @@ export function MobileShowcaseEnhancement({
               </div>
             ) : null}
 
-            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center lg:flex-col xl:flex-row xl:items-center">
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap lg:flex-col xl:flex-row">
               <Button
                 href={activeProject.caseStudyHref}
-                className="w-full bg-background text-foreground active:opacity-90 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
+                className="w-full bg-background text-foreground active:opacity-90 focus-visible:outline-background sm:min-w-42 sm:w-auto lg:w-full xl:min-w-42 xl:w-auto"
               >
                 Read case study
               </Button>
@@ -466,7 +489,7 @@ export function MobileShowcaseEnhancement({
                 <Button
                   href={activeProject.storeUrl}
                   variant="secondary"
-                  className="w-full border-background/45 text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background sm:w-auto lg:w-full xl:w-auto"
+                  className="w-full border-background/45 text-background sm:min-w-42 sm:w-auto lg:w-full xl:min-w-42 xl:w-auto [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background"
                 >
                   View on Play Store
                 </Button>
@@ -520,8 +543,11 @@ export function MobileShowcaseEnhancement({
                   <MobileShowcaseScene
                     screenshot={activeScreenshot}
                     enableDrag={capabilities.desktopLayout}
-                    idleMotion={!capabilities.desktopLayout}
-                    playIntro={sceneReady}
+                    idleMotion={false}
+                    performanceProfile={
+                      mobile3DEligible ? "mobile" : "desktop"
+                    }
+                    playIntro={sceneReady && capabilities.desktopLayout}
                     onContextLost={handleContextLost}
                     onReady={handleSceneReady}
                   />
