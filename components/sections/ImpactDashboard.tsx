@@ -19,8 +19,8 @@ export function ImpactDashboard() {
             Measurable improvements across shipped mobile products.
           </h2>
           <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
-            Verified production results from DFC and AptiBooster — release
-            optimization and measured delivery improvements.
+            Verified production results from DFC and AptiBooster — startup,
+            release optimization, and measured delivery improvements.
           </p>
         </div>
 

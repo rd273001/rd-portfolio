@@ -16,10 +16,11 @@ export const experience: Experience[] = [
       "Production ownership of DFC and AptiBooster, from feature work through Play Store release and maintenance.",
     highlights: [
       "Own and maintain two production Android apps: DFC and AptiBooster.",
-      "Shipped a new DFC codebase on the existing Play listing and built the full onboarding flow with TypeScript, TanStack Query, authentication/API integration, and stronger error handling.",
+      "Led the DFC mobile revamp on the existing Play listing — new TypeScript and TanStack Query codebase with onboarding, deep-link navigation, offline usage, and stronger auth/API error handling.",
+      "Cut DFC p90 app start from ~894 ms to ~794 ms on production Android with lazy-loaded navigators and startup-path refactors; ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
       "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus axios interceptors that log only the errors that should be logged.",
       "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module.",
-      "Built AptiBooster so scoring, peer comparison, and analysis all derive from one timed test attempt.",
+      "Built AptiBooster so scoring, peer comparison, and analysis derive from one timed test attempt, and wired the mobile surfaces for API-backed insights, suggestions, and downloadable reports.",
     ],
     technologies: [
       "React Native",
