@@ -1,10 +1,20 @@
 import { getWorkShowcaseMetrics } from "@/content/metrics";
 import { getProjectsByProminence } from "@/content/projects";
+import type { Metric } from "@/content/types";
 import { MobileShowcaseEnhancement } from "./MobileShowcaseEnhancement";
 import { MobileShowcasePresentation } from "./MobileShowcasePresentation";
 import type { MobileShowcaseProject } from "./types";
 
 const requiredProjectCount = 2;
+
+/** Work panel: show ms/value where Impact already uses the same metric as a %. */
+function workShowcaseMetricValue(metric: Metric): string {
+  if (metric.id === "dfc-app-start-p90") {
+    return metric.value;
+  }
+
+  return metric.percentage ?? metric.value;
+}
 
 export function MobileShowcase() {
   const projects = getProjectsByProminence()
@@ -14,7 +24,7 @@ export function MobileShowcase() {
       const projectMetrics = getWorkShowcaseMetrics(project.id).map((metric) => ({
         id: metric.id,
         label: metric.label,
-        value: metric.percentage ?? metric.value,
+        value: workShowcaseMetricValue(metric),
         previous: metric.previous,
         current: metric.current,
         percentage: metric.percentage,
