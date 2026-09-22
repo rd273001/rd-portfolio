@@ -28,10 +28,10 @@ export function MobileShowcasePresentation({
               <p className="mt-3 text-sm leading-6 text-background/70">
                 {project.tagline}
               </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Button
                   href={project.caseStudyHref}
-                  className="bg-background text-foreground active:opacity-90 focus-visible:outline-background"
+                  className="bg-background text-foreground active:opacity-90 focus-visible:outline-background sm:min-w-42"
                 >
                   Read case study
                 </Button>
@@ -39,7 +39,7 @@ export function MobileShowcasePresentation({
                   <Button
                     href={project.storeUrl}
                     variant="secondary"
-                    className="border-background/45 text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/15 active:scale-[0.98] active:border-background/55 active:bg-background/15 focus-visible:outline-background"
+                    className="border-background/45 text-background sm:min-w-42 [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/15 active:scale-[0.98] active:border-background/55 active:bg-background/15 focus-visible:outline-background"
                   >
                     View on Play Store
                   </Button>

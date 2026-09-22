@@ -109,15 +109,25 @@ function ProjectCard({
 
   const cardFooter = (
     <div className="mt-7 shrink-0 space-y-7">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button href={project.caseStudyHref}>Read case study</Button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button className="sm:min-w-42" href={project.caseStudyHref}>
+          Read case study
+        </Button>
         {project.storeUrl ? (
-          <Button href={project.storeUrl} variant="secondary">
+          <Button
+            className="sm:min-w-42"
+            href={project.storeUrl}
+            variant="secondary"
+          >
             View on Play Store
           </Button>
         ) : null}
         {project.liveUrl ? (
-          <Button href={project.liveUrl} variant="secondary">
+          <Button
+            className="sm:min-w-42"
+            href={project.liveUrl}
+            variant="secondary"
+          >
             View live
           </Button>
         ) : null}

@@ -41,7 +41,7 @@ export function Button({
   ...props
 }: ButtonAsButton | ButtonAsLink) {
   const classes = cn(
-    "inline-flex min-h-11 min-w-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full px-5 text-center text-sm font-medium duration-150",
+    "inline-flex min-h-11 min-w-6 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full px-5 text-center text-sm font-medium duration-150",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
     variants[variant],
     className,
