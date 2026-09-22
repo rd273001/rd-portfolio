@@ -28,7 +28,7 @@ export const achievements: Achievement[] = [
     id: "dfc-mobile-revamp",
     title: "DFC mobile revamp",
     description:
-      "Shipped a new DFC codebase on the existing Play listing, replacing the legacy JavaScript app. Designed and implemented the full onboarding flow with TypeScript, TanStack Query, and modern API and auth patterns.",
+      "Led the DFC mobile revamp on the existing Play listing with a new TypeScript and TanStack Query codebase, including the full student onboarding flow built from scratch.",
     status: "verified",
   },
   {
@@ -40,9 +40,10 @@ export const achievements: Achievement[] = [
   },
   {
     id: "dfc-startup-load",
-    title: "DFC initial-load work",
+    title: "DFC startup, deep links, and offline",
     description:
-      "Improved DFC initial load with lazy loading and startup-path refactors. No measured time delta is recorded yet.",
+      "Lazy-loaded navigators and startup-path refactors on the existing Play production app: p90 app start ~894 ms → ~794 ms (~100 ms faster). ~5 MB lower JS heap at Home idle in internal profiling after the same work. Deep links and offline for core flows.",
+    metricId: "dfc-app-start-p90",
     status: "verified",
   },
   {
@@ -57,7 +58,14 @@ export const achievements: Achievement[] = [
     id: "aptibooster-test-telemetry",
     title: "AptiBooster test as the data source",
     description:
-      "Every insight in AptiBooster — peer comparison, speed vs accuracy, difficulty sensitivity, consistency, and subject analytics — traces back to telemetry captured during a single timed test attempt.",
+      "Peer comparison, speed vs accuracy, difficulty sensitivity, consistency, and subject analytics trace back to telemetry from a single timed test attempt—the data foundation for analysis across the app.",
+    status: "verified",
+  },
+  {
+    id: "aptibooster-analysis-surfaces",
+    title: "AptiBooster analysis and report surfaces",
+    description:
+      "Shipped mobile flows for full test analysis (insight callouts), Analytics personalized suggestions, and Profile download reports—consuming production APIs that return generated analysis content tied to test telemetry.",
     status: "verified",
   },
   {

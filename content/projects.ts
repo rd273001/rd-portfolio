@@ -8,7 +8,7 @@ export const projects: Project[] = [
     prominence: 1,
     tagline: "Production education app with on-demand Zoom delivery.",
     summary:
-      "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. I own the revamp on the existing listing — a new mobile codebase with onboarding, role-based access, and Android delivery architecture.",
+      "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. I own the revamp on the existing listing — a new TypeScript codebase with onboarding, deep links, offline usage, role-based access, and Android delivery architecture.",
     role: "Software Engineer 1 (Mobile) · production ownership",
     downloads: "10K+",
     storeUrl:
@@ -29,16 +29,17 @@ export const projects: Project[] = [
       "Dynamic Feature Modules",
     ],
     highlights: [
-      "Shipped a new DFC codebase on the existing Play listing, replacing the legacy JavaScript app with TypeScript, TanStack Query, and modern API and auth patterns.",
-      "Designed and implemented the full student onboarding flow in the new app — not a refactor of the old onboarding code.",
+      "Led the DFC mobile revamp on the existing Play listing: new TypeScript and TanStack Query codebase with auth/API integration and the full student onboarding flow built from scratch.",
       "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus axios interceptors that log only the errors that should be logged.",
       "Shipped student, teacher, and admin roles in the same product.",
-      "Improved initial load with lazy loading and startup-path refactors.",
+      "Shipped lazy-loaded navigators and startup-path refactors: p90 app start ~894 ms → ~794 ms on production Android (~100 ms / ~11% faster). Internal profiling showed ~5 MB less JS heap at Home idle after the same work. Deep-link navigation and offline usage for core flows.",
       "Optimized the Android App Bundle from 21.02 MB to 15 MB (6.02 MB / 28.6%).",
       "Moved Zoom Meeting SDK out of base delivery with a Dynamic Feature Module: 161 MB base-delivery reduction, 15.9 MB new-install size, 8 second module download, 90 second improvement versus the previous release.",
     ],
     metricIds: [
       "dfc-downloads",
+      "dfc-app-start-p90",
+      "dfc-js-heap-home-idle",
       "dfc-bundle-optimization",
       "dfc-zoom-delivery",
       "dfc-zoom-new-install-size",
@@ -58,9 +59,9 @@ export const projects: Project[] = [
     kind: "production-app",
     prominence: 2,
     tagline:
-      "Every insight traces back to telemetry captured during a single timed test attempt.",
+      "Live test telemetry is the source of truth; analysis and AI copy arrive from production APIs.",
     summary:
-      "Production aptitude app with 1K+ downloads, built substantially from scratch. Scoring, peer comparison, and analysis are derived from one live test client rather than a separate analytics product.",
+      "Production aptitude app with 1K+ downloads, built substantially from scratch. Scoring, peer comparison, and structured analysis data come from one live test client; the mobile app surfaces API-backed insights (including backend-generated analysis and reports).",
     role: "Software Engineer 1 (Mobile) · substantial development from scratch",
     downloads: "1K+",
     storeUrl:
@@ -75,8 +76,8 @@ export const projects: Project[] = [
       "Crashlytics",
     ],
     highlights: [
-      "Every insight in the app is built from one timed test attempt’s telemetry, not from a separate analytics product.",
-      "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and full analysis.",
+      "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",
+      "Integrated API-backed analysis UX: lightbulb insights on full test analysis, personalized suggestions on Analytics, and downloadable performance reports from Profile—the backend produces the content; the app renders and ships the flows.",
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search, with Razorpay unlocking the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",

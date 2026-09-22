@@ -464,7 +464,10 @@ Key work:
 * error handling
 * user feedback
 * student, teacher, and admin roles
-* initial-load / lazy-loading startup work (no measured time delta yet)
+* Firebase Performance (_app_start): production Android p90 app start ~894 ms → ~794 ms (~100 ms / ~11%) after lazy-loaded navigators and startup-path refactors
+* ~5 MB lower JS heap at Home idle in internal profiling after the same lazy-load work (not live prod heap telemetry)
+* deep-link navigation
+* offline usage for core flows
 * Firebase Crashlytics contextual logger (stack trace, API URL, component; selective axios interceptors) — shared with AptiBooster
 * Firebase Analytics
 * Firebase Performance Monitoring
@@ -479,6 +482,14 @@ Key work:
 Do NOT invent a debugging-effort percentage. Describe the logger until a measured range exists.
 
 Do not describe DFC onboarding as “~80% legacy replaced” or “~85–90% modernization” — the product was rebuilt; onboarding was implemented in the new codebase.
+
+Verified production app start (Firebase Performance, Android p90):
+
+~894 ms → 794 ms
+
+~100 ms faster
+
+~11%
 
 Verified previous optimization:
 
@@ -523,7 +534,9 @@ Key work:
 * Firebase Analytics
 * Crashlytics
 * Contextual Crashlytics logger (shared with DFC; selective axios interceptors)
-* Live test client as the source of truth for scoring, peer comparison, and analysis
+* Live test client as the source of truth for scoring, peer comparison, and structured analysis data
+* Mobile surfaces for API-backed analysis: full test analysis insight callouts, Analytics personalized suggestions, Profile downloadable reports (content generated on the backend from test telemetry—not mobile Gemini integration)
+* Do not claim Ravi implemented Gemini or the backend AI pipeline; claim test client, API integration, and UX for analysis/report flows
 * HTML + LaTeX / MathJax exam rendering (`math-tex`) in test, review, and flashcards
 * Chapter-based trial: first 2 chapters per subject across tests, flashcards, and search
 
