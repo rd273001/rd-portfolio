@@ -5,7 +5,7 @@ export const achievements: Achievement[] = [
     id: "dfc-zoom-ondemand",
     title: "On-demand Zoom delivery",
     description:
-      "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module, cutting 161 MB from the base download path.",
+      "On-demand Zoom for live lectures—download progress, cancel, restart after install, resume in-meeting—via an Android Dynamic Feature Module, cutting 161 MB from the base download path.",
     metricId: "dfc-zoom-delivery",
     status: "verified",
   },
@@ -21,7 +21,7 @@ export const achievements: Achievement[] = [
     id: "crashlytics-contextual-logger",
     title: "Contextual Crashlytics logging",
     description:
-      "Implemented a Firebase Crashlytics logger for fatal and non-fatal exceptions in DFC and AptiBooster, with stack trace, API URL, and component context, plus axios interceptors that log only the errors that should be logged.",
+      "Implemented a Firebase Crashlytics logger for fatal and non-fatal exceptions in DFC and AptiBooster, with stack trace, API URL, and component context, plus selective axios interceptors that report actionable failures without flooding Crashlytics.",
     status: "verified",
   },
   {
@@ -33,9 +33,9 @@ export const achievements: Achievement[] = [
   },
   {
     id: "dfc-multi-role",
-    title: "DFC student, teacher, and admin roles",
+    title: "DFC multi-role product on one listing",
     description:
-      "Implemented using DFC with student, teacher, and admin roles in the same product.",
+      "Students, teachers, and admins use the same Play listing with role-based access—one product architecture instead of separate apps.",
     status: "verified",
   },
   {
@@ -79,7 +79,14 @@ export const achievements: Achievement[] = [
     id: "aptibooster-chapter-trial",
     title: "Chapter-based AptiBooster trial",
     description:
-      "Free users get the first 2 chapters of every subject. Start test, flashcards, and search all respect the same rule, with Razorpay unlocking the rest of the syllabus and full analysis.",
+      "Free users get the first 2 chapters of every subject. Start test, flashcards, and search all respect the same rule; subscriptions unlock the rest of the syllabus and full analysis.",
+    status: "verified",
+  },
+  {
+    id: "aptibooster-razorpay-subscriptions",
+    title: "AptiBooster Razorpay subscriptions",
+    description:
+      "In-app subscription payments via Razorpay React Native SDK, tied to chapter trial and premium unlock.",
     status: "verified",
   },
 ];

@@ -105,6 +105,7 @@ export type Education = {
   start: string;
   end: string;
   status: VerificationStatus;
+  credentialUrl?: string;
 };
 
 export type Certification = {

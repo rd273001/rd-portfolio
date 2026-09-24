@@ -333,9 +333,8 @@ Dedicated PR only. **Goal:** reduce first-visit jank and main-thread cost while 
 
 Search `TODO_` in `content/`. Do not fill these from conversation memory. Examples:
 
-- Current-role start date
-- Education rows
-- Certification rows
+- B.Tech start / end dates
+- Location
 - Testimonials
 - Headshot / photo OG image (typographic OG cards are in place until then)
 - Preferred public email if `ravidubey.personal@gmail.com` should not be the canonical contact

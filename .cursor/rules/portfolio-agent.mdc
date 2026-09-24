@@ -470,10 +470,11 @@ Key work:
 * offline usage for core flows
 * Firebase Crashlytics contextual logger (stack trace, API URL, component; selective axios interceptors) — shared with AptiBooster
 * Firebase Analytics
-* Firebase Performance Monitoring
+* Firebase Performance
 * OneSignal
-* Razorpay
 * Zoom Meeting SDK
+* Live lecture join with on-demand Zoom SDK download (install progress, cancel, post-install restart, resume when a meeting is already running)
+* Kotlin / Android native modules where the product requires it; in-repo patches to Zoom SDK dependencies when library changes were needed for on-demand delivery
 * Android App Bundle optimization
 * ProGuard/R8
 * resource optimization
@@ -528,9 +529,9 @@ Substantial development from scratch.
 
 Key work:
 
-* Razorpay Subscription
-* Global Search
-* OneSignal
+* In-app subscription payments via Razorpay (Razorpay React Native SDK)
+* Global Search (product feature—not a project tech chip)
+* Microsoft Clarity
 * Firebase Analytics
 * Crashlytics
 * Contextual Crashlytics logger (shared with DFC; selective axios interceptors)
@@ -564,14 +565,18 @@ May 2023 – Nov 2023
 
 Facts:
 
+* Mobile only (no web internship work)
 * React Native
-* React
+* JavaScript (not TypeScript on this app)
 * Redux Toolkit
 * Context API
-* JavaScript
+* react-native-video (Instagram Reels–inspired UI)
 * Figma
-* responsive/pixel-perfect UI
-* 20–25% performance improvement
+* Period tracking was the hero feature at the time—cycle calendar, per-day insight UI (analysis planned; UI built for it), multi-step report flow; Health, Care, Sleep section UI (much later removed or redesigned)
+* UI inspired by established period / health apps on the Play Store—not a claim on today’s IKIOR feature set
+* 20–25% UI performance improvement on implemented screens
+* Company site: https://www.ikior.com/ — OK to link as “today’s IKIOR,” not as proof of internship UI
+* Do not link Play Store unless Ravi explicitly wants it; live app diverged after a major revamp
 
 Keep this section concise.
 
@@ -607,15 +612,11 @@ Do not present it as employment.
 
 Facts:
 
-* MERN
-* REST APIs
-* CRUD
-* PDF generation
-* pdf-lib
-* Google Drive API
-* Redux Toolkit
+* MERN (React + Redux Toolkit frontend; Express + MongoDB + Mongoose backend)
+* REST APIs / CRUD
+* PDF generation (pdf-lib)
+* Google APIs (Node client) + Google Drive API for issued PDF storage
 * Tailwind CSS
-* JavaScript
 * 350+ requests
 * 260+ generated certificates
 
