@@ -14,6 +14,6 @@ export const profile: Profile = {
   headline: "Software Engineer specializing in Web & Mobile Experiences",
   summary:
     "I build and own production web and mobile experiences. At Dnyandeep Foundation Centre I maintain DFC and AptiBooster — including the DFC mobile revamp, payments, notifications, and Android delivery work with verified Play Console results.",
-  currentRoleStarted: "TODO_CURRENT_ROLE_START",
-  currentRoleStartedStatus: "placeholder",
+  currentRoleStarted: "Apr 2025",
+  currentRoleStartedStatus: "verified",
 };

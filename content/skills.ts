@@ -20,4 +20,16 @@ export const skills: SkillGroup[] = [
       "REST APIs",
     ],
   },
+  {
+    id: "tooling",
+    label: "Tooling",
+    items: [
+      "Git",
+      "GitHub",
+      "Android Studio",
+      "Figma",
+      "Firebase",
+      "Cursor",
+    ],
+  },
 ];

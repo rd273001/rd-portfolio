@@ -95,7 +95,11 @@ function ProjectCard({
   isFeatured?: boolean;
 }) {
   const cardMetric = getProjectCardMetric(project.id);
-  const visibleHighlights = project.highlights.slice(0, isFeatured ? 4 : 3);
+  /** Home cards only — full lists stay on /work case studies. */
+  const visibleHighlights =
+    project.id === "certificate-generator"
+      ? project.highlights
+      : project.highlights.slice(0, isFeatured ? 3 : 2);
   const visibleTechnologies = project.technologies.slice(
     0,
     isFeatured ? 9 : 6,
@@ -110,12 +114,15 @@ function ProjectCard({
   const cardFooter = (
     <div className="mt-7 shrink-0 space-y-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <Button className="sm:min-w-42" href={project.caseStudyHref}>
+        <Button
+          className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+          href={project.caseStudyHref}
+        >
           Read case study
         </Button>
         {project.storeUrl ? (
           <Button
-            className="sm:min-w-42"
+            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
             href={project.storeUrl}
             variant="secondary"
           >
@@ -124,7 +131,7 @@ function ProjectCard({
         ) : null}
         {project.liveUrl ? (
           <Button
-            className="sm:min-w-42"
+            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
             href={project.liveUrl}
             variant="secondary"
           >

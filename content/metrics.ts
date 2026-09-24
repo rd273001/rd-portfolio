@@ -42,7 +42,7 @@ export const metrics: Metric[] = [
     percentage: "~11%",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["impact", "achievement", "timeline"],
+    surfaces: ["impact", "achievement"],
   },
   {
     id: "dfc-js-heap-home-idle",
