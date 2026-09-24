@@ -87,7 +87,6 @@ export default async function ProjectCaseStudyPage({
   const visibleScreenshots = project.screenshots.filter(
     (screenshot) => !screenshot.startsWith("TODO_"),
   );
-
   return (
     <PageShell>
       <section className="py-14 sm:py-20">
@@ -114,15 +113,29 @@ export default async function ProjectCaseStudyPage({
                 {project.summary}
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 {project.storeUrl ? (
-                  <Button href={project.storeUrl}>View on Play Store</Button>
+                  <Button
+                    className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+                    href={project.storeUrl}
+                  >
+                    View on Play Store
+                  </Button>
                 ) : null}
                 {project.liveUrl ? (
-                  <Button href={project.liveUrl}>View live project</Button>
+                  <Button
+                    className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+                    href={project.liveUrl}
+                  >
+                    View live project
+                  </Button>
                 ) : null}
                 {project.githubUrl ? (
-                  <Button href={project.githubUrl} variant="secondary">
+                  <Button
+                    className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+                    href={project.githubUrl}
+                    variant="secondary"
+                  >
                     View GitHub
                   </Button>
                 ) : null}
