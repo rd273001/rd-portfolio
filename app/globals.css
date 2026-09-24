@@ -33,6 +33,33 @@
   [data-journey-progress] {
     transform: none !important;
   }
+
+  [data-journey-card] {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+[data-journey-card] {
+  --journey-fade-stop: 100;
+  --journey-fade-end: 1;
+}
+
+@media (max-width: 1023px) {
+  [data-journey-card] {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 calc(var(--journey-fade-stop) * 1%),
+      rgb(0 0 0 / var(--journey-fade-end)) 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 calc(var(--journey-fade-stop) * 1%),
+      rgb(0 0 0 / var(--journey-fade-end)) 100%
+    );
+  }
 }
 
 html {
