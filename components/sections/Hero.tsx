@@ -38,7 +38,7 @@ export function Hero() {
                 {primaryCta ? (
                   <Button
                     href={primaryCta.href}
-                    className="w-full px-6 sm:w-auto sm:min-w-36"
+                    className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
                   >
                     {primaryCta.label}
                   </Button>
@@ -47,7 +47,7 @@ export function Hero() {
                   <Button
                     href={secondaryCta.href}
                     variant="secondary"
-                    className="w-full px-6 sm:w-auto sm:min-w-36"
+                    className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
                   >
                     {secondaryCta.label}
                   </Button>

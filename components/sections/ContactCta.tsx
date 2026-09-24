@@ -35,7 +35,7 @@ export function ContactCta() {
               {primaryCta ? (
                 <Button
                   href={primaryCta.href}
-                  className="w-full px-6 sm:w-auto sm:min-w-36 bg-background text-foreground [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:outline-background"
+                  className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36 bg-background text-foreground [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:outline-background"
                 >
                   {primaryCta.label}
                 </Button>
@@ -44,7 +44,7 @@ export function ContactCta() {
                 <Button
                   href={secondaryCta.href}
                   variant="secondary"
-                  className="w-full px-6 sm:w-auto sm:min-w-36 border-background/45 bg-transparent text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background"
+                  className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36 border-background/45 bg-transparent text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background"
                 >
                   {secondaryCta.label}
                 </Button>

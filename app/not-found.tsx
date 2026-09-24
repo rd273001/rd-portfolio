@@ -25,9 +25,18 @@ export default function NotFound() {
           <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
             The link may be out of date, or the case study does not exist.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button href="/">Back home</Button>
-            <Button href="/#work" variant="secondary">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button
+              className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+              href="/"
+            >
+              Back home
+            </Button>
+            <Button
+              className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+              href="/#work"
+              variant="secondary"
+            >
               Selected work
             </Button>
           </div>

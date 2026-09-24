@@ -25,11 +25,19 @@ export function RouteError({
         <p className="mt-5 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
           {description}
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button type="button" onClick={reset}>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button
+            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+            type="button"
+            onClick={reset}
+          >
             Try again
           </Button>
-          <Button href="/" variant="secondary">
+          <Button
+            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+            href="/"
+            variant="secondary"
+          >
             Back home
           </Button>
         </div>
