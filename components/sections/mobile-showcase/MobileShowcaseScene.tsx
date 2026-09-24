@@ -315,6 +315,8 @@ async function createScreenMap(image: HTMLImageElement) {
   return map;
 }
 
+const screenMapCache = new Map<string, Texture>();
+
 function applyScreenMap(root: Group, map: Texture) {
   root.traverse((child) => {
     if (child.name !== "Screen" || !("isMesh" in child) || !child.isMesh) {
@@ -323,6 +325,15 @@ function applyScreenMap(root: Group, map: Texture) {
 
     const mesh = child as Mesh;
     mesh.visible = true;
+    const current = mesh.material;
+
+    if (current instanceof MeshBasicMaterial) {
+      current.map = map;
+      current.toneMapped = false;
+      current.needsUpdate = true;
+      return;
+    }
+
     mesh.material = new MeshBasicMaterial({
       map,
       toneMapped: false,
@@ -341,32 +352,50 @@ function ScreenTexture({
 }) {
   const src = getScreenshotSrc(screenshot);
   const readyRef = useRef(false);
+  const requestIdRef = useRef(0);
+  const invalidate = useThree((state) => state.invalidate);
 
   useEffect(() => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+
+    const apply = (map: Texture) => {
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
+
+      applyScreenMap(root, map);
+      invalidate();
+
+      if (!readyRef.current) {
+        readyRef.current = true;
+        onTextureReady();
+      }
+    };
+
+    const cached = screenMapCache.get(src);
+    if (cached) {
+      apply(cached);
+      return;
+    }
+
     let cancelled = false;
-    let map: Texture | null = null;
     const image = new window.Image();
     image.decoding = "async";
 
     const handleLoad = () => {
       void createScreenMap(image)
         .then((nextMap) => {
-          if (cancelled || !nextMap) {
+          if (cancelled || requestId !== requestIdRef.current || !nextMap) {
             nextMap?.dispose();
             return;
           }
 
-          map?.dispose();
-          map = nextMap;
-          applyScreenMap(root, map);
-
-          if (!readyRef.current) {
-            readyRef.current = true;
-            onTextureReady();
-          }
+          screenMapCache.set(src, nextMap);
+          apply(nextMap);
         })
         .catch(() => {
-          /* Keep the 2D placeholder if the screen map cannot be created. */
+          /* Keep the previous screen map if the next one cannot be created. */
         });
     };
 
@@ -381,9 +410,8 @@ function ScreenTexture({
     return () => {
       cancelled = true;
       image.removeEventListener("load", handleLoad);
-      map?.dispose();
     };
-  }, [onTextureReady, root, src]);
+  }, [invalidate, onTextureReady, root, src]);
 
   return null;
 }
@@ -529,6 +557,23 @@ function ProductPhone({
     vy: 0,
   });
   const invalidate = useThree((state) => state.invalidate);
+
+  const skipScreenshotPoseReset = useRef(true);
+
+  useEffect(() => {
+    if (skipScreenshotPoseReset.current) {
+      skipScreenshotPoseReset.current = false;
+      return;
+    }
+
+    intro.current.active = false;
+    drag.current.vx = 0;
+    drag.current.vy = 0;
+    targetRotation.current.x = restPose.x;
+    targetRotation.current.y = restPose.y;
+    idle.current.elapsed = 0;
+    invalidate();
+  }, [invalidate, screenshot]);
 
   useEffect(() => {
     if (!playIntro || introStarted.current) {
