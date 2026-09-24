@@ -47,6 +47,7 @@ type SceneCapabilities = {
   evaluated: boolean;
   motionAllowed: boolean;
   desktopLayout: boolean;
+  finePointer: boolean;
   webglSupported: boolean;
   dataSaver: boolean;
   lowMemory: boolean;
@@ -246,6 +247,41 @@ function getScreenLabel(screenshot: string) {
     .join(" ");
 }
 
+const screenChipButtonClass =
+  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-3 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background";
+
+/**
+ * Touch: fill / half-row chips. Mouse/trackpad (`compact`): label-sized wrap like DFC / AptiBooster tabs.
+ * Driven by JS `finePointer` — CSS `max-lg` stretch was winning over media-query overrides.
+ */
+function getScreenChipGroupClass(screenCount: number, compact: boolean) {
+  if (!compact && screenCount >= 4) {
+    return "mt-3 grid grid-cols-2 gap-2";
+  }
+
+  return "mt-3 flex flex-wrap gap-2";
+}
+
+function getScreenChipButtonClass(screenCount: number, compact: boolean) {
+  if (compact) {
+    return `${screenChipButtonClass} max-w-full whitespace-nowrap`;
+  }
+
+  if (screenCount >= 4) {
+    return `${screenChipButtonClass} w-full min-w-0 whitespace-nowrap`;
+  }
+
+  if (screenCount === 3) {
+    return `${screenChipButtonClass} max-w-full whitespace-nowrap max-lg:max-w-[calc(50%-0.25rem)] max-lg:flex-[1_1_calc(50%-0.25rem)] lg:max-w-none lg:flex-none`;
+  }
+
+  return `${screenChipButtonClass} max-w-full whitespace-nowrap`;
+}
+
+/** Desktop Work 3D stage — same height/width cap side-by-side or stacked. */
+const showcaseStageClassName =
+  "relative mx-auto h-[min(100%,44rem)] w-full max-w-[38.5rem]";
+
 export function MobileShowcaseEnhancement({
   projects,
 }: {
@@ -263,6 +299,7 @@ export function MobileShowcaseEnhancement({
     evaluated: false,
     motionAllowed: false,
     desktopLayout: false,
+    finePointer: false,
     webglSupported: false,
     dataSaver: false,
     lowMemory: false,
@@ -295,7 +332,12 @@ export function MobileShowcaseEnhancement({
     const motionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
+    /** Side-by-side copy + phone only at `lg`. */
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    /** Resized desktop still has a mouse — keep compact chips + 3D in the stacked panel. */
+    const finePointerQuery = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    );
 
     const updateCapabilities = () => {
       const hints = getNavigatorHints();
@@ -304,6 +346,7 @@ export function MobileShowcaseEnhancement({
         evaluated: true,
         motionAllowed: !motionQuery.matches,
         desktopLayout: desktopQuery.matches,
+        finePointer: finePointerQuery.matches,
         webglSupported: detectWebGLSupport(),
         dataSaver: hints.dataSaver,
         lowMemory: hints.lowMemory,
@@ -313,10 +356,12 @@ export function MobileShowcaseEnhancement({
     updateCapabilities();
     motionQuery.addEventListener("change", updateCapabilities);
     desktopQuery.addEventListener("change", updateCapabilities);
+    finePointerQuery.addEventListener("change", updateCapabilities);
 
     return () => {
       motionQuery.removeEventListener("change", updateCapabilities);
       desktopQuery.removeEventListener("change", updateCapabilities);
+      finePointerQuery.removeEventListener("change", updateCapabilities);
     };
   }, []);
 
@@ -333,12 +378,16 @@ export function MobileShowcaseEnhancement({
     !capabilities.desktopLayout &&
     mobileCapable &&
     !sceneFailed;
-  const canWarmDesktop =
+  /** Wide layout or resized desktop (mouse): WebGL. Real phones stay on 2D unless the flag is on. */
+  const preferWebGLShowcase =
     capabilities.evaluated &&
-    capabilities.desktopLayout &&
     capabilities.motionAllowed &&
     capabilities.webglSupported &&
-    !sceneFailed;
+    !capabilities.dataSaver &&
+    !capabilities.lowMemory &&
+    !sceneFailed &&
+    (capabilities.desktopLayout || capabilities.finePointer);
+  const canWarmDesktop = preferWebGLShowcase;
   const canWarmMobile = mobile3DEligible && isNearViewport;
   const canWarmAssets = canWarmDesktop || canWarmMobile;
   const assetsReady = useBackgroundSceneAssets(canWarmAssets, setSceneFailed);
@@ -362,12 +411,15 @@ export function MobileShowcaseEnhancement({
   const activeScreenshot =
     activeProject?.screenshots[state.screenIndex] ??
     activeProject?.screenshots[0];
+  const screenCount = activeProject?.screenshots.length ?? 0;
 
   if (!activeProject || !activeScreenshot) {
     return null;
   }
 
   const canRenderScene = canEvaluateScene && sceneMountAllowed;
+  /** Until matchMedia runs, prefer compact pills (avoids a stretch flash on desktop). */
+  const compactChips = !capabilities.evaluated || capabilities.finePointer;
 
   const markSceneFailed = () => {
     setSceneReady(false);
@@ -457,7 +509,9 @@ export function MobileShowcaseEnhancement({
                 <p className="text-xs font-medium uppercase tracking-[0.16em] text-background/65">
                   Screen
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div
+                  className={getScreenChipGroupClass(screenCount, compactChips)}
+                >
                   {activeProject.screenshots.map((screenshot, index) => (
                     <button
                       key={screenshot}
@@ -469,7 +523,10 @@ export function MobileShowcaseEnhancement({
                         }
                       }}
                       onClick={() => selectScreen(index)}
-                      className="inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-3 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background"
+                      className={getScreenChipButtonClass(
+                        screenCount,
+                        compactChips,
+                      )}
                     >
                       {getScreenLabel(screenshot)}
                     </button>
@@ -478,10 +535,22 @@ export function MobileShowcaseEnhancement({
               </div>
             ) : null}
 
-            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap lg:flex-col xl:flex-row">
+            <div
+              className={
+                compactChips
+                  ? "mt-7 flex flex-wrap gap-3 border-t border-background/15 pt-5"
+                  : "mt-7 grid grid-cols-2 gap-2 border-t border-background/15 pt-5"
+              }
+              role="group"
+              aria-label="Project links"
+            >
               <Button
                 href={activeProject.caseStudyHref}
-                className="w-full bg-background text-foreground active:opacity-90 focus-visible:outline-background sm:min-w-42 sm:w-auto lg:w-full xl:min-w-42 xl:w-auto"
+                className={
+                  compactChips
+                    ? "whitespace-nowrap bg-background px-3 text-foreground active:opacity-90 focus-visible:outline-background"
+                    : `w-full min-w-0 whitespace-nowrap bg-background px-3 text-foreground active:opacity-90 focus-visible:outline-background${activeProject.storeUrl ? "" : " col-span-2"}`
+                }
               >
                 Read case study
               </Button>
@@ -489,7 +558,11 @@ export function MobileShowcaseEnhancement({
                 <Button
                   href={activeProject.storeUrl}
                   variant="secondary"
-                  className="w-full border-background/45 text-background sm:min-w-42 sm:w-auto lg:w-full xl:min-w-42 xl:w-auto [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background"
+                  className={
+                    compactChips
+                      ? "whitespace-nowrap border-background/45 px-3 text-background active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10"
+                      : "w-full min-w-0 whitespace-nowrap border-background/45 px-3 text-background active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10"
+                  }
                 >
                   View on Play Store
                 </Button>
@@ -498,8 +571,18 @@ export function MobileShowcaseEnhancement({
           </div>
         </div>
 
-        <div className="relative min-h-144 overflow-hidden border-t border-background/15 bg-[#050505] p-8 lg:min-h-176 lg:border-l lg:border-t-0">
-          <div className={mobile3DEligible ? "hidden" : "lg:hidden"}>
+        <div
+          className={`relative overflow-hidden border-t border-background/15 bg-[#050505] p-8 lg:border-l lg:border-t-0 ${
+            preferWebGLShowcase || capabilities.desktopLayout
+              ? "min-h-176"
+              : "min-h-144 lg:min-h-176"
+          }`}
+        >
+          <div
+            className={
+              preferWebGLShowcase || mobile3DEligible ? "hidden" : "lg:hidden"
+            }
+          >
             <MobileProjectPhone
               project={activeProject}
               screenshotIndex={state.screenIndex}
@@ -508,8 +591,10 @@ export function MobileShowcaseEnhancement({
 
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-0 z-10 items-center justify-center transition-opacity duration-500 ${
-              mobile3DEligible ? "flex" : "hidden lg:flex"
+            className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-500 ${
+              preferWebGLShowcase || mobile3DEligible
+                ? "flex"
+                : "hidden lg:flex"
             } ${sceneReady ? "opacity-0" : "opacity-100"}`}
           >
             {mobile3DEligible ? (
@@ -518,43 +603,59 @@ export function MobileShowcaseEnhancement({
                 screenshotIndex={state.screenIndex}
               />
             ) : (
-              <ProductPhonePlaceholder
-                project={activeProject}
-                screenshotIndex={state.screenIndex}
-              />
+              <div className="flex h-full w-full items-center justify-center p-8">
+                <div className={showcaseStageClassName}>
+                  <ProductPhonePlaceholder
+                    project={activeProject}
+                    screenshotIndex={state.screenIndex}
+                  />
+                </div>
+              </div>
             )}
           </div>
 
           {canRenderScene ? (
             <>
               <div
-                className={`absolute inset-0 contain-[layout_paint] transition-opacity duration-500 ${
-                  mobile3DEligible ? "block" : "hidden lg:block"
+                className={`absolute inset-0 z-0 flex items-center justify-center p-8 transition-opacity duration-500 ${
+                  preferWebGLShowcase || mobile3DEligible
+                    ? "flex"
+                    : "hidden lg:flex"
                 } ${
                   sceneReady
-                    ? capabilities.desktopLayout
+                    ? capabilities.finePointer
                       ? "pointer-events-auto opacity-100"
                       : "pointer-events-none opacity-100"
                     : "pointer-events-none opacity-0"
                 }`}
                 aria-hidden={!sceneReady}
               >
-                <SceneErrorBoundary onError={markSceneFailed}>
-                  <MobileShowcaseScene
-                    screenshot={activeScreenshot}
-                    enableDrag={capabilities.desktopLayout}
-                    idleMotion={false}
-                    performanceProfile={
-                      mobile3DEligible ? "mobile" : "desktop"
-                    }
-                    playIntro={sceneReady && capabilities.desktopLayout}
-                    onContextLost={handleContextLost}
-                    onReady={handleSceneReady}
-                  />
-                </SceneErrorBoundary>
+                <div
+                  className={`${showcaseStageClassName} ${
+                    capabilities.finePointer
+                      ? sceneReady
+                        ? "pointer-events-auto"
+                        : "pointer-events-none"
+                      : "pointer-events-none"
+                  }`}
+                >
+                  <SceneErrorBoundary onError={markSceneFailed}>
+                    <MobileShowcaseScene
+                      screenshot={activeScreenshot}
+                      enableDrag={capabilities.finePointer}
+                      idleMotion={false}
+                      performanceProfile={
+                        mobile3DEligible ? "mobile" : "desktop"
+                      }
+                      playIntro={sceneReady && capabilities.finePointer}
+                      onContextLost={handleContextLost}
+                      onReady={handleSceneReady}
+                    />
+                  </SceneErrorBoundary>
+                </div>
               </div>
-              {sceneReady && capabilities.desktopLayout ? (
-                <p className="pointer-events-none absolute bottom-5 left-5 right-5 hidden text-center text-xs text-background/55 lg:block">
+              {sceneReady && capabilities.finePointer ? (
+                <p className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 text-center text-xs text-background/55">
                   Drag to rotate the Android device.
                 </p>
               ) : null}
