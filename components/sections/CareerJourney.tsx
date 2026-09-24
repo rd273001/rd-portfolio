@@ -1,10 +1,9 @@
 import { Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
-import { getMetricsForSurface } from "@/content/metrics";
+import { getMetricsByIds } from "@/content/metrics";
 import { CareerJourneyMotion } from "./career-journey/CareerJourneyMotion";
 
 export function CareerJourney() {
-  const timelineMetrics = getMetricsForSurface("timeline");
   const timelineItems = experience.filter(
     (item) => item.company && item.role && item.summary,
   );
@@ -18,9 +17,10 @@ export function CareerJourney() {
       <Container>
         <div
           data-journey-layout
-          className="grid gap-10 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-16"
+          className="grid gap-10 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-stretch lg:gap-16"
         >
-          <div data-journey-intro className="lg:self-start">
+          <div className="min-w-0">
+            <div data-journey-intro className="lg:sticky lg:top-20">
             <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
               Career journey
             </p>
@@ -31,6 +31,7 @@ export function CareerJourney() {
               Follow the roles and measurable results that shaped how I build,
               ship, and maintain product experiences.
             </p>
+            </div>
           </div>
 
           <div data-journey-list className="relative">
@@ -46,10 +47,7 @@ export function CareerJourney() {
 
             <ol className="space-y-5">
               {timelineItems.map((item, index) => {
-                const relatedMetrics = timelineMetrics.filter(
-                  (metric) =>
-                    metric.project && item.projectIds.includes(metric.project),
-                );
+                const relatedMetrics = getMetricsByIds(item.metricIds);
 
                 return (
                   <li
@@ -59,12 +57,16 @@ export function CareerJourney() {
                   >
                     <div
                       aria-hidden="true"
+                      data-journey-badge
                       className="absolute left-0 top-1 grid size-8 place-items-center rounded-full border border-border bg-background font-mono text-xs font-medium"
                     >
                       {index + 1}
                     </div>
 
-                    <article className="rounded-3xl border border-border bg-surface p-5 sm:p-6">
+                    <article
+                      data-journey-card
+                      className="rounded-3xl border border-border bg-surface p-5 sm:p-6"
+                    >
                       <p className="text-sm font-medium text-muted">
                         {item.company}
                       </p>
