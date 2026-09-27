@@ -2,6 +2,10 @@ import { Button, Container } from "@/components/primitives";
 import { getProjectCardMetric } from "@/content/metrics";
 import { getCaseStudyProjects } from "@/content/projects";
 import type { Project } from "@/content/types";
+import {
+  HOME_FEATURED_PROJECT_TECH_VISIBLE,
+  HOME_PROJECT_TECH_VISIBLE,
+} from "@/lib/home-card-limits";
 import { MobileShowcase } from "./mobile-showcase/MobileShowcase";
 
 const projectKindLabels: Record<Project["kind"], string> = {
@@ -102,7 +106,7 @@ function ProjectCard({
       : project.highlights.slice(0, isFeatured ? 3 : 2);
   const visibleTechnologies = project.technologies.slice(
     0,
-    isFeatured ? 9 : 6,
+    isFeatured ? HOME_FEATURED_PROJECT_TECH_VISIBLE : HOME_PROJECT_TECH_VISIBLE,
   );
   const useSplitLayout = isFeatured && Boolean(cardMetric);
 
@@ -114,12 +118,14 @@ function ProjectCard({
   const cardFooter = (
     <div className="mt-7 shrink-0 space-y-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <Button
-          className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
-          href={project.caseStudyHref}
-        >
-          Read case study
-        </Button>
+        {project.caseStudyHref ? (
+          <Button
+            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
+            href={project.caseStudyHref}
+          >
+            Read case study
+          </Button>
+        ) : null}
         {project.storeUrl ? (
           <Button
             className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"

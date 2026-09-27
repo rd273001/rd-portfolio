@@ -7,6 +7,7 @@ import { PageShell } from "@/components/sections";
 import { AndroidPhoneFrame } from "@/components/sections/mobile-showcase/AndroidPhoneFrame";
 import { getMetricsByIds } from "@/content/metrics";
 import {
+  getCaseStudyHighlights,
   getCaseStudyProject,
   getCaseStudyProjects,
 } from "@/content/projects";
@@ -87,6 +88,7 @@ export default async function ProjectCaseStudyPage({
   const visibleScreenshots = project.screenshots.filter(
     (screenshot) => !screenshot.startsWith("TODO_"),
   );
+  const caseStudyHighlights = getCaseStudyHighlights(project);
   return (
     <PageShell>
       <section className="py-14 sm:py-20">
@@ -217,37 +219,19 @@ export default async function ProjectCaseStudyPage({
             </div>
 
             <div className="grid gap-5">
-              {project.highlights.length > 0 ? (
+              {caseStudyHighlights.length > 0 ? (
                 <article className="rounded-3xl border border-border bg-surface p-5 sm:p-6">
                   <h3 className="text-lg font-semibold tracking-[-0.03em]">
                     Highlights
                   </h3>
                   <ul className="mt-5 grid gap-3 text-sm leading-6 text-foreground sm:grid-cols-2">
-                    {project.highlights.map((highlight) => (
+                    {caseStudyHighlights.map((highlight) => (
                       <li key={highlight} className="flex gap-3">
                         <span
                           aria-hidden="true"
                           className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"
                         />
                         <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ) : null}
-
-              {project.technologies.length > 0 ? (
-                <article className="rounded-3xl border border-border bg-surface p-5 sm:p-6">
-                  <h3 className="text-lg font-semibold tracking-[-0.03em]">
-                    Technologies
-                  </h3>
-                  <ul className="mt-5 flex flex-wrap gap-2">
-                    {project.technologies.map((technology) => (
-                      <li
-                        key={technology}
-                        className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted"
-                      >
-                        {technology}
                       </li>
                     ))}
                   </ul>
@@ -268,6 +252,24 @@ export default async function ProjectCaseStudyPage({
                           size="stack"
                           sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"
                         />
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ) : null}
+
+              {project.technologies.length > 0 ? (
+                <article className="rounded-3xl border border-border bg-surface p-5 sm:p-6">
+                  <h3 className="text-lg font-semibold tracking-[-0.03em]">
+                    Technologies
+                  </h3>
+                  <ul className="mt-5 flex flex-wrap gap-2">
+                    {project.technologies.map((technology) => (
+                      <li
+                        key={technology}
+                        className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted"
+                      >
+                        {technology}
                       </li>
                     ))}
                   </ul>

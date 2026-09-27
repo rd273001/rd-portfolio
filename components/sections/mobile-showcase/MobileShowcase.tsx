@@ -35,7 +35,7 @@ export function MobileShowcase() {
         name: project.name,
         tagline: project.tagline,
         role: project.role,
-        caseStudyHref: project.caseStudyHref,
+        caseStudyHref: project.caseStudyHref!,
         storeUrl: project.storeUrl,
         screenshots: project.screenshots.filter(
           (screenshot) =>
