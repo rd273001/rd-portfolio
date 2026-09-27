@@ -8,6 +8,7 @@ import type { Metric, ProjectId } from "./types";
  * - work: 1–2 project-specific metrics in the mobile showcase
  * - project: optional single ProjectCard metric (omit when hero/impact already cover it)
  * - timeline / achievement: narrative surfaces, not extra dashboards
+ * - site: this portfolio (3D GLB/HDR, Lighthouse). Never mix into impact/hero.
  *
  * Case-study pages read `project.metricIds`, not surfaces, so they can stay complete.
  */
@@ -107,14 +108,6 @@ export const metrics: Metric[] = [
     surfaces: ["impact", "work", "achievement"],
   },
   {
-    id: "ikior-performance",
-    label: "IKIOR UI performance improvement",
-    value: "20–25%",
-    status: "verified",
-    project: "ikior",
-    surfaces: ["timeline"],
-  },
-  {
     id: "certificate-generator-requests",
     label: "Certificate Generator requests",
     value: "350+",
@@ -128,6 +121,73 @@ export const metrics: Metric[] = [
     value: "260+",
     status: "verified",
     project: "certificate-generator",
+    surfaces: [],
+  },
+  {
+    id: "site-3d-payload",
+    label: "Desktop 3D download",
+    value: "7.17 MB",
+    current: "7.17 MB",
+    status: "verified",
+    note: "GLB 5.73 MB + HDR 1.44 MB. Desktop Work WebGL only — mobile keeps the 2D frame.",
+    surfaces: ["site", "achievement"],
+  },
+  {
+    id: "site-phone-glb",
+    label: "Phone model (GLB)",
+    value: "5.73 MB",
+    current: "5.73 MB",
+    status: "verified",
+    note: "Original procedural model, 68,056 triangles. Primary target for the asset pass.",
+    surfaces: ["site", "achievement"],
+  },
+  {
+    id: "site-studio-hdr",
+    label: "Studio HDR environment",
+    value: "1.44 MB",
+    current: "1.44 MB",
+    status: "verified",
+    note: "Studio environment map for the 3D phone. Kept in content for the before / after fill.",
+    surfaces: [],
+  },
+  {
+    id: "site-lighthouse-mobile-performance",
+    label: "Mobile performance",
+    value: "TODO_PSI_MOBILE_PERFORMANCE",
+    status: "placeholder",
+    note: "Fill from PageSpeed Insights on https://ravidubey.in after deploy (Mobile).",
+    surfaces: ["site", "achievement"],
+  },
+  {
+    id: "site-lighthouse-desktop-performance",
+    label: "Desktop performance",
+    value: "TODO_PSI_DESKTOP_PERFORMANCE",
+    status: "placeholder",
+    note: "Fill from PageSpeed Insights after deploy (Desktop).",
+    surfaces: ["site", "achievement"],
+  },
+  {
+    id: "site-lighthouse-accessibility",
+    label: "Accessibility",
+    value: "TODO_PSI_ACCESSIBILITY",
+    status: "placeholder",
+    note: "Fill from PageSpeed Insights after deploy.",
+    surfaces: ["site", "achievement"],
+  },
+  {
+    id: "site-lighthouse-seo",
+    label: "Lighthouse SEO",
+    value: "TODO_PSI_SEO",
+    status: "placeholder",
+    note: "Fill from PageSpeed Insights after deploy. Shown in section copy, not as a card.",
+    surfaces: [],
+  },
+  {
+    id: "site-lighthouse-best-practices",
+    label: "Lighthouse Best Practices",
+    value: "TODO_PSI_BEST_PRACTICES",
+    status: "placeholder",
+    note: "Fill from PageSpeed Insights after deploy. Shown in section copy, not as a card.",
     surfaces: [],
   },
 ];

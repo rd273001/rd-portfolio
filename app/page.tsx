@@ -7,6 +7,7 @@ import {
   ImpactDashboard,
   PageShell,
   ProjectsSection,
+  SiteMetrics,
   SkillsSection,
 } from "@/components/sections";
 
@@ -20,6 +21,7 @@ export default function Home() {
       <ProjectsSection />
       <SkillsSection />
       <EducationSection />
+      <SiteMetrics />
       <ContactCta />
     </PageShell>
   );

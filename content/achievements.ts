@@ -89,4 +89,20 @@ export const achievements: Achievement[] = [
       "In-app subscription payments via Razorpay React Native SDK, tied to chapter trial and premium unlock.",
     status: "verified",
   },
+  {
+    id: "site-3d-assets",
+    title: "Original Android phone 3D showcase",
+    description:
+      "Procedural GLB for the Work section phone: 5.73 MB (68,056 triangles) plus a 1.44 MB studio HDR — 7.17 MB on the desktop WebGL path. Mobile keeps the 2D frame. Baseline 26 Sep 2026; intended to shrink in the asset perf pass without changing the look.",
+    metricId: "site-3d-payload",
+    status: "verified",
+  },
+  {
+    id: "site-lighthouse",
+    title: "Portfolio Lighthouse lab scores",
+    description:
+      "TODO: Update after PageSpeed Insights on https://ravidubey.in post-deploy. Local next start baseline (26 Sep 2026) is kept in AGENTS.md only — not shown on the site until live PSI is verified.",
+    metricId: "site-lighthouse-mobile-performance",
+    status: "placeholder",
+  },
 ];
