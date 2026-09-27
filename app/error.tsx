@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteError, SiteFooter } from "@/components/sections";
+import { PageShell, RouteError } from "@/components/sections";
 
 export default function Error({
   reset,
@@ -9,11 +9,8 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <>
-      <main id="content" tabIndex={-1} className="scroll-mt-20 outline-none">
-        <RouteError reset={reset} />
-      </main>
-      <SiteFooter />
-    </>
+    <PageShell>
+      <RouteError reset={reset} />
+    </PageShell>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteError, SiteFooter } from "@/components/sections";
+import { PageShell, RouteError } from "@/components/sections";
 
 export default function ProjectError({
   reset,
@@ -9,15 +9,14 @@ export default function ProjectError({
   reset: () => void;
 }) {
   return (
-    <>
-      <main id="content" tabIndex={-1} className="scroll-mt-20 outline-none">
-        <RouteError
-          reset={reset}
-          title="This case study failed to load."
-          description="You can try again or return to selected work on the home page."
-        />
-      </main>
-      <SiteFooter />
-    </>
+    <PageShell>
+      <RouteError
+        reset={reset}
+        title="Case study unavailable."
+        description="Try again, or browse other selected work on the home page."
+        secondaryHref="/#work"
+        secondaryLabel="Selected work"
+      />
+    </PageShell>
   );
 }
