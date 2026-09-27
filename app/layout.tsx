@@ -79,7 +79,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-background font-sans text-foreground">
+      <body className="flex min-h-dvh flex-col bg-background font-sans text-foreground">
         <JsonLd data={getPersonJsonLd()} />
         <JsonLd data={getWebSiteJsonLd()} />
         <SkipToContent />
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           navigation={site.navigation}
           contact={contact}
         />
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
       </body>
     </html>
   );

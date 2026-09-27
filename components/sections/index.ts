@@ -10,4 +10,7 @@ export { ProjectsSection } from "./ProjectsSection";
 export { RouteError } from "./RouteError";
 export { SiteFooter } from "./SiteFooter";
 export { SiteHeader } from "./SiteHeader";
+export { SparsePageContent } from "./SparsePageContent";
+export { SparsePageMark } from "./SparsePageMark";
+export { SparsePageSection } from "./SparsePageSection";
 export { SkillsSection } from "./SkillsSection";

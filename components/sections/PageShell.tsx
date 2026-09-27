@@ -8,8 +8,12 @@ type PageShellProps = {
 
 export function PageShell({ children }: PageShellProps) {
   return (
-    <div className="min-h-screen">
-      <main id="content" tabIndex={-1} className="scroll-mt-20 outline-none">
+    <div className="flex flex-1 flex-col">
+      <main
+        id="content"
+        tabIndex={-1}
+        className="flex flex-1 flex-col scroll-mt-20 outline-none"
+      >
         {children}
       </main>
       <SiteFooter />
