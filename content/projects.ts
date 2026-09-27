@@ -24,10 +24,8 @@ export const projects: Project[] = [
       "Firebase Performance",
       "Axios",
       "OneSignal",
+      "Google Play In-App Updates",
       "Zoom Meeting SDK",
-      "Android App Bundle",
-      "ProGuard/R8",
-      "Dynamic Feature Modules",
     ],
     highlights: [
       "Led the DFC mobile revamp on the existing Play listing: new TypeScript and TanStack Query codebase with auth/API integration and the full student onboarding flow built from scratch.",
@@ -37,6 +35,11 @@ export const projects: Project[] = [
       "Optimized the Android App Bundle from 21.02 MB to 15 MB (6.02 MB / 28.6%).",
       "Built live lecture join with on-demand Zoom SDK download—install progress, cancel, post-install restart, and resume when a meeting is already running—instead of shipping the full SDK with every install.",
       "Delivered Zoom via an Android Dynamic Feature Module with Kotlin/native work and in-repo SDK patches: 161 MB base-delivery reduction, 15.9 MB new-install size, 8 second module download, 90 second improvement versus the previous release.",
+    ],
+    caseStudyHighlights: [
+      "Integrated OneSignal for push notifications and in-app messaging on the production app.",
+      "Shipped Google Play in-app updates so users can install new releases from inside the app.",
+      "Upgraded React Native from 0.76.5 to 0.81.0—updated dependencies for the new RN version, applied Android changes required by the upgrade (including edge-to-edge layout and safe-area handling), and validated behavior across supported OS versions.",
     ],
     metricIds: [
       "dfc-downloads",
@@ -72,11 +75,12 @@ export const projects: Project[] = [
       "React Native",
       "TypeScript",
       "Context API",
-      "MathJax",
       "Gifted Charts",
+      "MathJax",
       "Razorpay React Native SDK",
       "Microsoft Clarity",
       "Firebase Crashlytics",
+      "Google Play In-App Updates",
     ],
     highlights: [
       "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",
@@ -85,6 +89,9 @@ export const projects: Project[] = [
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search; subscriptions unlock the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
+    ],
+    caseStudyHighlights: [
+      "Shipped Google Play in-app updates so users can install new releases from inside the app.",
     ],
     metricIds: ["aptibooster-downloads", "aptibooster-bundle-optimization"],
     caseStudyHref: "/work/aptibooster",
@@ -140,10 +147,8 @@ export const projects: Project[] = [
       "Instagram Reels–inspired experience using react-native-video.",
       "Multi-step form flow for period-tracking reports—collecting inputs and presenting a results experience (content was envisioned with clinical input; that scope was not shipped).",
       "Health, Care, and Sleep wellness section UI from Figma—largely removed or redesigned in later revamps.",
-      "Contributed to a 20–25% UI performance improvement on implemented screens.",
     ],
-    metricIds: ["ikior-performance"],
-    caseStudyHref: "/work/ikior",
+    metricIds: [],
     screenshots: [],
   },
   {
@@ -211,4 +216,8 @@ export function getCaseStudyProject(id: string): Project | undefined {
   }
 
   return project;
+}
+
+export function getCaseStudyHighlights(project: Project): string[] {
+  return [...project.highlights, ...(project.caseStudyHighlights ?? [])];
 }

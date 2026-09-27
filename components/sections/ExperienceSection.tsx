@@ -1,8 +1,15 @@
 import { Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
 import type { Experience } from "@/content/types";
-/** Home experience cards — full lists stay on case studies. */
-const EXPERIENCE_TECH_VISIBLE = 8;
+import { HOME_EXPERIENCE_TECH_VISIBLE } from "@/lib/home-card-limits";
+
+function getExperienceCertificateUrl(credentialUrl?: string) {
+  if (!credentialUrl || credentialUrl.startsWith("TODO_")) {
+    return undefined;
+  }
+
+  return credentialUrl;
+}
 
 function getVisibleDateRange(item: Experience) {
   const start =
@@ -49,9 +56,12 @@ export function ExperienceSection() {
         <div className="mt-10 space-y-5">
           {visibleExperience.map((item) => {
             const dateRange = getVisibleDateRange(item);
+            const certificateUrl = getExperienceCertificateUrl(
+              item.credentialUrl,
+            );
             const visibleTechnologies = item.technologies.slice(
               0,
-              EXPERIENCE_TECH_VISIBLE,
+              HOME_EXPERIENCE_TECH_VISIBLE,
             );
 
             return (
@@ -91,6 +101,18 @@ export function ExperienceSection() {
                 <p className="mt-5 max-w-3xl text-base leading-7 text-muted">
                   {item.summary}
                 </p>
+
+                {certificateUrl ? (
+                  <a
+                    href={certificateUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex rounded-md text-sm text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    View internship certificate
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                ) : null}
 
                 {item.highlights.length > 0 ? (
                   <ul className="mt-6 grid gap-3 text-sm leading-6 text-foreground sm:grid-cols-2">

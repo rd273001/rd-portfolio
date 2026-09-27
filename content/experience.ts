@@ -22,16 +22,17 @@ export const experience: Experience[] = [
       "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module.",
       "Built AptiBooster so scoring, peer comparison, and analysis derive from one timed test attempt, and wired the mobile surfaces for API-backed insights, suggestions, and downloadable reports.",
     ],
+    /** Shared + DFC + AptiBooster — priority order; home shows first 9 only. */
     technologies: [
       "React Native",
       "TypeScript",
-      "Kotlin",
       "TanStack Query",
       "Context API",
+      "Kotlin",
       "Firebase",
-      "OneSignal",
       "Zoom Meeting SDK",
-      "Android (native)",
+      "Razorpay React Native SDK",
+      "OneSignal",
     ],
     metricIds: ["dfc-app-start-p90"],
     projectIds: ["dfc-app", "aptibooster"],
@@ -48,14 +49,22 @@ export const experience: Experience[] = [
     kind: "internship",
     prominence: 4,
     summary:
-      "Internship on the DFC and AptiBooster production apps—onboarding and auth/API integration on DFC, plus test and result analysis surfaces on AptiBooster.",
+      "Internship on the new DFC and AptiBooster apps—implemented most of the DFC mobile revamp in a fresh TypeScript repository (product flows, API layer, and screen work), with AptiBooster test and result analysis surfaces on the side.",
     highlights: [
-      "Implemented AptiBooster test and result analysis surfaces.",
-      "Implemented DFC onboarding UI with authentication and authorization API integration.",
+      "Implemented the bulk of the new DFC app: replaced the legacy JavaScript codebase with TypeScript, TanStack Query, Axios (configured interceptors), and custom hooks so screens stay UI-focused and API logic stays separate.",
+      "Shipped DFC onboarding with authentication and authorization API integration, additional DFC modules, and AptiBooster test and result analysis surfaces.",
     ],
-    technologies: ["React Native", "React", "TypeScript"],
+    technologies: [
+      "React Native",
+      "TypeScript",
+      "TanStack Query",
+      "Axios",
+      "Context API",
+    ],
     metricIds: [],
     projectIds: ["dfc-app", "aptibooster"],
+    credentialUrl:
+      "https://drive.google.com/file/d/1vN6y0zHncM9DwK6VtzDtDnYWNH-4SLvK/view?usp=sharing",
   },
   {
     id: "ikior-intern",
@@ -73,7 +82,6 @@ export const experience: Experience[] = [
     highlights: [
       "Shipped period-tracking UI when it was the product hero—a cycle calendar with marked dates and per-day layouts built to surface insights as analysis was planned.",
       "Instagram Reels–inspired UI with react-native-video; multi-step period report flow; Health, Care, and Sleep section screens from Figma.",
-      "Contributed to a 20–25% UI performance improvement on implemented screens.",
     ],
     technologies: [
       "React Native",
@@ -83,7 +91,9 @@ export const experience: Experience[] = [
       "React Native Video",
       "Figma",
     ],
-    metricIds: ["ikior-performance"],
+    metricIds: [],
     projectIds: ["ikior"],
+    credentialUrl:
+      "https://drive.google.com/file/d/1d2kRf17t7UFew1xNG-MgxL9KyVSPA3sl/view?usp=sharing",
   },
 ];

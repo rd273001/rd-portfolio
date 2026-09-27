@@ -6,7 +6,8 @@ export type MetricSurface =
   | "work"
   | "project"
   | "timeline"
-  | "achievement";
+  | "achievement"
+  | "site";
 
 export type ProjectId =
   | "dfc-app"
@@ -70,6 +71,8 @@ export type Experience = {
   technologies: string[];
   metricIds: string[];
   projectIds: ProjectId[];
+  /** Internship / experience certificate (PDF or Drive link). */
+  credentialUrl?: string;
 };
 
 export type Project = {
@@ -86,9 +89,13 @@ export type Project = {
   storeUrl?: string;
   websiteMayBeUnavailable?: boolean;
   technologies: string[];
+  /** Shown on home project cards (trimmed in UI) and on the case study page. */
   highlights: string[];
+  /** Extra bullets for `/work/[id]` only — not on the home page. */
+  caseStudyHighlights?: string[];
   metricIds: string[];
-  caseStudyHref: string;
+  /** Omitted when the project has no `/work/[id]` case study (e.g. IKIOR internship). */
+  caseStudyHref?: string;
   screenshots: string[];
 };
 

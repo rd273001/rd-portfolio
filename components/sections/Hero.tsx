@@ -12,9 +12,6 @@ export function Hero() {
   const secondaryCta = socials.find(
     (social) => social.id === site.contact.secondarySocialId,
   );
-  const canShowLocation = profile.locationStatus === "verified";
-  const canShowStartDate = profile.currentRoleStartedStatus === "verified";
-
   return (
     <section id="about" className="scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-28">
       <Container>
@@ -87,22 +84,6 @@ export function Hero() {
               {profile.employer}
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            {canShowLocation || canShowStartDate ? (
-              <dl className="mt-8 space-y-4 border-t border-border pt-5 text-sm text-muted">
-                {canShowLocation ? (
-                  <div>
-                    <dt className="sr-only">Location</dt>
-                    <dd>{profile.location}</dd>
-                  </div>
-                ) : null}
-                {canShowStartDate ? (
-                  <div>
-                    <dt className="sr-only">Current role start date</dt>
-                    <dd>{profile.currentRoleStarted}</dd>
-                  </div>
-                ) : null}
-              </dl>
-            ) : null}
           </aside>
         </div>
       </Container>

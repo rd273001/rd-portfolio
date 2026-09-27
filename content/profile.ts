@@ -9,11 +9,11 @@ export const profile: Profile = {
   employer: "Dnyandeep Foundation Centre",
   employerShort: "DFC",
   employerUrl: "https://dfc.org.in/",
-  location: "TODO_LOCATION",
-  locationStatus: "placeholder",
+  location: "Remote",
+  locationStatus: "verified",
   headline: "Software Engineer specializing in Web & Mobile Experiences",
   summary:
     "I build and own production web and mobile experiences. At Dnyandeep Foundation Centre I maintain DFC and AptiBooster — including the DFC mobile revamp, payments, notifications, and Android delivery work with verified Play Console results.",
   currentRoleStarted: "Apr 2025",
-  currentRoleStartedStatus: "verified",
+  currentRoleStartedStatus: "placeholder",
 };
