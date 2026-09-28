@@ -96,7 +96,7 @@ Priority / visual weight:
 
 Identity: Software Engineer specializing in Web & Mobile Experiences. Do not reduce this to “React Native Developer”.
 
-Impact dashboard: production DFC and AptiBooster metrics only. Do not put Certificate Generator or IKIOR numbers there.
+Impact dashboard: production DFC and AptiBooster metrics only. Do not put Certificate Generator, IKIOR, GLB/HDR, or Lighthouse scores there. Those site numbers use the `site` metric surface (`SiteMetrics`).
 
 Do not invent a debugging-effort percentage. The Crashlytics contextual logger is a verified narrative achievement until Crashlytics history can support a measured range.
 
@@ -308,11 +308,45 @@ Dedicated PR only. **Goal:** reduce first-visit jank and main-thread cost while 
 
 **Showcase modes (no video hero):** Desktop uses live WebGL 3D when viable. The 2D `AndroidPhoneFrame` is the **only** fallback — loading cover, mobile layout, `prefers-reduced-motion`, missing WebGL, or scene error (`SceneErrorBoundary` / context lost). Do **not** add pre-rendered video or image-sequence replacements for the 3D phone. Once WebGL is ready on desktop, **always** reveal 3D and keep it — do not leave users on the 2D frame forever after fast scrolling.
 
-**Baseline (measure again at PR start):**
+**3D assets (showcase on `SiteMetrics`; keep out of Impact/hero):**
 
-- `public/models/android-phone.glb` — ~6 MB, procedural export from `scripts/build-android-phone-glb.mjs` (high `curveSegments` / bevel counts).
-- `public/hdri/studio_small_08_1k.hdr` — ~1.5 MB; runtime PMREM via drei `Environment`.
-- Screen texture in `MobileShowcaseScene.tsx` — capped for GPU upload (`SCREEN_MAP_MAX_WIDTH`); 2D frame uses full WebP via Next/Image.
+Measured 2026-09-26 from disk / GLB JSON. Fill After in the perf PR, then set `previous` / `reduction` on `site-phone-glb`, `site-studio-hdr`, and `site-3d-payload`.
+
+| What | Before | After |
+| --- | --- | --- |
+| `public/models/android-phone.glb` | 6,010,980 bytes (5.73 MiB) | |
+| GLB topology | 58 meshes, 183,704 vertices, 68,056 triangles | |
+| `public/hdri/studio_small_08_1k.hdr` | 1,508,872 bytes (1.44 MiB) | |
+| 3D critical-path download (GLB + HDR) | 7,519,852 bytes (7.17 MiB) | |
+
+Builder tessellation in `scripts/build-android-phone-glb.mjs` (Before): main extrude `curveSegments` **64**, `bevelSegments` **12**; screen `ShapeGeometry` segments **64**; camera-bar extrude `curveSegments` **28** / `bevelSegments` **8**.
+
+Screen map: `SCREEN_MAP_MAX_WIDTH` **720** in `MobileShowcaseScene.tsx`. 2D frame uses full WebP.
+
+Screenshot WebPs (7 files, DFC + AptiBooster): 305,482 bytes (0.29 MiB). Not a primary optimization target.
+
+**Portfolio site — Lighthouse (showcase on `SiteMetrics`; re-run after perf work):**
+
+Lighthouse 12.8.2, production `next start` at `http://127.0.0.1:3001` (`next build --webpack`), homepage `/`, 2026-09-26. Single lab run (not PageSpeed Insights on ravidubey.in). Re-run after perf work with the same CLI flags before updating `site-lighthouse-*` metrics.
+
+| Category | Mobile before | Desktop before | After |
+| --- | --- | --- | --- |
+| Performance | **93** | **100** | |
+| Accessibility | **96** | **96** | |
+| Best Practices | **100** | **100** | |
+| SEO | **100** | **100** | |
+
+Core Web Vitals (same runs):
+
+| Metric | Mobile before | Desktop before | After |
+| --- | --- | --- | --- |
+| FCP | 1.2 s | 0.3 s | |
+| LCP | 3.3 s | 0.6 s | |
+| TBT | 40 ms | 6 ms | |
+| CLS | 0 | 0 | |
+| Transfer | 300 KB | 3.2 MB (3D assets load on desktop) | |
+
+Notes from this run: a11y **96** is a `<dl>` structure fail; mobile Performance is pulled by LCP (~3.3 s); desktop transfer is large because the GLB + HDR load. Do not invent a public “Lighthouse 100” claim from this localhost lab.
 
 **Optimization backlog (priority order):**
 
