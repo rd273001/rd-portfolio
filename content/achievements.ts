@@ -99,10 +99,10 @@ export const achievements: Achievement[] = [
   },
   {
     id: "site-lighthouse",
-    title: "Portfolio Lighthouse lab scores",
+    title: "Portfolio PageSpeed scores",
     description:
-      "PageSpeed Insights on https://www.ravidubey.in — update metric values in content/metrics.ts when scores are verified (localhost baseline stays in AGENTS.md only).",
+      "PageSpeed Insights on https://www.ravidubey.in (28 Sep 2026): mobile Performance 99, desktop Performance 89, Accessibility 96. SEO and Best Practices were 100 in the same runs.",
     metricId: "site-lighthouse-mobile-performance",
-    status: "placeholder",
+    status: "verified",
   },
 ];

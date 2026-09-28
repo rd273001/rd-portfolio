@@ -83,8 +83,8 @@ export function SiteMetrics() {
             >
               PageSpeed Insights
             </a>{" "}
-            on the live homepage — not localhost lab runs. SEO and Best Practices
-            scores are noted here once verified on production.
+            on the live homepage (28 Sep 2026) — not localhost lab runs. SEO and
+            Best Practices were 100 in the same PageSpeed runs.
           </p>
         </div>
 
