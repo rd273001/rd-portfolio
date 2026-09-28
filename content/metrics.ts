@@ -155,7 +155,7 @@ export const metrics: Metric[] = [
     label: "Mobile performance",
     value: "TODO_PSI_MOBILE_PERFORMANCE",
     status: "placeholder",
-    note: "Fill from PageSpeed Insights on https://ravidubey.in after deploy (Mobile).",
+    note: "PageSpeed Insights, mobile profile — https://www.ravidubey.in",
     surfaces: ["site", "achievement"],
   },
   {
@@ -163,7 +163,7 @@ export const metrics: Metric[] = [
     label: "Desktop performance",
     value: "TODO_PSI_DESKTOP_PERFORMANCE",
     status: "placeholder",
-    note: "Fill from PageSpeed Insights after deploy (Desktop).",
+    note: "PageSpeed Insights, desktop profile — https://www.ravidubey.in",
     surfaces: ["site", "achievement"],
   },
   {
@@ -171,7 +171,7 @@ export const metrics: Metric[] = [
     label: "Accessibility",
     value: "TODO_PSI_ACCESSIBILITY",
     status: "placeholder",
-    note: "Fill from PageSpeed Insights after deploy.",
+    note: "PageSpeed Insights — https://www.ravidubey.in",
     surfaces: ["site", "achievement"],
   },
   {

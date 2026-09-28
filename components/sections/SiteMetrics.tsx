@@ -74,9 +74,17 @@ export function SiteMetrics() {
           </h2>
           <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
             The Work section’s original 3D phone and measured asset sizes below.
-            Lighthouse cards appear here after you run PageSpeed Insights on the
-            live homepage — not from localhost lab runs. SEO and Best Practices
-            scores go in this copy once verified on production.
+            PageSpeed score cards are filled from{" "}
+            <a
+              href="https://pagespeed.web.dev/analysis?url=https://www.ravidubey.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              PageSpeed Insights
+            </a>{" "}
+            on the live homepage — not localhost lab runs. SEO and Best Practices
+            scores are noted here once verified on production.
           </p>
         </div>
 
@@ -87,7 +95,7 @@ export function SiteMetrics() {
             className="mt-4 grid gap-4 sm:grid-cols-2"
           />
           <SiteMetricGroup
-            title="Lighthouse lab"
+            title="PageSpeed (live)"
             metrics={labMetrics}
             className="mt-4 grid gap-4 sm:grid-cols-3"
           />

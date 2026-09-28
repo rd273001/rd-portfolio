@@ -33,19 +33,17 @@ export function ImpactDashboard() {
               <dt className="text-sm leading-5 text-muted">{metric.label}</dt>
               <dd className="mt-4 text-3xl font-semibold tracking-[-0.04em]">
                 {metric.percentage ?? metric.value}
+                {metric.previous && metric.current ? (
+                  <span className="mt-3 block text-sm font-normal leading-6 tracking-normal text-muted">
+                    {metric.previous} to {metric.current}
+                  </span>
+                ) : null}
+                {metric.note ? (
+                  <span className="mt-3 block text-sm font-normal leading-6 tracking-normal text-muted">
+                    {metric.note}
+                  </span>
+                ) : null}
               </dd>
-
-              {metric.previous && metric.current ? (
-                <p className="mt-3 text-sm leading-6 text-muted">
-                  {metric.previous} to {metric.current}
-                </p>
-              ) : null}
-
-              {metric.note ? (
-                <p className="mt-3 text-sm leading-6 text-muted">
-                  {metric.note}
-                </p>
-              ) : null}
             </div>
           ))}
         </dl>
