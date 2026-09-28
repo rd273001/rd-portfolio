@@ -99,10 +99,10 @@ export const achievements: Achievement[] = [
   },
   {
     id: "site-lighthouse",
-    title: "Portfolio Lighthouse lab scores",
+    title: "Portfolio PageSpeed scores",
     description:
-      "TODO: Update after PageSpeed Insights on https://ravidubey.in post-deploy. Local next start baseline (26 Sep 2026) is kept in AGENTS.md only — not shown on the site until live PSI is verified.",
+      "PageSpeed Insights on https://www.ravidubey.in (28 Sep 2026): mobile Performance 94, desktop Performance 95, Accessibility 96. SEO and Best Practices were 100 in the same runs.",
     metricId: "site-lighthouse-mobile-performance",
-    status: "placeholder",
+    status: "verified",
   },
 ];
