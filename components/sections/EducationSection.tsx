@@ -95,7 +95,10 @@ export function EducationSection() {
             </div>
 
             <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {verifiedCertifications.map((item) => (
+              {verifiedCertifications.map((item) => {
+                const credentialUrl = getPublicCredentialUrl(item.url);
+
+                return (
                 <article
                   key={item.id}
                   className="flex min-h-full flex-col rounded-2xl border border-border bg-surface p-4 sm:p-5"
@@ -104,9 +107,9 @@ export function EducationSection() {
                     {item.name}
                   </h3>
                   <p className="mt-1.5 text-sm text-muted">{item.issuer}</p>
-                  {item.url ? (
+                  {credentialUrl ? (
                     <a
-                      href={item.url}
+                      href={credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-4 inline-flex text-sm text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
@@ -116,7 +119,8 @@ export function EducationSection() {
                     </a>
                   ) : null}
                 </article>
-              ))}
+                );
+              })}
             </div>
           </div>
         ) : null}
