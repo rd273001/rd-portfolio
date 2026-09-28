@@ -101,7 +101,7 @@ export const achievements: Achievement[] = [
     id: "site-lighthouse",
     title: "Portfolio PageSpeed scores",
     description:
-      "PageSpeed Insights on https://www.ravidubey.in (28 Sep 2026): mobile Performance 99, desktop Performance 89, Accessibility 96. SEO and Best Practices were 100 in the same runs.",
+      "PageSpeed Insights on https://www.ravidubey.in (28 Sep 2026): mobile Performance 94, desktop Performance 95, Accessibility 96. SEO and Best Practices were 100 in the same runs.",
     metricId: "site-lighthouse-mobile-performance",
     status: "verified",
   },

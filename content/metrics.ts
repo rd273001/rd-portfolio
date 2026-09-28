@@ -153,17 +153,17 @@ export const metrics: Metric[] = [
   {
     id: "site-lighthouse-mobile-performance",
     label: "Mobile performance",
-    value: "99",
+    value: "94",
     status: "verified",
-    note: "PageSpeed Insights homepage, mobile — 28 Sep 2026. https://www.ravidubey.in",
+    note: "PageSpeed Insights homepage, mobile — 28 Sep 2026 (later run). https://www.ravidubey.in",
     surfaces: ["site", "achievement"],
   },
   {
     id: "site-lighthouse-desktop-performance",
     label: "Desktop performance",
-    value: "89",
+    value: "95",
     status: "verified",
-    note: "PageSpeed Insights homepage, desktop — 28 Sep 2026. Transfer includes Work WebGL assets.",
+    note: "PageSpeed Insights homepage, desktop — 28 Sep 2026 (later run). Transfer includes Work WebGL assets.",
     surfaces: ["site", "achievement"],
   },
   {
