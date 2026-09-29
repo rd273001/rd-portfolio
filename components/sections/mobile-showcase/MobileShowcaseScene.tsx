@@ -41,6 +41,14 @@ import { yieldUntilQuiet } from "./sceneScheduler";
 
 setConsoleFunction((type, message, ...rest) => {
   const text = [message, ...rest].map(String).join(" ");
+  // Production only: benign teardown when leaving `/`; handled via webglcontextlost.
+  if (
+    process.env.NODE_ENV === "production" &&
+    text.includes("WebGLRenderer: Context Lost")
+  ) {
+    return;
+  }
+
   if (
     type === "warn" &&
     (text.includes("Clock: This module has been deprecated") ||
