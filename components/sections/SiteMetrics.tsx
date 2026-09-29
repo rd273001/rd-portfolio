@@ -83,8 +83,8 @@ export function SiteMetrics() {
             >
               PageSpeed Insights
             </a>{" "}
-            on the live homepage (28 Sep 2026) — not localhost lab runs. SEO and
-            Best Practices were 100 in the same PageSpeed runs.
+            on https://www.ravidubey.in (28 Sep 2026). SEO and Best Practices
+            were 100 in the same runs.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export function SiteMetrics() {
             className="mt-4 grid gap-4 sm:grid-cols-2"
           />
           <SiteMetricGroup
-            title="PageSpeed (live)"
+            title="PageSpeed"
             metrics={labMetrics}
             className="mt-4 grid gap-4 sm:grid-cols-3"
           />

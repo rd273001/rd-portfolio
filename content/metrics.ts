@@ -109,8 +109,8 @@ export const metrics: Metric[] = [
   },
   {
     id: "certificate-generator-requests",
-    label: "Certificate Generator requests",
-    value: "350+",
+    label: "Pending certificate requests",
+    value: "400+",
     status: "verified",
     project: "certificate-generator",
     surfaces: [],
@@ -118,7 +118,7 @@ export const metrics: Metric[] = [
   {
     id: "certificate-generator-issued",
     label: "Certificates generated",
-    value: "260+",
+    value: "466+",
     status: "verified",
     project: "certificate-generator",
     surfaces: [],
@@ -155,7 +155,7 @@ export const metrics: Metric[] = [
     label: "Mobile performance",
     value: "94",
     status: "verified",
-    note: "PageSpeed Insights homepage, mobile — 28 Sep 2026 (later run). https://www.ravidubey.in",
+    note: "PageSpeed Insights homepage, mobile profile — 28 Sep 2026. https://www.ravidubey.in",
     surfaces: ["site", "achievement"],
   },
   {
@@ -163,7 +163,7 @@ export const metrics: Metric[] = [
     label: "Desktop performance",
     value: "95",
     status: "verified",
-    note: "PageSpeed Insights homepage, desktop — 28 Sep 2026 (later run). Transfer includes Work WebGL assets.",
+    note: "PageSpeed Insights homepage, desktop profile — 28 Sep 2026. Desktop lab load includes Work WebGL assets.",
     surfaces: ["site", "achievement"],
   },
   {

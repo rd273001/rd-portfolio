@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 95],
   },
+  // Production: remove console.log/info/debug/warn from app code; keep console.error.
+  // Dev (`next dev`) is unchanged. Library console output is handled separately (e.g. Three.js).
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error"] }
+        : false,
+  },
   poweredByHeader: false,
   agentRules: false,
   async headers() {
