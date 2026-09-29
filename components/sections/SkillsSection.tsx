@@ -17,7 +17,7 @@ export function SkillsSection() {
               Skills
             </p>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl">
-              Focused on React, React Native, and TypeScript product work.
+              Focused on React, React Native, Next.js, and TypeScript product work.
             </h2>
           </div>
 

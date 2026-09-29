@@ -616,8 +616,8 @@ Facts:
 * PDF generation (pdf-lib)
 * Google APIs (Node client) + Google Drive API for issued PDF storage
 * Tailwind CSS
-* 350+ requests
-* 260+ generated certificates
+* 400+ requests (admin pending queue)
+* 466+ generated certificates
 
 Live:
 

@@ -4,7 +4,7 @@ export const skills: SkillGroup[] = [
   {
     id: "primary",
     label: "Primary",
-    items: ["React", "React Native", "TypeScript", "JavaScript"],
+    items: ["React", "React Native", "TypeScript", "JavaScript", "Next.js"],
   },
   {
     id: "additional",
@@ -14,6 +14,10 @@ export const skills: SkillGroup[] = [
       "Express.js",
       "MongoDB",
       "MySQL",
+      "TanStack Query",
+      "Axios",
+      "Redux Toolkit",
+      "Tailwind CSS",
       "Java",
       "Spring Boot",
       "Hibernate",
