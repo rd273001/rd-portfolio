@@ -38,6 +38,14 @@ export type Metric = {
   surfaces: MetricSurface[];
 };
 
+/** Editorial headshot. Hidden until a real file is verified. */
+export type ProfilePhoto = {
+  /** File in /public, for example "/profile/ravi.webp". */
+  src: string;
+  alt: string;
+  status: VerificationStatus;
+};
+
 export type Profile = {
   name: string;
   firstName: string;
@@ -53,6 +61,16 @@ export type Profile = {
   summary: string;
   currentRoleStarted: string;
   currentRoleStartedStatus: VerificationStatus;
+  /** Omit until a real professional photo is in the repo. */
+  photo?: ProfilePhoto;
+};
+
+/** Shown in the header, hero, and mobile menu only when verified. */
+export type Resume = {
+  label: string;
+  /** Public path or absolute URL. Omit until the file exists. */
+  url?: string;
+  status: VerificationStatus;
 };
 
 export type Experience = {
@@ -163,6 +181,8 @@ export type Site = {
   description: string;
   locale: string;
   navigation: NavigationItem[];
+  /** GitHub, LinkedIn, and similar links in the mobile menu utility row. */
+  headerUtilitySocialIds: string[];
   contact: {
     title: string;
     description: string;

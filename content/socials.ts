@@ -32,3 +32,13 @@ export const socials: Social[] = [
     status: "verified",
   },
 ];
+
+export function getVerifiedSocialsByIds(ids: readonly string[]): Social[] {
+  return ids.flatMap((id) => {
+    const social = socials.find(
+      (item) => item.id === id && item.status === "verified",
+    );
+
+    return social ? [social] : [];
+  });
+}

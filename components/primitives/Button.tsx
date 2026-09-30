@@ -34,6 +34,23 @@ function isHttpHref(href: string) {
   return href.startsWith("http://") || href.startsWith("https://");
 }
 
+function isFileHref(href: string) {
+  return /\.(pdf|docx?)(?:$|[?#])/i.test(href);
+}
+
+function usesNativeAnchor(href: string) {
+  return (
+    isHttpHref(href) ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:") ||
+    isFileHref(href)
+  );
+}
+
+function opensInNewTab(href: string) {
+  return isHttpHref(href) || isFileHref(href);
+}
+
 export function Button({
   children,
   className,
@@ -48,22 +65,22 @@ export function Button({
   );
 
   if ("href" in props && props.href) {
-    const opensInNewTab = isHttpHref(props.href);
+    const external = opensInNewTab(props.href);
     const content = (
       <>
         {children}
-        {opensInNewTab ? (
+        {external ? (
           <span className="sr-only"> (opens in a new tab)</span>
         ) : null}
       </>
     );
 
-    if (props.href.startsWith("http") || props.href.startsWith("mailto:")) {
+    if (usesNativeAnchor(props.href)) {
       return (
         <a
           href={props.href}
           className={classes}
-          {...(opensInNewTab
+          {...(external
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
         >

@@ -41,6 +41,7 @@ export const site: Site = {
       href: "/#contact",
     },
   ],
+  headerUtilitySocialIds: ["github", "linkedin"],
   contact: {
     title: "Let’s build something useful.",
     description:
