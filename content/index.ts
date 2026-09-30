@@ -10,10 +10,11 @@ export {
   getWorkShowcaseMetrics,
   metrics,
 } from "./metrics";
-export { profile } from "./profile";
+export { getVerifiedProfilePhoto, profile } from "./profile";
+export { getPublicResume, resume } from "./resume";
 export { getProject, getProjectsByProminence, projects } from "./projects";
 export { site } from "./site";
-export { skills } from "./skills";
+export { skills, skillsIntro } from "./skills";
 export { socials } from "./socials";
 export { testimonials } from "./testimonials";
 export type * from "./types";

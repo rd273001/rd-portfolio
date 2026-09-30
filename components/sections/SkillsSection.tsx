@@ -1,5 +1,5 @@
 import { Container } from "@/components/primitives";
-import { skills } from "@/content/skills";
+import { skills, skillsIntro } from "@/content/skills";
 
 export function SkillsSection() {
   const visibleSkillGroups = skills.filter((group) => group.items.length > 0);
@@ -14,10 +14,10 @@ export function SkillsSection() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:items-start lg:gap-16">
           <div>
             <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
-              Skills
+              {skillsIntro.eyebrow}
             </p>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl">
-              Focused on React, React Native, Next.js, and TypeScript product work.
+              {skillsIntro.title}
             </h2>
           </div>
 

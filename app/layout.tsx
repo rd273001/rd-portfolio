@@ -5,8 +5,9 @@ import type { ReactNode } from "react";
 import { SkipToContent } from "@/components/primitives";
 import { SiteHeader } from "@/components/sections";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getPublicResume } from "@/content/resume";
 import { site } from "@/content/site";
-import { socials } from "@/content/socials";
+import { getVerifiedSocialsByIds } from "@/content/socials";
 import { getPersonJsonLd, getWebSiteJsonLd } from "@/lib/seo";
 
 import "./globals.css";
@@ -70,8 +71,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const contact = socials.find(
-    (social) => social.id === site.contact.primarySocialId,
+  const resume = getPublicResume();
+  const utilities = getVerifiedSocialsByIds(site.headerUtilitySocialIds).map(
+    (social) => ({
+      id: social.id,
+      label: social.label,
+      href: social.href,
+    }),
   );
 
   return (
@@ -86,7 +92,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteHeader
           brand={site.name}
           navigation={site.navigation}
-          contact={contact}
+          resume={resume}
+          utilities={utilities}
         />
         <div className="flex flex-1 flex-col">{children}</div>
       </body>

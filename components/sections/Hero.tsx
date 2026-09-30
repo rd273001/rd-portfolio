@@ -1,6 +1,8 @@
+import Image from "next/image";
+
 import { Button, Container } from "@/components/primitives";
 import { getMetricsForSurface } from "@/content/metrics";
-import { profile } from "@/content/profile";
+import { getVerifiedProfilePhoto, profile } from "@/content/profile";
 import { site } from "@/content/site";
 import { socials } from "@/content/socials";
 
@@ -12,13 +14,15 @@ export function Hero() {
   const secondaryCta = socials.find(
     (social) => social.id === site.contact.secondarySocialId,
   );
+  const photo = getVerifiedProfilePhoto();
+
   return (
-    <section id="about" className="scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-28">
+    <section id="about" className="scroll-mt-20 overflow-hidden py-16 sm:py-20">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start lg:gap-16">
           <div>
             <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
-              {profile.currentTitle}
+              {profile.identity}
             </p>
             <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.045em] text-balance sm:text-5xl lg:text-6xl">
               {profile.name}
@@ -68,9 +72,23 @@ export function Hero() {
             ) : null}
           </div>
 
-          <aside className="rounded-2xl border border-border bg-surface p-6 shadow-[0_16px_40px_-28px_rgba(17,17,17,0.45)]">
+          <aside className="self-start rounded-2xl border border-border bg-surface p-6 shadow-[0_16px_40px_-28px_rgba(17,17,17,0.45)]">
+            {photo ? (
+              <div
+                className="relative mb-5 aspect-4/3 w-full max-w-76 overflow-hidden rounded-xl bg-accent mx-auto lg:mx-0 lg:max-w-none"
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  sizes="(min-width: 1024px) 19rem, 19rem"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+            ) : null}
             <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
-              {profile.identity}
+              Current role
             </p>
             <p className="mt-5 text-lg font-medium tracking-tight">
               {profile.currentTitle}

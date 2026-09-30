@@ -1,5 +1,11 @@
 import type { SkillGroup } from "./types";
 
+export const skillsIntro = {
+  eyebrow: "Skills",
+  title:
+    "A practical engineering stack shaped by production web, mobile, and full-stack work.",
+} as const;
+
 export const skills: SkillGroup[] = [
   {
     id: "primary",
