@@ -50,6 +50,44 @@ export const projects: Project[] = [
       "dfc-zoom-download-time",
       "dfc-zoom-time-improvement",
     ],
+    story: {
+      eyebrow: "On-demand Zoom delivery",
+      title: "The meeting SDK left the base download.",
+      lead: "Live lectures still use the Zoom Meeting SDK. It now arrives through an Android Dynamic Feature Module instead of shipping inside every install.",
+      narrative: [],
+      chapters: [
+        {
+          id: "dfc-zoom-base",
+          eyebrow: "Before",
+          title: "Every install carried the SDK",
+          body: "Base application delivery included the Zoom Meeting SDK. A new install downloaded that footprint even when no lecture was about to start.",
+          metricIds: [],
+        },
+        {
+          id: "dfc-zoom-module",
+          eyebrow: "Architecture",
+          title: "An Android Dynamic Feature Module",
+          body: "The SDK moved out of the base download. Kotlin and in-repo patches covered the native path when the library needed changes for on-demand delivery. Join triggers the module download—progress, cancel, restart after install, resume when a meeting is already running. That is a different install path, not a compressed copy of the old base package.",
+          metricIds: [],
+          screenshot: {
+            src: "/screenshots/dfc-app/zoom-on-demand.webp",
+            alt: "DFC live lecture join while the Zoom module downloads on demand",
+          },
+        },
+        {
+          id: "dfc-zoom-result",
+          eyebrow: "Verified result",
+          title: "What the release recorded",
+          body: "Google Play delivery for the release—the install-footprint figures below.",
+          metricIds: [
+            "dfc-zoom-delivery",
+            "dfc-zoom-new-install-size",
+            "dfc-zoom-download-time",
+            "dfc-zoom-time-improvement",
+          ],
+        },
+      ],
+    },
     caseStudyHref: "/work/dfc-app",
     screenshots: [
       "/screenshots/dfc-app/student-onboarding.webp",

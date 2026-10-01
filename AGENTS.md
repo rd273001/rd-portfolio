@@ -259,6 +259,14 @@ PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
 sitemap, icons, skip-to-content, and route loading/error/not-found states.
 Reduced-motion and 3D fallbacks remain as shipped in PR 5.
 
+### Case-study scroll story
+
+Optional `project.story` in `content/types.ts`: narrative blocks stay in normal flow; chapters can pin. Chapter `metricIds` resolve through `content/metrics.ts`. Do not hardcode those values in UI. Citing Google Play Console or Play delivery in copy is fine. Do not publish Play Console **dashboard** screenshots in the UI—state verified figures in `content/metrics.ts` only. DFC is the only story so far (Zoom Meeting SDK moved to an Android Dynamic Feature Module / on-demand delivery). 161 MB is that base-delivery change, not compression. Other case studies keep the standard layout until they have `story` content.
+
+GSAP for that story lives in `components/sections/case-study/CaseStudyStoryMotion.tsx` and only targets `[data-case-story-*]` on `/work/[projectId]`. Scroll progress is the story. Desktop pins one beat at a time beside the phone: the screen is blank while the SDK is still in the base install, the on-demand screenshot fades in on the architecture beat, and the verified figures arrive one after another on the result beat. Below 1024px the beats stay full width, the architecture card holds the download screenshot, and GSAP does not run — a fade on a phone that has already scrolled away is not the story. `prefers-reduced-motion: reduce` shows every beat at once with the screenshot visible. Do not call `ScrollTrigger.getAll()` — the career journey uses the same plugin on the homepage.
+
+Do not add post-DFM challenge beats or version-specific failure copy until Ravi verifies it in `content/`. Extra Zoom UI shots (restart modal, in-meeting) wait on real files under `/screenshots/dfc-app/`; `TODO_` screenshot srcs do not render.
+
 ### Local Windows note
 
 This machine’s npm config currently reports `os=linux`, so optional Tailwind / Lightning CSS Windows bindings are skipped unless you install with:

@@ -11,6 +11,7 @@ import type { Metric, ProjectId } from "./types";
  * - site: this portfolio (3D GLB/HDR, Lighthouse). Never mix into impact/hero.
  *
  * Case-study pages read `project.metricIds`, not surfaces, so they can stay complete.
+ * Story chapters reference those same ids for callouts.
  */
 export const metrics: Metric[] = [
   {

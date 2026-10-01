@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
+import { CaseStudyStory } from "@/components/sections/case-study/CaseStudyStory";
 import { AndroidPhoneFrame } from "@/components/sections/mobile-showcase/AndroidPhoneFrame";
 import { getMetricsByIds } from "@/content/metrics";
 import {
@@ -82,8 +83,15 @@ export default async function ProjectCaseStudyPage({
     notFound();
   }
 
+  const storyMetricIds = new Set(
+    getMetricsByIds(
+      project.story?.chapters.flatMap((chapter) => chapter.metricIds) ?? [],
+    )
+      .filter((metric) => metric.status === "verified")
+      .map((metric) => metric.id),
+  );
   const metrics = getMetricsByIds(project.metricIds).filter(
-    (metric) => metric.status === "verified",
+    (metric) => metric.status === "verified" && !storyMetricIds.has(metric.id),
   );
   const visibleScreenshots = project.screenshots.filter(
     (screenshot) => !screenshot.startsWith("TODO_"),
@@ -165,6 +173,8 @@ export default async function ProjectCaseStudyPage({
           </div>
         </Container>
       </section>
+
+      {project.story ? <CaseStudyStory story={project.story} /> : null}
 
       {metrics.length > 0 ? (
         <section className="border-t border-border py-16 sm:py-20">

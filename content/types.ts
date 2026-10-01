@@ -73,6 +73,40 @@ export type Resume = {
   status: VerificationStatus;
 };
 
+/** Readable setup in normal document flow. Not pinned. */
+export type CaseStudyNarrativeBlock = {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  body: string;
+};
+
+/** One beat of a pinned scroll story. Values come from `metricIds`. */
+export type CaseStudyStoryChapter = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  /** Ids in `content/metrics.ts`. Empty when the beat has no callouts. */
+  metricIds: string[];
+  screenshot?: {
+    src: string;
+    alt: string;
+  };
+};
+
+/**
+ * Optional flagship scroll story on a case-study page.
+ * Projects without `story` keep the standard layout.
+ */
+export type CaseStudyStory = {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  narrative: CaseStudyNarrativeBlock[];
+  chapters: CaseStudyStoryChapter[];
+};
+
 export type Experience = {
   id: string;
   company: string;
@@ -114,6 +148,11 @@ export type Project = {
   metricIds: string[];
   /** Omitted when the project has no `/work/[id]` case study (e.g. IKIOR internship). */
   caseStudyHref?: string;
+  /**
+   * Scroll story for this case study. Metric numbers stay in `content/metrics.ts`.
+   * Omit until that project has structured story content.
+   */
+  story?: CaseStudyStory;
   screenshots: string[];
 };
 
