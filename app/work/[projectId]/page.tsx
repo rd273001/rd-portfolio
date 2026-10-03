@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 
 import { Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
+import { CaseStudyStory } from "@/components/sections/case-study/CaseStudyStory";
 import { AndroidPhoneFrame } from "@/components/sections/mobile-showcase/AndroidPhoneFrame";
-import { getMetricsByIds } from "@/content/metrics";
+import { formatMetricRange, getMetricsByIds } from "@/content/metrics";
 import {
   getCaseStudyHighlights,
   getCaseStudyProject,
@@ -82,8 +83,17 @@ export default async function ProjectCaseStudyPage({
     notFound();
   }
 
+  const storyMetricIds = new Set(
+    getMetricsByIds(
+      project.story?.chapters
+        .filter((chapter) => chapter.metricIds.length > 1)
+        .flatMap((chapter) => chapter.metricIds) ?? [],
+    )
+      .filter((metric) => metric.status === "verified")
+      .map((metric) => metric.id),
+  );
   const metrics = getMetricsByIds(project.metricIds).filter(
-    (metric) => metric.status === "verified",
+    (metric) => metric.status === "verified" && !storyMetricIds.has(metric.id),
   );
   const visibleScreenshots = project.screenshots.filter(
     (screenshot) => !screenshot.startsWith("TODO_"),
@@ -166,6 +176,8 @@ export default async function ProjectCaseStudyPage({
         </Container>
       </section>
 
+      {project.story ? <CaseStudyStory story={project.story} /> : null}
+
       {metrics.length > 0 ? (
         <section className="border-t border-border py-16 sm:py-20">
           <Container>
@@ -188,10 +200,9 @@ export default async function ProjectCaseStudyPage({
                   <dd className="mt-4 text-3xl font-semibold tracking-[-0.04em]">
                     {metric.value}
                   </dd>
-                  {metric.previous && metric.current ? (
+                  {formatMetricRange(metric) ? (
                     <p className="mt-3 text-sm leading-6 text-muted">
-                      {metric.previous} to {metric.current}
-                      {metric.percentage ? ` (${metric.percentage})` : ""}
+                      {formatMetricRange(metric)}
                     </p>
                   ) : null}
                   {metric.note ? (

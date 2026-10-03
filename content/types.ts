@@ -73,6 +73,47 @@ export type Resume = {
   status: VerificationStatus;
 };
 
+/** Readable setup in normal document flow. Not pinned. */
+export type CaseStudyNarrativeBlock = {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  body: string;
+};
+
+export type CaseStudyStoryScreenshot = {
+  src: string;
+  alt: string;
+};
+
+/** One beat of a pinned scroll story. Values come from `metricIds`. */
+export type CaseStudyStoryChapter = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  /** Ids in `content/metrics.ts`. Empty when the beat has no callouts. */
+  metricIds: string[];
+  /**
+   * Screens for the pinned phone on this beat. Multiple srcs crossfade
+   * during the beat (download → restart → join). Omit to keep the last
+   * screen, or leave the phone blank on the opening beat.
+   */
+  screenshots?: CaseStudyStoryScreenshot[];
+};
+
+/**
+ * Optional flagship scroll story on a case-study page.
+ * Projects without `story` keep the standard layout.
+ */
+export type CaseStudyStory = {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  narrative: CaseStudyNarrativeBlock[];
+  chapters: CaseStudyStoryChapter[];
+};
+
 export type Experience = {
   id: string;
   company: string;
@@ -114,7 +155,18 @@ export type Project = {
   metricIds: string[];
   /** Omitted when the project has no `/work/[id]` case study (e.g. IKIOR internship). */
   caseStudyHref?: string;
+  /**
+   * Scroll story for this case study. Metric numbers stay in `content/metrics.ts`.
+   * Omit until that project has structured story content.
+   */
+  story?: CaseStudyStory;
+  /** Full gallery on `/work/[id]` and anywhere that needs every capture. */
   screenshots: string[];
+  /**
+   * Home Work 3D panel only. Omit to use all `screenshots`. Keep length
+   * aligned across flagship apps so tab switch does not resize the stage.
+   */
+  workShowcaseScreenshots?: string[];
 };
 
 export type SkillGroup = {

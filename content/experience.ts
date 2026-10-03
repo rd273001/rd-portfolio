@@ -17,7 +17,7 @@ export const experience: Experience[] = [
     highlights: [
       "Own and maintain two production Android apps: DFC and AptiBooster.",
       "Led the DFC mobile revamp on the existing Play listing — new TypeScript and TanStack Query codebase with onboarding, deep-link navigation, offline usage, and stronger auth/API error handling.",
-      "Cut DFC p90 app start from ~894 ms to ~794 ms on production Android with lazy-loaded navigators and startup-path refactors; ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
+      "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors (~100 ms / 11.2% faster); ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
       "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors that report actionable failures without flooding Crashlytics.",
       "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module.",
       "Built AptiBooster so scoring, peer comparison, and analysis derive from one timed test attempt, and wired the mobile surfaces for API-backed insights, suggestions, and downloadable reports.",

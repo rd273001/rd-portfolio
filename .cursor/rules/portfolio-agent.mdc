@@ -464,7 +464,7 @@ Key work:
 * error handling
 * user feedback
 * student, teacher, and admin roles
-* Firebase Performance (_app_start): production Android p90 app start ~894 ms → ~794 ms (~100 ms / ~11%) after lazy-loaded navigators and startup-path refactors
+* Firebase Performance (_app_start): production Android p90 app start ~894 ms → 794 ms (~100 ms / 11.2%) after lazy-loaded navigators and startup-path refactors
 * ~5 MB lower JS heap at Home idle in internal profiling after the same lazy-load work (not live prod heap telemetry)
 * deep-link navigation
 * offline usage for core flows
@@ -490,28 +490,33 @@ Verified production app start (Firebase Performance, Android p90):
 
 ~100 ms faster
 
-~11%
+11.2%
 
-Verified previous optimization:
+Verified production base app bundle optimization (Google Play Console production track, base path before Zoom in ~177 MB delivery):
 
-21.02 MB → 15 MB
+* **21.02 MB → 15.9 MB** (5.12 MB / 24.36%) — earlier production base bundle on the same Play listing; after R8/ProGuard/bundle work to current new-install size
+* Separate from the on-demand Zoom release row below
 
-6.02 MB saved
+Verified production Zoom delivery result (Google Play Console: current production vs previous production release, Release delivery):
 
-28.6% reduction
-
-Verified production Zoom delivery result:
-
-* Zoom Meeting SDK moved out of base delivery
+* Previous production with Zoom in base delivery: **177 MB** new-install download size
+* Current production with on-demand Zoom: **15.9 MB** new-install download size
+* **161 MB** on-demand **feature_zoom** module on Play (not in the 15.9 MB base install)
+* Versus prior production with Zoom in base (**177 MB** new-install), Release delivery **161.1 MB** less on the base path (177 − 15.9; not “compressed the app”)
+* Earlier production base **21 MB** on Play explorer (**21.02 MB** in release tooling) → **15.9 MB** base today (**5.12 MB** / **24.36%**)—separate from the feature_zoom split
 * Android Dynamic Feature Module / on-demand delivery
-* 161 MB reduction versus previous release
-* 15.9 MB new-install download size
-* 8 second download time
-* 90 second improvement versus previous release
+* 9 second new-install download time (Play modeled store delivery—not the on-demand module alone on user Wi‑Fi)
+* 94 seconds faster download time versus previous production release
+* Do not publish Play Console app version names, version codes, or bundle artifact labels on the public site
+
+Verified production stability (Play Console):
+
+* User-perceived crash rate **10.36% lower** than pre-revamp baseline when Ravi took over mobile
+* Current production user-perceived crash rate **0.1%** — say “10.36% lower,” not “10% crash rate”
 
 IMPORTANT:
 
-The 161 MB represents removal of the large Zoom SDK footprint from base application delivery through on-demand delivery.
+The **161 MB** feature_zoom module (Play bundle explorer) represents the Zoom SDK footprint moved to on-demand delivery; the **15.9 MB** base install replaces shipping that footprint in every new install.
 
 Do NOT describe it as simply "compressed the app by 161 MB".
 
@@ -686,11 +691,8 @@ Another:
 
 ```ts
 {
-  id: "dfc-bundle-optimization",
-  previous: "21.02 MB",
-  current: "15 MB",
-  reduction: "6.02 MB",
-  percentage: "28.6%",
+  id: "dfc-crash-rate-improvement",
+  value: "10.36% lower",
   status: "verified"
 }
 ```

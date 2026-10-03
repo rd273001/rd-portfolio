@@ -37,7 +37,9 @@ export function MobileShowcase() {
         role: project.role,
         caseStudyHref: project.caseStudyHref!,
         storeUrl: project.storeUrl,
-        screenshots: project.screenshots.filter(
+        screenshots: (
+          project.workShowcaseScreenshots ?? project.screenshots
+        ).filter(
           (screenshot) =>
             screenshot.startsWith("/") && !screenshot.startsWith("//"),
         ),

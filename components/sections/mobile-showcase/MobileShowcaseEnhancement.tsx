@@ -478,7 +478,7 @@ export function MobileShowcaseEnhancement({
             <h4 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
               {activeProject.name}
             </h4>
-            <p className="mt-4 text-base leading-7 text-background/70">
+            <p className="mt-4 min-h-14 text-base leading-7 text-background/70">
               {activeProject.tagline}
             </p>
 

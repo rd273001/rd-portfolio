@@ -8,7 +8,7 @@ Built with Next.js (App Router), TypeScript, and Tailwind CSS. Professional copy
 
 - Next.js 16 · React 19 · TypeScript
 - Tailwind CSS 4
-- GSAP + ScrollTrigger for responsive career storytelling
+- GSAP + ScrollTrigger for the career journey and the DFC case-study delivery story
 - React Three Fiber + Drei for the screenshot-gated mobile showcase
 
 The work section lazy-loads the WebGL phone when DFC App and AptiBooster
@@ -73,7 +73,8 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 3. **Professional story** — experience, impact, skills, education
 4. **Projects** — selected work and case studies
 5. **Creative interaction** — GSAP storytelling and 3D mobile showcase
-6. **Production polish** — SEO, accessibility, performance, QA *(current)*
+6. **Production polish** — SEO, accessibility, performance, QA
+7. **Case-study storytelling** — DFC on-demand Zoom delivery *(current)*
 
 Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.
 

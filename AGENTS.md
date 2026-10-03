@@ -100,7 +100,7 @@ Impact dashboard: production DFC and AptiBooster metrics only. Do not put Certif
 
 Do not invent a debugging-effort percentage. The Crashlytics contextual logger is a verified narrative achievement until Crashlytics history can support a measured range.
 
-DFC 161 MB: that figure is Zoom Meeting SDK moved out of base delivery via Android Dynamic Feature Module / on-demand delivery. Never say the app was “compressed by 161 MB”.
+DFC delivery (Play production): feature_zoom **161 MB** on-demand (not in **15.9 MB** base). Prior Zoom-in-base production **177 MB** new-install → **161.1 MB** Release delivery reduction (177 − 15.9). Earlier production base bundle **21.02 → 15.9 MB** (**5.12 MB** / **24.36%**). Download time **9 s**, **94 s** faster vs prior prod; crash **10.36% lower** (0.1% current). Never publish app version names or version codes on the public site. Never say the app was “compressed by 161 MB”.
 
 ## Design
 
@@ -258,6 +258,14 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
 sitemap, icons, skip-to-content, and route loading/error/not-found states.
 Reduced-motion and 3D fallbacks remain as shipped in PR 5.
+
+### Case-study scroll story
+
+Optional `project.story` in `content/types.ts`: narrative blocks stay in normal flow; chapters can pin. Chapter `metricIds` resolve through `content/metrics.ts`. Do not hardcode those values in UI. Citing Google Play Console or Play delivery in copy is fine. Do not publish Play Console **dashboard** screenshots in the UI—state verified figures in `content/metrics.ts` only. DFC is the only story so far (Zoom Meeting SDK moved to an Android Dynamic Feature Module / on-demand delivery). 161 MB is the on-demand feature_zoom module; 161.1 MB is Release delivery reduction vs 177 MB Zoom-in-base production—not compression. Other case studies keep the standard layout until they have `story` content.
+
+GSAP for that story lives in `components/sections/case-study/CaseStudyStoryMotion.tsx` and only targets `[data-case-story-*]` on `/work/[projectId]`. Scroll progress is the story. Desktop pins one beat at a time beside one phone: the screen stays blank on the short Before beat, the download UI fades in on Architecture, and Product flow crossfades download → restart → join inside the same frame. Later beats keep the last screen. Below 1024px the beats stack and that same single phone sits above them (no per-chapter frames). `prefers-reduced-motion: reduce` shows every beat at once with the last screen visible. Do not call `ScrollTrigger.getAll()` — the career journey uses the same plugin on the homepage.
+
+Do not add post-DFM challenge beats or version-specific failure copy until Ravi verifies it in `content/`. Zoom download, restart, and join-preview shots are in the DFC story. A cancel-download shot can wait. `TODO_` screenshot srcs do not render.
 
 ### Local Windows note
 
