@@ -20,6 +20,32 @@ const colors = {
   surface: "#ffffff",
 };
 
+/** Matches `public/brand-mark.svg` / header `BrandMark` (32×32, rx 8). */
+const brandMarkSize = 56;
+const brandMarkRadius = (8 / 32) * brandMarkSize;
+
+function OgBrandMark() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: brandMarkSize,
+        width: brandMarkSize,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: brandMarkRadius,
+        backgroundColor: colors.foreground,
+        color: colors.background,
+        fontSize: 24,
+        fontFamily: "Georgia, serif",
+        letterSpacing: "-0.02em",
+      }}
+    >
+      RD
+    </div>
+  );
+}
+
 export function createOpenGraphImage({
   kicker,
   title,
@@ -44,23 +70,7 @@ export function createOpenGraphImage({
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div
-            style={{
-              display: "flex",
-              height: 56,
-              width: 56,
-              alignItems: "center",
-              justifyContent: "center",
-              border: `1px solid ${colors.border}`,
-              borderRadius: 12,
-              backgroundColor: colors.surface,
-              fontSize: 18,
-              fontWeight: 600,
-              letterSpacing: "-0.04em",
-            }}
-          >
-            RD
-          </div>
+          <OgBrandMark />
           <div style={{ display: "flex", fontSize: 28, fontWeight: 600 }}>
             {site.name}
           </div>
@@ -70,9 +80,10 @@ export function createOpenGraphImage({
           <div
             style={{
               display: "flex",
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: 500,
-              letterSpacing: "0.16em",
+              fontFamily: "ui-monospace, monospace",
+              letterSpacing: "0.18em",
               textTransform: "uppercase",
               color: colors.muted,
             }}
@@ -116,6 +127,9 @@ export function createOpenGraphImage({
 }
 
 export function createAppleIcon() {
+  const size = appleIconSize.width;
+  const radius = (8 / 32) * size;
+
   return new ImageResponse(
     (
       <div
@@ -126,10 +140,11 @@ export function createAppleIcon() {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: colors.foreground,
+          borderRadius: radius,
           color: colors.background,
-          fontSize: 72,
-          fontWeight: 600,
-          letterSpacing: "-0.06em",
+          fontSize: 78,
+          fontFamily: "Georgia, serif",
+          letterSpacing: "-0.02em",
         }}
       >
         RD

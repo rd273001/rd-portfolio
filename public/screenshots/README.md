@@ -9,8 +9,16 @@ Capture at **device resolution** (1080×2340 or larger), then export WebP around
 | File | Screen |
 | --- | --- |
 | `student-onboarding.webp` | Welcome / OTP login (empty phone field — no number shown) |
-| `zoom-on-demand.webp` | Live lectures + on-demand Zoom module download |
+| `zoom-on-demand.webp` | Live lectures + on-demand meeting tools download in progress (Unseen) |
+| `zoom-cancel-download.webp` | Cancel download confirmation while meeting tools are downloading |
+| `zoom-dfm-preparing.webp` | Preparing meeting tools after download |
+| `zoom-restart-after-download.webp` | Post-download restart prompt for meeting tools (Unseen) |
+| `zoom-returning-to-lecture.webp` | Returning to an in-progress lecture after download / restart |
+| `zoom-starting-lecture.webp` | Starting your lecture loading state |
+| `zoom-join-preview.webp` | Zoom join preview before entering the meeting |
 | `student-batches.webp` | Assigned batches list |
+
+**Capture notes (DFC live lectures):** Prefer an **Unseen** badge on the lecture card in marketing shots when you can. **Watched** often appears when re-testing after tools were already installed or the same lecture was completed earlier—it does not change the product story, but portfolio viewers may read it as “already consumed” without that context.
 
 ## AptiBooster → `public/screenshots/aptibooster/`
 
@@ -18,7 +26,8 @@ Capture at **device resolution** (1080×2340 or larger), then export WebP around
 | --- | --- |
 | `test-session.webp` | Live test (match-the-following question) |
 | `test-overview.webp` | Post-test overview grid |
-| `test-analysis.webp` | Full test analysis with charts / strength mapping |
+| `test-analysis-charts.webp` | Full test analysis — topic difficulty (pie) and strength mapping (bars) |
+| `test-analysis.webp` | Full test analysis — strength mapping (bars) and consistency index (line chart) |
 | `question-review.webp` | Question review with answer and explanation |
 
-Same paths power the static showcase, the gated 3D scene, and case-study pages.
+Home **Work** 3D panel uses `workShowcaseScreenshots` when set (DFC: four Zoom/onboarding shots). Case-study **Screenshots** sections use the full `screenshots` list on each project.
