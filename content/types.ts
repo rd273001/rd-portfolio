@@ -81,6 +81,11 @@ export type CaseStudyNarrativeBlock = {
   body: string;
 };
 
+export type CaseStudyStoryScreenshot = {
+  src: string;
+  alt: string;
+};
+
 /** One beat of a pinned scroll story. Values come from `metricIds`. */
 export type CaseStudyStoryChapter = {
   id: string;
@@ -89,10 +94,12 @@ export type CaseStudyStoryChapter = {
   body: string;
   /** Ids in `content/metrics.ts`. Empty when the beat has no callouts. */
   metricIds: string[];
-  screenshot?: {
-    src: string;
-    alt: string;
-  };
+  /**
+   * Screens for the pinned phone on this beat. Multiple srcs crossfade
+   * during the beat (download → restart → join). Omit to keep the last
+   * screen, or leave the phone blank on the opening beat.
+   */
+  screenshots?: CaseStudyStoryScreenshot[];
 };
 
 /**
@@ -153,7 +160,13 @@ export type Project = {
    * Omit until that project has structured story content.
    */
   story?: CaseStudyStory;
+  /** Full gallery on `/work/[id]` and anywhere that needs every capture. */
   screenshots: string[];
+  /**
+   * Home Work 3D panel only. Omit to use all `screenshots`. Keep length
+   * aligned across flagship apps so tab switch does not resize the stage.
+   */
+  workShowcaseScreenshots?: string[];
 };
 
 export type SkillGroup = {

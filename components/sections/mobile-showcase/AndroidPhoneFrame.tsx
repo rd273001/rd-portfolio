@@ -5,6 +5,11 @@ import { phoneFrontLayout } from "./phoneFrontLayout";
 type AndroidPhoneFrameProps = {
   screenshot?: string;
   alt?: string;
+  /** Stacked screen images for case-study scroll (frame stays; screens crossfade). */
+  layers?: {
+    src: string;
+    alt: string;
+  }[];
   /**
    * `panel` — height-led; matches desktop Work 3D loading slot (9:19.5).
    * `stack` — width-led; Work mobile + case study screenshots (same aspect).
@@ -23,6 +28,7 @@ type AndroidPhoneFrameProps = {
 export function AndroidPhoneFrame({
   screenshot,
   alt = "",
+  layers,
   size = "stack",
   sizes = "(min-width: 1024px) 280px, 55vw",
   priority = false,
@@ -86,6 +92,21 @@ export function AndroidPhoneFrame({
                   priority={priority}
                 />
               ) : null}
+              {layers?.map((layer, index) => (
+                <Image
+                  key={layer.src}
+                  src={layer.src}
+                  alt={index === 0 ? layer.alt : ""}
+                  fill
+                  sizes={sizes}
+                  quality={95}
+                  data-case-story-screen=""
+                  data-active="false"
+                  className="object-fill"
+                  priority={priority && index === 0}
+                  aria-hidden={index === 0 ? undefined : true}
+                />
+              ))}
               <span
                 className="absolute left-1/2 flex items-center justify-center rounded-full"
                 style={{

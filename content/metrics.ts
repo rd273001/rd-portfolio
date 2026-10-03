@@ -1,6 +1,15 @@
 import type { Metric, ProjectId } from "./types";
 
 /**
+ * DFC production figures (canonical math — keep `metrics` entries in sync):
+ * - Base bundle (earlier production base → current): 21.02 − 15.9 = 5.12 MB (24.36%)
+ * - feature_zoom on Play: 161 MB on-demand (not in 15.9 MB base install)
+ * - Prior prod Zoom-in-base new install: 177 MB → 15.9 MB base (177 − 15.9 = 161.1 MB Release delivery)
+ * - New-install download time: 9 s; vs prior prod: 94 s faster
+ * - Crash rate: 10.36% lower vs pre-revamp baseline; 0.1% current
+ * - App start p90: ~894 ms → 794 ms (~100 ms / 11.2%)
+ */
+/**
  * Surface roles:
  * - hero: three identity/scale metrics only
  * - impact: production DFC and AptiBooster results that are not already in the hero
@@ -24,15 +33,25 @@ export const metrics: Metric[] = [
   },
   {
     id: "dfc-bundle-optimization",
-    label: "DFC previous release optimization",
-    value: "6.02 MB",
+    label: "DFC base app bundle (production)",
+    value: "5.12 MB",
     previous: "21.02 MB",
-    current: "15 MB",
-    reduction: "6.02 MB",
-    percentage: "28.6%",
+    current: "15.9 MB",
+    reduction: "5.12 MB",
+    percentage: "24.36%",
     status: "verified",
     project: "dfc-app",
-    surfaces: ["impact", "achievement", "work"],
+    note: "R8, ProGuard, and App Bundle work on the same Play listing. Separate from on-demand Zoom.",
+    surfaces: ["impact", "achievement"],
+  },
+  {
+    id: "dfc-crash-rate-improvement",
+    label: "User-perceived crash rate improvement",
+    value: "10.36% lower",
+    status: "verified",
+    project: "dfc-app",
+    note: "Current production: 0.1% user-perceived crash rate. 10.36% lower than the pre-revamp baseline.",
+    surfaces: ["impact", "achievement"],
   },
   {
     id: "dfc-app-start-p90",
@@ -41,9 +60,10 @@ export const metrics: Metric[] = [
     previous: "~894 ms",
     current: "794 ms",
     reduction: "~100 ms",
-    percentage: "~11%",
+    percentage: "11.2%",
     status: "verified",
     project: "dfc-app",
+    note: "Firebase Performance p90 on production Android after lazy-loaded navigators and startup-path refactors.",
     surfaces: ["impact", "achievement"],
   },
   {
@@ -52,16 +72,18 @@ export const metrics: Metric[] = [
     value: "~5 MB lower",
     status: "verified",
     project: "dfc-app",
-    note: "Internal profiling after lazy-loaded navigators (same lazy-load work as the production startup win). Not live production heap telemetry.",
+    note: "Internal profiling after lazy-loaded navigators. Not live production heap telemetry.",
     surfaces: [],
   },
   {
     id: "dfc-zoom-delivery",
     label: "Base delivery reduction",
     value: "161 MB",
+    previous: "177 MB",
+    current: "15.9 MB",
     status: "verified",
     project: "dfc-app",
-    note: "Zoom Meeting SDK moved out of the base download with an Android Dynamic Feature Module / on-demand delivery. This is not simple compression of the app binary.",
+    note: "On-demand Zoom module on Play (161 MB), not in the 15.9 MB base install. 177 MB → 15.9 MB is 161.1 MB less on the base path—not compression.",
     surfaces: ["hero", "achievement"],
   },
   {
@@ -70,22 +92,25 @@ export const metrics: Metric[] = [
     value: "15.9 MB",
     status: "verified",
     project: "dfc-app",
-    surfaces: [],
+    note: "Play base module for a new install after Zoom left the first download.",
+    surfaces: ["work"],
   },
   {
     id: "dfc-zoom-download-time",
-    label: "On-demand module download time",
-    value: "8 seconds",
+    label: "New-install download time",
+    value: "9 seconds",
     status: "verified",
     project: "dfc-app",
+    note: "Play modeled new-install download time, not on-device Zoom module Wi‑Fi.",
     surfaces: [],
   },
   {
     id: "dfc-zoom-time-improvement",
-    label: "Install-time improvement vs previous release",
-    value: "90 seconds",
+    label: "Download time vs previous production release",
+    value: "94 seconds faster",
     status: "verified",
     project: "dfc-app",
+    note: "Play Time to download vs the prior production release.",
     surfaces: [],
   },
   {
@@ -195,6 +220,16 @@ export const metrics: Metric[] = [
 
 export function getMetric(id: string): Metric | undefined {
   return metrics.find((metric) => metric.id === id);
+}
+
+export function formatMetricRange(metric: Metric): string | undefined {
+  if (!metric.previous || !metric.current) {
+    return undefined;
+  }
+
+  return metric.percentage
+    ? `${metric.previous} → ${metric.current} (${metric.percentage})`
+    : `${metric.previous} → ${metric.current}`;
 }
 
 export function getMetricsByIds(ids: string[]): Metric[] {

@@ -5,16 +5,24 @@ export const achievements: Achievement[] = [
     id: "dfc-zoom-ondemand",
     title: "On-demand Zoom delivery",
     description:
-      "On-demand Zoom for live lectures—download progress, cancel, restart after install, resume in-meeting—via an Android Dynamic Feature Module, cutting 161 MB from the base download path.",
+      "On-demand Zoom for live lectures—download progress, cancel, restart after install, resume in-meeting—via feature_zoom (161 MB on-demand on Play): 15.9 MB base new-install download vs 177 MB prior production with Zoom in base (161.1 MB Release delivery reduction).",
     metricId: "dfc-zoom-delivery",
     status: "verified",
   },
   {
     id: "dfc-bundle",
-    title: "DFC bundle optimization",
+    title: "DFC base bundle optimization (production)",
     description:
-      "Reduced the Android App Bundle from 21.02 MB to 15 MB — 6.02 MB saved, 28.6% smaller.",
+      "Reduced production base app bundle download size on Google Play from 21.02 MB to 15.9 MB (5.12 MB / 24.36%) on an earlier production release—alongside the on-demand Zoom release that cut new-install delivery from 177 MB to 15.9 MB.",
     metricId: "dfc-bundle-optimization",
+    status: "verified",
+  },
+  {
+    id: "dfc-production-stability",
+    title: "DFC production stability",
+    description:
+      "After the TypeScript rebuild and native delivery work, Google Play reports 0.1% user-perceived crash rate on current production—10.36% lower than the pre-revamp baseline when I took over mobile.",
+    metricId: "dfc-crash-rate-improvement",
     status: "verified",
   },
   {
@@ -42,7 +50,7 @@ export const achievements: Achievement[] = [
     id: "dfc-startup-load",
     title: "DFC startup, deep links, and offline",
     description:
-      "Lazy-loaded navigators and startup-path refactors on the existing Play production app: p90 app start ~894 ms → ~794 ms (~100 ms faster). ~5 MB lower JS heap at Home idle in internal profiling after the same work. Deep links and offline for core flows.",
+      "Lazy-loaded navigators and startup-path refactors on the existing Play production app: p90 app start ~894 ms → 794 ms (~100 ms / 11.2% faster). ~5 MB lower JS heap at Home idle in internal profiling after the same work. Deep links and offline for core flows.",
     metricId: "dfc-app-start-p90",
     status: "verified",
   },

@@ -1,5 +1,5 @@
 import { Container } from "@/components/primitives";
-import { getMetricsForSurface } from "@/content/metrics";
+import { formatMetricRange, getMetricsForSurface } from "@/content/metrics";
 
 export function ImpactDashboard() {
   const impactMetrics = getMetricsForSurface("impact");
@@ -33,9 +33,9 @@ export function ImpactDashboard() {
               <dt className="text-sm leading-5 text-muted">{metric.label}</dt>
               <dd className="mt-4 text-3xl font-semibold tracking-[-0.04em]">
                 {metric.percentage ?? metric.value}
-                {metric.previous && metric.current ? (
+                {formatMetricRange(metric) ? (
                   <span className="mt-3 block text-sm font-normal leading-6 tracking-normal text-muted">
-                    {metric.previous} to {metric.current}
+                    {formatMetricRange(metric)}
                   </span>
                 ) : null}
                 {metric.note ? (

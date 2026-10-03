@@ -1,6 +1,10 @@
 import { Container } from "@/components/primitives";
-import { getMetricsByIds } from "@/content/metrics";
-import type { CaseStudyStory as CaseStudyStoryContent, Metric } from "@/content/types";
+import { formatMetricRange, getMetricsByIds } from "@/content/metrics";
+import type {
+  CaseStudyStory as CaseStudyStoryContent,
+  CaseStudyStoryScreenshot,
+  Metric,
+} from "@/content/types";
 
 import { AndroidPhoneFrame } from "../mobile-showcase/AndroidPhoneFrame";
 import { CaseStudyStoryMotion } from "./CaseStudyStoryMotion";
@@ -8,6 +12,47 @@ import { CaseStudyStoryMotion } from "./CaseStudyStoryMotion";
 type CaseStudyStoryProps = {
   story: CaseStudyStoryContent;
 };
+
+function visibleShot(
+  shot: CaseStudyStoryScreenshot | undefined,
+): CaseStudyStoryScreenshot | undefined {
+  if (!shot || !shot.src.trim() || shot.src.startsWith("TODO_")) {
+    return undefined;
+  }
+
+  return shot;
+}
+
+function uniqueStoryScreens(
+  chapters: CaseStudyStoryContent["chapters"],
+): CaseStudyStoryScreenshot[] {
+  const seen = new Set<string>();
+  const screens: CaseStudyStoryScreenshot[] = [];
+
+  for (const chapter of chapters) {
+    for (const shot of chapter.screenshots ?? []) {
+      const visible = visibleShot(shot);
+      if (!visible || seen.has(visible.src)) {
+        continue;
+      }
+      seen.add(visible.src);
+      screens.push(visible);
+    }
+  }
+
+  return screens;
+}
+
+function screenIndexes(
+  chapter: CaseStudyStoryContent["chapters"][number],
+  screens: CaseStudyStoryScreenshot[],
+) {
+  return (chapter.screenshots ?? [])
+    .map((shot) => visibleShot(shot))
+    .filter((shot): shot is CaseStudyStoryScreenshot => shot !== undefined)
+    .map((shot) => screens.findIndex((screen) => screen.src === shot.src))
+    .filter((index) => index >= 0);
+}
 
 function MetricCallouts({ metrics }: { metrics: Metric[] }) {
   if (metrics.length === 0) {
@@ -31,10 +76,9 @@ function MetricCallouts({ metrics }: { metrics: Metric[] }) {
             >
               {metric.value}
             </dd>
-            {metric.previous && metric.current ? (
+            {formatMetricRange(metric) ? (
               <p className="mt-2 text-sm leading-6 text-muted">
-                {metric.previous} to {metric.current}
-                {metric.percentage ? ` (${metric.percentage})` : ""}
+                {formatMetricRange(metric)}
               </p>
             ) : null}
           </div>
@@ -51,10 +95,7 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
   const chapters = story.chapters.filter(
     (chapter) => chapter.title.trim() && chapter.body.trim(),
   );
-
-  const visual = chapters.find(
-    (chapter) => chapter.screenshot && !chapter.screenshot.src.startsWith("TODO_"),
-  )?.screenshot;
+  const screens = uniqueStoryScreens(chapters);
 
   if (narrative.length === 0 && chapters.length === 0) {
     return null;
@@ -124,11 +165,11 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
                 <div data-case-story-progress />
               </div>
               <div data-case-story-layout>
-                {visual ? (
-                  <div data-case-story-visual className="hidden lg:block">
+                {screens.length > 0 ? (
+                  <div data-case-story-visual>
                     <AndroidPhoneFrame
-                      screenshot={visual.src}
-                      alt={visual.alt}
+                      layers={screens}
+                      alt={screens[screens.length - 1]?.alt ?? ""}
                       size="stack"
                       sizes="(min-width: 1024px) 240px, 176px"
                     />
@@ -139,18 +180,16 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
                     const metrics = getMetricsByIds(chapter.metricIds).filter(
                       (metric) => metric.status === "verified",
                     );
-                    const screenshot =
-                      chapter.screenshot &&
-                      !chapter.screenshot.src.startsWith("TODO_")
-                        ? chapter.screenshot
-                        : undefined;
+                    const indexes = screenIndexes(chapter, screens);
 
                     return (
                       <li
                         key={chapter.id}
                         data-case-story-chapter
-                        {...(screenshot
-                          ? { "data-case-story-reveal": "" }
+                        {...(indexes.length > 0
+                          ? {
+                              "data-case-story-screens": indexes.join(","),
+                            }
                           : {})}
                         className="w-full rounded-3xl border border-border bg-surface p-5 sm:p-7"
                       >
@@ -164,19 +203,6 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
                           {chapter.body}
                         </p>
                         <MetricCallouts metrics={metrics} />
-                        {screenshot ? (
-                          <div
-                            data-case-story-shot
-                            className="mx-auto mt-6 w-full max-w-52 lg:hidden"
-                          >
-                            <AndroidPhoneFrame
-                              screenshot={screenshot.src}
-                              alt={screenshot.alt}
-                              size="stack"
-                              sizes="208px"
-                            />
-                          </div>
-                        ) : null}
                       </li>
                     );
                   })}
