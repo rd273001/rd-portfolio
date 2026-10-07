@@ -1,3 +1,5 @@
+import { FeedbackForm } from "@/components/forms/FeedbackForm";
+import { InquiryForm } from "@/components/forms/InquiryForm";
 import { Button, Container } from "@/components/primitives";
 import { profile } from "@/content/profile";
 import { site } from "@/content/site";
@@ -13,9 +15,15 @@ export function ContactCta() {
   const visibleSocials = socials.filter(
     (social) => social.status === "verified",
   );
+  const emailHref = primaryCta?.href.startsWith("mailto:")
+    ? primaryCta.href
+    : (socials.find((social) => social.id === "email")?.href ?? null);
 
   return (
-    <section id="contact" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
+    <section
+      id="contact"
+      className="scroll-mt-20 border-t border-border py-16 sm:py-20"
+    >
       <Container>
         <div className="rounded-3xl bg-foreground px-6 py-10 text-background sm:px-10 sm:py-14 lg:px-14">
           <div className="max-w-2xl">
@@ -75,6 +83,24 @@ export function ContactCta() {
               })}
             </ul>
           ) : null}
+        </div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">
+          <InquiryForm
+            title={site.contact.inquiry.title}
+            description={site.contact.inquiry.description}
+            submitLabel={site.contact.inquiry.submitLabel}
+            reasons={site.contact.inquiry.reasons}
+            emailHref={emailHref}
+          />
+          <div id="feedback" className="scroll-mt-20">
+            <FeedbackForm
+              title={site.contact.feedback.title}
+              description={site.contact.feedback.description}
+              submitLabel={site.contact.feedback.submitLabel}
+              emailHref={emailHref}
+            />
+          </div>
         </div>
       </Container>
     </section>

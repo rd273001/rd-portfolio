@@ -11,6 +11,7 @@ export { RouteError } from "./RouteError";
 export { SiteFooter } from "./SiteFooter";
 export { SiteHeader } from "./SiteHeader";
 export { SiteMetrics } from "./SiteMetrics";
+export { TestimonialsSection } from "./TestimonialsSection";
 export { SparsePageContent } from "./SparsePageContent";
 export { SparsePageMark } from "./SparsePageMark";
 export { SparsePageSection } from "./SparsePageSection";

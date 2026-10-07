@@ -22,6 +22,8 @@ type ButtonAsButton = SharedProps & {
   href?: undefined;
   type?: "button" | "submit";
   onClick?: () => void;
+  disabled?: boolean;
+  "aria-busy"?: boolean;
 };
 
 type ButtonAsLink = SharedProps & {
@@ -96,11 +98,19 @@ export function Button({
     );
   }
 
+  const buttonProps = props as ButtonAsButton;
+
   return (
     <button
-      type={props.type ?? "button"}
-      className={classes}
-      onClick={props.onClick}
+      type={buttonProps.type ?? "button"}
+      className={cn(
+        classes,
+        buttonProps.disabled &&
+          "pointer-events-none cursor-not-allowed opacity-55",
+      )}
+      onClick={buttonProps.onClick}
+      disabled={buttonProps.disabled}
+      aria-busy={buttonProps["aria-busy"]}
     >
       {children}
     </button>

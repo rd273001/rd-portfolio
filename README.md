@@ -74,7 +74,21 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 4. **Projects** — selected work and case studies
 5. **Creative interaction** — GSAP storytelling and 3D mobile showcase
 6. **Production polish** — SEO, accessibility, performance, QA
-7. **Case-study storytelling** — DFC on-demand Zoom delivery *(current)*
+7. **Case-study storytelling** — DFC on-demand Zoom delivery *(merged)*
+8. **Product polish A–G** — see `AGENTS.md`. PR C waits on AptiBooster production metrics. **PR D** is contact + feedback.
+
+## Contact form (Resend)
+
+Submissions go through `POST /api/contact` and email Ravi. There is no database.
+
+1. Create a Resend account and API key.
+2. Verify `ravidubey.in` at [resend.com/domains](https://resend.com/domains).
+3. Copy `.env.example` to `.env.local` and set `RESEND_API_KEY` plus `CONTACT_FROM_EMAIL` (must be on the verified domain).
+4. On Vercel (or your host), add the same server env vars. Never prefix them with `NEXT_PUBLIC_`.
+
+Until those vars exist, the form returns an error and the Email CTA remains the fallback.
+
+Public “What collaborators say” only appears when `content/testimonials.ts` has verified entries.
 
 Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.
 
