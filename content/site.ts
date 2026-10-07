@@ -48,6 +48,25 @@ export const site: Site = {
       "I’m open to conversations about software engineering roles and thoughtful product work.",
     primarySocialId: "email",
     secondarySocialId: "linkedin",
+    inquiry: {
+      eyebrow: "Contact",
+      title: "Send a message",
+      description:
+        "Use the form for roles, product work, or a short question. Email still works if you prefer.",
+      submitLabel: "Send message",
+      reasons: [
+        { id: "role", label: "Software engineering role" },
+        { id: "product", label: "Product or collaboration" },
+        { id: "other", label: "Something else" },
+      ],
+    },
+    feedback: {
+      eyebrow: "Feedback",
+      title: "Leave feedback",
+      description:
+        "If we have worked together, you can send a note privately. Nothing is published unless I follow up and you agree.",
+      submitLabel: "Send feedback",
+    },
   },
   features: {
     mobile3DShowcase: false,
