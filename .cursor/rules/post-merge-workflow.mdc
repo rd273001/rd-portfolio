@@ -11,7 +11,7 @@ This is a **git + handoff** task. Do **not** only congratulate, list manual step
 
 ## Steps (run in the repo)
 
-1. Read `AGENTS.md` — **Product polish phase (PR A–G)** (if active), else **Branches** (PR 1–6), and **Current status** — to determine which PR was just finished and which is **next**.
+1. Read `AGENTS.md` — **Product polish phase (PR A–H)** (if active), else **Branches** (PR 1–6), and **Current status** — to determine which PR was just finished and which is **next**.
 2. Sync local `main` with remote:
    - `git fetch origin`
    - `git checkout main`
@@ -47,21 +47,22 @@ for the following PR. The branch used by a PR itself is defined in the
 | PR 3 Professional story | PR 4: `feat/projects-and-case-studies` |
 | PR 4 Projects | PR 5: `feat/gsap-and-3d-showcase` |
 | PR 5 Interaction | PR 6: `chore/production-polish` |
-| PR 6 Polish | No further planned PR in initial build; use **PR A–G** below for polish phase. |
+| PR 6 Polish | No further planned PR in initial build; use **PR A–H** below for polish phase. |
 
-## Branch sequence (product polish PR A–G)
+## Branch sequence (product polish PR A–H)
 
-After PR 1–6, use `AGENTS.md` **Product polish phase (PR A–G)** for scope and branch names.
+After PR 1–6, use `AGENTS.md` **Product polish phase (PR A–H)** for scope and branch names.
 
 | Merged PR (completed) | Create this branch for the next PR |
 | --- | --- |
 | PR A | PR B: `feat/case-study-storytelling` |
 | PR B | PR C: `feat/aptibooster-case-study-story` |
 | PR C | PR D: `feat/contact-and-feedback` |
-| PR D | PR E: `feat/work-archive` |
-| PR E | PR F: `feat/evidence-interactions` |
-| PR F | PR G: `chore/final-qa` |
-| PR G | No further PR in A–G plan; optional `perf/android-showcase-assets` or ad-hoc content PRs per `AGENTS.md`. |
+| PR D | PR E: `feat/admin-feedback` |
+| PR E | PR F: `feat/work-archive` |
+| PR F | PR G: `feat/evidence-interactions` |
+| PR G | PR H: `chore/final-qa` |
+| PR H | No further PR in A–H plan; optional `perf/android-showcase-assets` or ad-hoc content PRs per `AGENTS.md`. |
 
 If `AGENTS.md` marks the next PR as **waiting** (for example PR C waiting on AptiBooster production metrics), skip to the following **planned** / **next** PR instead of creating a blocked branch.
 

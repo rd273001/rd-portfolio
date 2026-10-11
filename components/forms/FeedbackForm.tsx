@@ -4,10 +4,32 @@ import { useReducer, type FormEvent } from "react";
 
 import { Button } from "@/components/primitives";
 import { FIELD_LIMITS } from "@/lib/contact/limits";
+import { cn } from "@/lib/cn";
+import type { FeedbackFieldKey } from "@/lib/contact/validate";
 
-import { controlClassName, Field, honeypotClassName } from "./Field";
+import {
+  controlClassName,
+  Field,
+  fieldDescribedBy,
+  honeypotClassName,
+  messageTextareaClassName,
+} from "./Field";
+import {
+  ContactFormShell,
+  ContactFormSuccess,
+} from "./ContactFormShell";
+import { ContactFormHeightSwap } from "./ContactFormHeightSwap";
+import { focusFirstFieldError } from "./focusFirstFieldError";
+import { FormSubmitButtonLabel } from "./FormSubmitButtonLabel";
 import { FormSubmitFeedback } from "./FormSubmitFeedback";
 import { useContactForm } from "./useContactForm";
+
+const FEEDBACK_FIELD_ORDER: FeedbackFieldKey[] = [
+  "name",
+  "role",
+  "email",
+  "message",
+];
 
 type Draft = {
   name: string;
@@ -47,58 +69,81 @@ function draftReducer(state: Draft, action: DraftAction): Draft {
 }
 
 type FeedbackFormProps = {
-  title: string;
-  description: string;
+  description?: string;
   submitLabel: string;
   emailHref: string | null;
+  successTitleId?: string;
 };
 
 export function FeedbackForm({
-  title,
-  description,
+  description = "",
   submitLabel,
   emailHref,
+  successTitleId = "contact-feedback-status",
 }: FeedbackFormProps) {
   const [draft, updateDraft] = useReducer(draftReducer, emptyDraft);
   const form = useContactForm();
   const submitting = form.status === "submitting";
+  const fieldErrors = form.fieldErrors as Partial<Record<FeedbackFieldKey, string>>;
+
+  function updateField(
+    field: Exclude<keyof Draft, "permissionToPublish">,
+    value: string,
+  ) {
+    if (
+      field !== "website" &&
+      field !== "company" &&
+      fieldErrors[field as FeedbackFieldKey]
+    ) {
+      form.clearFieldError(field);
+    }
+
+    updateDraft({ type: "field", field, value });
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const ok = await form.submit({
+    const result = await form.submit({
       kind: "feedback",
       ...draft,
     });
 
-    if (ok) {
+    if (result.ok) {
       updateDraft({ type: "clear" });
+      return;
+    }
+
+    if (result.fieldErrors) {
+      focusFirstFieldError(result.fieldErrors, FEEDBACK_FIELD_ORDER, "feedback");
     }
   }
 
-  if (form.status === "success") {
-    return (
-      <div className="rounded-2xl border border-border bg-surface px-5 py-6 sm:px-6">
-        <h3 className="text-lg font-semibold tracking-[-0.03em]">{title}</h3>
-        <p className="mt-3 text-base leading-7 text-muted" role="status">
-          Feedback received. It stays private unless I follow up with you.
-        </p>
-      </div>
-    );
-  }
+  const isSuccess = form.status === "success";
 
   return (
+    <ContactFormHeightSwap viewKey={isSuccess ? "success" : "form"}>
+      {isSuccess ? (
+        <ContactFormSuccess
+          title="Feedback sent"
+          titleId={successTitleId}
+          message="It stays private unless I follow up with you."
+          resetLabel="Send more feedback"
+          onReset={form.reset}
+        />
+      ) : (
+    <ContactFormShell>
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-5 rounded-2xl border border-border bg-surface px-5 py-6 sm:px-6"
+      className="flex flex-1 flex-col gap-5"
       noValidate
+      aria-labelledby="contact-feedback-title"
     >
-      <div>
-        <h3 className="text-lg font-semibold tracking-[-0.03em]">{title}</h3>
-        <p className="mt-2 text-sm leading-6 text-muted">{description}</p>
-      </div>
+      {description ? (
+        <p className="text-sm leading-6 text-muted">{description}</p>
+      ) : null}
 
-      <Field id="feedback-name" label="Name">
+      <Field id="feedback-name" label="Name" error={fieldErrors.name}>
         <input
           id="feedback-name"
           name="name"
@@ -106,18 +151,18 @@ export function FeedbackForm({
           required
           maxLength={FIELD_LIMITS.name}
           value={draft.name}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "name",
-              value: event.target.value,
-            })
-          }
-          className={controlClassName}
+          onChange={(event) => updateField("name", event.target.value)}
+          aria-invalid={fieldErrors.name ? true : undefined}
+          aria-describedby={fieldDescribedBy(
+            "feedback-name",
+            undefined,
+            fieldErrors.name,
+          )}
+          className={controlClassName(Boolean(fieldErrors.name))}
         />
       </Field>
 
-      <Field id="feedback-role" label="Role">
+      <Field id="feedback-role" label="Role" error={fieldErrors.role}>
         <input
           id="feedback-role"
           name="role"
@@ -125,14 +170,14 @@ export function FeedbackForm({
           required
           maxLength={FIELD_LIMITS.role}
           value={draft.role}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "role",
-              value: event.target.value,
-            })
-          }
-          className={controlClassName}
+          onChange={(event) => updateField("role", event.target.value)}
+          aria-invalid={fieldErrors.role ? true : undefined}
+          aria-describedby={fieldDescribedBy(
+            "feedback-role",
+            undefined,
+            fieldErrors.role,
+          )}
+          className={controlClassName(Boolean(fieldErrors.role))}
         />
       </Field>
 
@@ -143,14 +188,8 @@ export function FeedbackForm({
           autoComplete="organization"
           maxLength={FIELD_LIMITS.company}
           value={draft.company}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "company",
-              value: event.target.value,
-            })
-          }
-          className={controlClassName}
+          onChange={(event) => updateField("company", event.target.value)}
+          className={controlClassName()}
         />
       </Field>
 
@@ -159,6 +198,7 @@ export function FeedbackForm({
         label="Email"
         optional
         hint="Only if you want a follow-up."
+        error={fieldErrors.email}
       >
         <input
           id="feedback-email"
@@ -168,18 +208,18 @@ export function FeedbackForm({
           inputMode="email"
           maxLength={FIELD_LIMITS.email}
           value={draft.email}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "email",
-              value: event.target.value,
-            })
-          }
-          className={controlClassName}
+          onChange={(event) => updateField("email", event.target.value)}
+          aria-invalid={fieldErrors.email ? true : undefined}
+          aria-describedby={fieldDescribedBy(
+            "feedback-email",
+            "Only if you want a follow-up.",
+            fieldErrors.email,
+          )}
+          className={controlClassName(Boolean(fieldErrors.email))}
         />
       </Field>
 
-      <Field id="feedback-message" label="Feedback">
+      <Field id="feedback-message" label="Feedback" error={fieldErrors.message}>
         <textarea
           id="feedback-message"
           name="message"
@@ -187,14 +227,17 @@ export function FeedbackForm({
           rows={5}
           maxLength={FIELD_LIMITS.message}
           value={draft.message}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "message",
-              value: event.target.value,
-            })
-          }
-          className={`${controlClassName} min-h-32 resize-y py-3`}
+          onChange={(event) => updateField("message", event.target.value)}
+          aria-invalid={fieldErrors.message ? true : undefined}
+          aria-describedby={fieldDescribedBy(
+            "feedback-message",
+            undefined,
+            fieldErrors.message,
+          )}
+          className={cn(
+            controlClassName(Boolean(fieldErrors.message)),
+            messageTextareaClassName,
+          )}
         />
       </Field>
 
@@ -206,13 +249,7 @@ export function FeedbackForm({
           tabIndex={-1}
           autoComplete="off"
           value={draft.website}
-          onChange={(event) =>
-            updateDraft({
-              type: "field",
-              field: "website",
-              value: event.target.value,
-            })
-          }
+          onChange={(event) => updateField("website", event.target.value)}
         />
       </div>
 
@@ -227,16 +264,17 @@ export function FeedbackForm({
           }
           className="mt-1 size-4 shrink-0 rounded border-border accent-foreground"
         />
-        <label
-          htmlFor="feedback-permission"
-          className="cursor-pointer"
-        >
+        <label htmlFor="feedback-permission" className="cursor-pointer">
           I’m comfortable with this being published later if you follow up
           with me first.
         </label>
       </div>
 
-      <FormSubmitFeedback error={form.error} emailHref={emailHref} />
+      <FormSubmitFeedback
+        error={form.formError}
+        emailHref={emailHref}
+        showEmailLink={form.emailFallback}
+      />
 
       <Button
         type="submit"
@@ -244,8 +282,11 @@ export function FeedbackForm({
         aria-busy={submitting}
         className="w-full sm:w-auto sm:min-w-36"
       >
-        {submitting ? "Sending…" : submitLabel}
+        <FormSubmitButtonLabel busy={submitting} idleLabel={submitLabel} />
       </Button>
     </form>
+    </ContactFormShell>
+      )}
+    </ContactFormHeightSwap>
   );
 }

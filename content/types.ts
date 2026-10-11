@@ -254,7 +254,10 @@ export type Site = {
     };
     feedback: {
       eyebrow: string;
+      /** Short line above the card — clarifies this is not the hiring inquiry form. */
+      intro: string;
       title: string;
+      /** Optional helper inside the card; section intro is the primary context. */
       description: string;
       submitLabel: string;
     };

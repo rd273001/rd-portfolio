@@ -62,9 +62,10 @@ export const site: Site = {
     },
     feedback: {
       eyebrow: "Feedback",
+      intro:
+        "For collaborators only — not for job applications. Your note stays private unless we agree to publish it later.",
       title: "Leave feedback",
-      description:
-        "If we have worked together, you can send a note privately. Nothing is published unless I follow up and you agree.",
+      description: "",
       submitLabel: "Send feedback",
     },
   },

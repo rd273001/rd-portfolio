@@ -75,7 +75,7 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 5. **Creative interaction** — GSAP storytelling and 3D mobile showcase
 6. **Production polish** — SEO, accessibility, performance, QA
 7. **Case-study storytelling** — DFC on-demand Zoom delivery *(merged)*
-8. **Product polish A–G** — see `AGENTS.md`. PR C waits on AptiBooster production metrics. **PR D** is contact + feedback.
+8. **Product polish A–H** — see `AGENTS.md` and `docs/product-polish-pass.md`. PR C waits on AptiBooster metrics. **PR D** = contact + feedback; **PR E** = admin feedback dashboard (after D).
 
 ## Contact form (Resend)
 

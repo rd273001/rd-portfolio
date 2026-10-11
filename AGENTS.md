@@ -12,6 +12,7 @@ Do not dump a giant portfolio brief into chat. Read only what the current task n
 | --- | --- | --- |
 | Agent operating system | `.cursor/rules/portfolio-agent.mdc` | Always-on workflow, model use, verified facts, constraints |
 | Project specification | `AGENTS.md` | Architecture, PR plan, prompts, current status |
+| Polish pass (full brief) | `docs/product-polish-pass.md` | Numbered sections 1–36; PR order in **this file** wins if the doc’s §34 still lists A–G only |
 | Professional data | `content/*` | Typed source of truth for UI |
 | Implementation | `app/`, `components/`, `lib/` | Next.js code that consumes content |
 
@@ -210,33 +211,38 @@ Use short, kebab-case names with a [Conventional Commits](https://www.convention
 
 Do not push feature work directly to `main`; open a PR from the feature branch.
 
-### Product polish phase (PR A–G)
+### Product polish phase (PR A–H)
 
 PR 1–6 are **done**. Further work is the **evidence-driven storytelling / product polish** pass (one focused Agent chat per PR). Do not rebuild the site or replace Career Journey / 3D showcase.
+
+Full numbered brief (sections 1–36): `docs/product-polish-pass.md` (also referenced from `.cursor/rules/product-polish-pass.mdc`).
 
 | PR | Scope | Suggested branch | Status |
 | --- | --- | --- | --- |
 | A | Header + Resume + Hero photo + Skills copy | `feat/header-resume-and-hero` | merged |
 | B | Case-study content model + DFC scroll storytelling | `feat/case-study-storytelling` | merged |
 | C | AptiBooster + Certificate Generator storytelling + case-study navigation | `feat/aptibooster-case-study-story` | waiting (AptiBooster production metrics) |
-| D | Contact form + feedback collection | `feat/contact-and-feedback` | **next** |
-| E | All projects / archive + achievement integration | `feat/work-archive` | planned |
-| F | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | planned |
-| G | Final responsive / a11y / performance QA | `chore/final-qa` | planned |
+| D | Contact form + feedback collection (Resend; no DB) | `feat/contact-and-feedback` | **in progress** |
+| E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | planned |
+| F | All projects / archive + achievement integration | `feat/work-archive` | planned |
+| G | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | planned |
+| H | Final responsive / a11y / performance QA | `chore/final-qa` | planned |
 
 **PR C notes:** Paused until AptiBooster Play production numbers exist for the current review release (and the follow-up optimization branch, measured separately). Reuse DFC’s `project.story` + `CaseStudyStory` / `CaseStudyStoryMotion` patterns. AptiBooster story = timed test → telemetry → analysis UX (no Gemini / backend AI ownership claims). Certificate Generator = personal MERN project with verified request/certificate counts. Add case-study reading aids (anchors, sticky chapter nav, prev/next) only where they help—do not overbuild.
 
-**PR D notes:** Next.js Route Handler + Resend emails submissions to Ravi. No database. Public testimonials render only from verified `content/testimonials.ts` rows; empty list hides the section. `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (verified `ravidubey.in` domain in Resend) are required in production. Direct Email remains the fallback.
+**PR D notes:** Next.js Route Handler + Resend emails submissions to Ravi. **No database in this PR.** Public testimonials render only from verified `content/testimonials.ts` rows; empty list hides the section. `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (verified `ravidubey.in` domain in Resend) are required in production. Direct Email remains the fallback. Field-level validation + form-level send errors. **Do not** add `/admin`, OAuth, or DB here— that is PR E.
+
+**PR E notes:** Separate PR after D merges. Protected `/admin` (e.g. `/admin/feedback`): **Auth.js** (or equivalent) with **Google sign-in + email allowlist**; **authorization** on every server mutation. Persist feedback submissions (e.g. Supabase): `pending` → admin **publish** / **archive** / **delete**; homepage “What collaborators say” reads **published** rows from DB (optional: keep `content/testimonials.ts` as seed/legacy). Checkbox on the public form is intent only—**never** auto-publish. Rate-limit login; httpOnly session; no admin secrets in `NEXT_PUBLIC_*`. Inquiry form can stay email-only.
 
 **Source of truth:** `content/*`, `portfolio-agent.mdc`, and this file—not old chat prompts. Verified DFC/AptiBooster figures may differ from an early polish brief; never invent metrics.
 
-**Also planned (not A–G):** Android showcase asset perf — branch `perf/android-showcase-assets` (see below). DFC metric-only refreshes can be a small commit inside a content PR or a short `chore/content-metrics` PR if scoped to `content/metrics.ts` only.
+**Also planned (not A–H):** Android showcase asset perf — branch `perf/android-showcase-assets` (see below). DFC metric-only refreshes can be a small commit inside a content PR or a short `chore/content-metrics` PR if scoped to `content/metrics.ts` only.
 
 ### When the user says "merged"
 
 A merged PR means **sync local git and open the next PR branch** — not only a text handoff.
 
-The Agent must run: `git fetch origin` → `git checkout main` → `git pull origin main` → `git checkout -B <next-branch> main` (next branch from **PR A–G** if polish phase is active, else the PR 1–6 table). Then reply with **four numbered handoffs** (what to do next; commit/push readiness; full next-chat prompt including the same four-question closing; model for next PR). See `.cursor/rules/post-merge-workflow.mdc`.
+The Agent must run: `git fetch origin` → `git checkout main` → `git pull origin main` → `git checkout -B <next-branch> main` (next branch from **PR A–H** if polish phase is active, else the PR 1–6 table). Then reply with **four numbered handoffs** (what to do next; commit/push readiness; full next-chat prompt including the same four-question closing; model for next PR). See `.cursor/rules/post-merge-workflow.mdc`.
 
 Feature PR chats should end the starter prompt with: *When you finish, tell me: (1) what to do next, (2) commit/push ready, (3) next new-chat prompt, (4) model.*
 
@@ -279,8 +285,9 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR A header, resume utilities, hero identity, skills copy
 - [x] PR B DFC case-study scroll story (`project.story`, GSAP pin)
 - [ ] PR C AptiBooster + Certificate Generator stories + case-study navigation (waiting on production metrics)
-- [ ] PR D contact form + private feedback (this branch)
-- [ ] PR E–G (see **Product polish phase** table)
+- [ ] PR D contact form + private feedback (`feat/contact-and-feedback`)
+- [ ] PR E admin feedback dashboard + dynamic testimonials
+- [ ] PR F–H (see **Product polish phase** table)
 
 PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
 sitemap, icons, skip-to-content, and route loading/error/not-found states.

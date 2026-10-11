@@ -107,38 +107,76 @@ export function isSubmittedTooFast(request: ContactRequest, now = Date.now()): b
 
 const reasonIds = new Set(site.contact.inquiry.reasons.map((reason) => reason.id));
 
-export function validateContactFields(
-  request: ContactRequest,
-): string | null {
+export type InquiryFieldKey = "name" | "email" | "reason" | "message";
+export type FeedbackFieldKey = "name" | "role" | "email" | "message";
+
+export type InquiryFieldErrors = Partial<Record<InquiryFieldKey, string>>;
+export type FeedbackFieldErrors = Partial<Record<FeedbackFieldKey, string>>;
+
+export function getInquiryFieldErrors(
+  request: Extract<ContactRequest, { kind: "inquiry" }>,
+): InquiryFieldErrors {
+  const errors: InquiryFieldErrors = {};
+
   if (request.name.length < 2) {
-    return "Please enter your name.";
+    errors.name = "Please enter your name.";
+  }
+
+  if (!EMAIL_PATTERN.test(request.email)) {
+    errors.email = "Please enter a valid email.";
+  }
+
+  if (!reasonIds.has(request.reason)) {
+    errors.reason = "Please choose a reason.";
   }
 
   if (request.message.length < 12) {
-    return "Please write a slightly longer message.";
+    errors.message = "Please write a slightly longer message.";
   }
 
-  if (request.kind === "inquiry") {
-    if (!EMAIL_PATTERN.test(request.email)) {
-      return "Please enter a valid email.";
-    }
+  return errors;
+}
 
-    if (!reasonIds.has(request.reason)) {
-      return "Please choose a reason.";
-    }
+export function getFeedbackFieldErrors(
+  request: Extract<ContactRequest, { kind: "feedback" }>,
+): FeedbackFieldErrors {
+  const errors: FeedbackFieldErrors = {};
 
-    return null;
+  if (request.name.length < 2) {
+    errors.name = "Please enter your name.";
   }
 
   if (request.role.length < 2) {
-    return "Please add your role.";
+    errors.role = "Please add your role.";
   }
 
   if (request.email && !EMAIL_PATTERN.test(request.email)) {
-    return "Please enter a valid email, or leave it blank.";
+    errors.email = "Please enter a valid email, or leave it blank.";
   }
 
-  return null;
+  if (request.message.length < 12) {
+    errors.message = "Please write a slightly longer message.";
+  }
+
+  return errors;
+}
+
+export function getContactFieldErrors(
+  request: ContactRequest,
+): InquiryFieldErrors | FeedbackFieldErrors {
+  if (request.kind === "inquiry") {
+    return getInquiryFieldErrors(request);
+  }
+
+  return getFeedbackFieldErrors(request);
+}
+
+export function validateContactFields(
+  request: ContactRequest,
+): string | null {
+  const errors = getContactFieldErrors(request);
+  const first = Object.values(errors)[0];
+  return first ?? null;
 }
 
 export function reasonLabel(reasonId: string): string {
