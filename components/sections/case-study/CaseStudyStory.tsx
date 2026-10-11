@@ -147,22 +147,29 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
             <div data-case-story-stage>
               <ol data-case-story-steps className="hidden">
                 {chapters.map((chapter, index) => (
-                  <li
-                    key={chapter.id}
-                    data-case-story-step
-                    data-active={index === 0 ? "true" : "false"}
-                    className="font-mono text-xs font-medium uppercase tracking-[0.16em]"
-                  >
-                    {chapter.eyebrow}
+                  <li key={chapter.id}>
+                    <button
+                      type="button"
+                      data-case-story-step
+                      data-case-story-step-index={index}
+                      data-active={index === 0 ? "true" : "false"}
+                      className="font-mono text-xs font-medium uppercase tracking-[0.16em]"
+                    >
+                      {chapter.eyebrow}
+                    </button>
                   </li>
                 ))}
               </ol>
-              <div
-                data-case-story-progress-track
-                className="hidden"
-                aria-hidden="true"
-              >
+              <div data-case-story-progress-track className="hidden">
                 <div data-case-story-progress />
+              </div>
+              <div data-case-story-skip className="hidden">
+                <button type="button" data-case-story-skip-dir="-1">
+                  Back to start
+                </button>
+                <button type="button" data-case-story-skip-dir="1">
+                  Skip to end
+                </button>
               </div>
               <div data-case-story-layout>
                 {screens.length > 0 ? (
