@@ -134,6 +134,43 @@ export const metrics: Metric[] = [
     surfaces: ["impact", "work", "achievement"],
   },
   {
+    id: "aptibooster-home-js-cpu-lab",
+    label: "Home JS CPU after cold start (lab)",
+    value: "2.8%",
+    previous: "29.1%",
+    current: "2.8%",
+    status: "verified",
+    project: "aptibooster",
+    note:
+      "Flashlight avg JS thread CPU over a 15s Home window. Controlled lab before/after the production release that shipped the fix, on a low-end phone with tight RAM and storage.",
+    surfaces: ["impact", "achievement"],
+  },
+  {
+    id: "aptibooster-home-js70-samples-lab",
+    label: "Home JS CPU spikes ≥70% (lab)",
+    value: "0%",
+    previous: "17.4%",
+    current: "0%",
+    status: "verified",
+    project: "aptibooster",
+    note:
+      "Share of Flashlight samples with JS thread ≥70% during the same Home window as aptibooster-home-js-cpu-lab.",
+    surfaces: ["achievement"],
+  },
+  {
+    id: "aptibooster-home-pss-lab",
+    label: "Home memory after cold start (lab)",
+    value: "~108 MB lower",
+    previous: "~336 MB",
+    current: "~228 MB",
+    reduction: "~108 MB",
+    status: "verified",
+    project: "aptibooster",
+    note:
+      "dumpsys Total PSS after Home. Same lab device and before/after comparison as aptibooster-home-js-cpu-lab.",
+    surfaces: ["achievement"],
+  },
+  {
     id: "certificate-generator-requests",
     label: "Pending certificate requests",
     value: "400+",

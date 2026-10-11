@@ -151,7 +151,7 @@ export const projects: Project[] = [
     kind: "production-app",
     prominence: 2,
     tagline:
-      "Live test telemetry is the source of truth; the mobile app integrates APIs for analysis and AI-backed insights.",
+      "Live test telemetry is the source of truth; the mobile app integrates APIs for analysis and reports.",
     summary:
       "Production aptitude app with 1K+ downloads, built substantially from scratch. Scoring, peer comparison, and structured analysis data come from one live test client; the mobile app surfaces API-backed insights (including backend-generated analysis and reports).",
     role: "Software Engineer 1 (Mobile) · substantial development from scratch",
@@ -178,11 +178,101 @@ export const projects: Project[] = [
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search; subscriptions unlock the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
+      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
+      "Migrated to TanStack Query’s official MMKV persist client: throttled disk writes, selective dehydrate (Home, profile, and analytics summaries persist; large test and analysis payloads stay in memory only), and removed a legacy unbounded on-disk cache blob.",
     ],
     caseStudyHighlights: [
       "Shipped Google Play in-app updates so users can install new releases from inside the app.",
     ],
-    metricIds: ["aptibooster-downloads", "aptibooster-bundle-optimization"],
+    metricIds: [
+      "aptibooster-downloads",
+      "aptibooster-bundle-optimization",
+      "aptibooster-home-js-cpu-lab",
+      "aptibooster-home-js70-samples-lab",
+      "aptibooster-home-pss-lab",
+    ],
+    story: {
+      eyebrow: "Live test client",
+      title: "The timed attempt is the source of truth.",
+      lead: "Scoring, peer comparison, and structured analysis all read from one live test client. The app integrates the APIs for analysis and reports, and the production release stays usable on constrained Android devices.",
+      narrative: [],
+      chapters: [
+        {
+          id: "aptibooster-test-source",
+          eyebrow: "Source of truth",
+          title: "One timed attempt",
+          body: "The live test client records the attempt. Revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",
+          metricIds: [],
+        },
+        {
+          id: "aptibooster-test-client",
+          eyebrow: "Test client",
+          title: "Telemetry the rest of the app can trust",
+          body: "Peer comparison, speed versus accuracy, difficulty, consistency, and subject breakdowns trace back to that same attempt. The mobile client is the source of truth for the data those surfaces use.",
+          metricIds: [],
+          screenshots: [
+            {
+              src: "/screenshots/aptibooster/test-session.webp",
+              alt: "AptiBooster live test with a match-the-following question",
+            },
+          ],
+        },
+        {
+          id: "aptibooster-analysis-flow",
+          eyebrow: "Product flow",
+          title: "Analysis, suggestions, and reports",
+          body: "After the attempt, overview and full test analysis read that telemetry. Insight callouts, Analytics suggestions, and Profile downloadable reports are mobile surfaces on production APIs. The backend produces the analysis content; the app renders and ships the flows.",
+          metricIds: [],
+          // First shot matches Test client so the pin does not hard-cut (same
+          // pattern as DFC Architecture → Product flow). Then overview → charts.
+          screenshots: [
+            {
+              src: "/screenshots/aptibooster/test-session.webp",
+              alt: "AptiBooster live test with a match-the-following question",
+            },
+            {
+              src: "/screenshots/aptibooster/test-overview.webp",
+              alt: "AptiBooster post-test overview",
+            },
+            {
+              src: "/screenshots/aptibooster/test-analysis-charts.webp",
+              alt: "AptiBooster full test analysis with topic difficulty and strength mapping",
+            },
+            {
+              src: "/screenshots/aptibooster/test-analysis.webp",
+              alt: "AptiBooster full test analysis with strength mapping and consistency index",
+            },
+          ],
+        },
+        {
+          id: "aptibooster-home",
+          eyebrow: "Constrained devices",
+          title: "Home taps register on a tight phone",
+          body: "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch. That did not show up on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks, lazy loading, and a lighter startup and Home content load so taps register as soon as Home is shown. The figures are a controlled lab on that low-end phone, before and after the production release that shipped the fix: Flashlight JS-thread CPU over a 15-second Home window, the share of samples at or above 70%, and dumpsys Total PSS after Home.",
+          metricIds: [
+            "aptibooster-home-js-cpu-lab",
+            "aptibooster-home-js70-samples-lab",
+            "aptibooster-home-pss-lab",
+          ],
+          // No Home capture in repo yet — keep last analysis screen until a
+          // Home (or short cold-start → Home) asset is added.
+        },
+        {
+          id: "aptibooster-persist",
+          eyebrow: "Cache",
+          title: "Summaries persist; large payloads stay in memory",
+          body: "TanStack Query’s official MMKV persist client replaced a legacy unbounded on-disk cache. Disk writes are throttled. Home, profile, and analytics summaries persist; large test and analysis payloads stay in memory only.",
+          metricIds: [],
+        },
+        {
+          id: "aptibooster-release",
+          eyebrow: "Verified result",
+          title: "A smaller production release",
+          body: "The production release is smaller. The figure below is the verified size change on that release.",
+          metricIds: ["aptibooster-bundle-optimization"],
+        },
+      ],
+    },
     caseStudyHref: "/work/aptibooster",
     screenshots: [
       "/screenshots/aptibooster/test-session.webp",

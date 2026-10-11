@@ -55,6 +55,21 @@ export const achievements: Achievement[] = [
     status: "verified",
   },
   {
+    id: "aptibooster-home-interactivity",
+    title: "AptiBooster Home interactivity on constrained Android",
+    description:
+      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
+    metricId: "aptibooster-home-js-cpu-lab",
+    status: "verified",
+  },
+  {
+    id: "aptibooster-query-persist",
+    title: "AptiBooster TanStack Query cache persistence",
+    description:
+      "Migrated to TanStack Query’s official MMKV persist client with throttled disk writes and selective dehydrate: Home, profile, and analytics summaries persist; large test and analysis payloads stay in memory only. Removed a legacy unbounded on-disk cache blob.",
+    status: "verified",
+  },
+  {
     id: "aptibooster-bundle",
     title: "AptiBooster release optimization",
     description:
