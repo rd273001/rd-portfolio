@@ -211,6 +211,11 @@ export type Testimonial = {
   status: VerificationStatus;
 };
 
+export type ContactReason = {
+  id: string;
+  label: string;
+};
+
 export type Social = {
   id: string;
   label: string;
@@ -240,6 +245,22 @@ export type Site = {
     description: string;
     primarySocialId: string;
     secondarySocialId: string;
+    inquiry: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      submitLabel: string;
+      reasons: ContactReason[];
+    };
+    feedback: {
+      eyebrow: string;
+      /** Short line above the card — clarifies this is not the hiring inquiry form. */
+      intro: string;
+      title: string;
+      /** Optional helper inside the card; section intro is the primary context. */
+      description: string;
+      submitLabel: string;
+    };
   };
   features: {
     /**

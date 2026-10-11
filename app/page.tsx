@@ -9,6 +9,7 @@ import {
   ProjectsSection,
   SiteMetrics,
   SkillsSection,
+  TestimonialsSection,
 } from "@/components/sections";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
       <SkillsSection />
       <EducationSection />
       <SiteMetrics />
+      <TestimonialsSection />
       <ContactCta />
     </PageShell>
   );

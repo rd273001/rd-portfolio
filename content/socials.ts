@@ -33,6 +33,19 @@ export const socials: Social[] = [
   },
 ];
 
+export function getInboxEmail(): string | null {
+  const email = socials.find(
+    (item) => item.id === "email" && item.status === "verified",
+  );
+
+  if (!email?.href.startsWith("mailto:")) {
+    return null;
+  }
+
+  const address = email.href.slice("mailto:".length).split("?")[0]?.trim();
+  return address || null;
+}
+
 export function getVerifiedSocialsByIds(ids: readonly string[]): Social[] {
   return ids.flatMap((id) => {
     const social = socials.find(

@@ -16,5 +16,5 @@ export { getProject, getProjectsByProminence, projects } from "./projects";
 export { site } from "./site";
 export { skills, skillsIntro } from "./skills";
 export { socials } from "./socials";
-export { testimonials } from "./testimonials";
+export { getVerifiedTestimonials, testimonials } from "./testimonials";
 export type * from "./types";
