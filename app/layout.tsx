@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { SkipToContent } from "@/components/primitives";
-import { SiteHeader } from "@/components/sections";
+import { HashScroll, SiteHeader } from "@/components/sections";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublicResume } from "@/content/resume";
 import { site } from "@/content/site";
@@ -89,6 +89,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <JsonLd data={getPersonJsonLd()} />
         <JsonLd data={getWebSiteJsonLd()} />
         <SkipToContent />
+        <HashScroll />
         <SiteHeader
           brand={site.name}
           navigation={site.navigation}

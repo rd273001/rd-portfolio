@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 
 import { Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
+import { CaseStudyAdjacentNav } from "@/components/sections/case-study/CaseStudyAdjacentNav";
 import { CaseStudyStory } from "@/components/sections/case-study/CaseStudyStory";
 import { AndroidPhoneFrame } from "@/components/sections/mobile-showcase/AndroidPhoneFrame";
 import { formatMetricRange, getMetricsByIds } from "@/content/metrics";
 import {
+  getAdjacentCaseStudies,
   getCaseStudyHighlights,
   getCaseStudyProject,
   getCaseStudyProjects,
@@ -99,6 +101,8 @@ export default async function ProjectCaseStudyPage({
     (screenshot) => !screenshot.startsWith("TODO_"),
   );
   const caseStudyHighlights = getCaseStudyHighlights(project);
+  const { previous, next } = getAdjacentCaseStudies(project.id);
+
   return (
     <PageShell>
       <section className="py-14 sm:py-20">
@@ -217,7 +221,7 @@ export default async function ProjectCaseStudyPage({
         </section>
       ) : null}
 
-      <section className="border-t border-border py-16 sm:py-20">
+      <section className="border-t border-border pt-16 pb-6 sm:pt-20 sm:pb-8">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
             <div>
@@ -288,6 +292,8 @@ export default async function ProjectCaseStudyPage({
               ) : null}
             </div>
           </div>
+
+          <CaseStudyAdjacentNav previous={previous} next={next} />
         </Container>
       </section>
     </PageShell>
