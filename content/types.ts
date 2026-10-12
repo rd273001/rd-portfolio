@@ -103,7 +103,8 @@ export type CaseStudyStoryChapter = {
 };
 
 /**
- * Optional flagship scroll story on a case-study page.
+ * Optional case-study story. `narrative` stays in document flow (how-it-works).
+ * `chapters` can pin — use that only when there is a real production arc.
  * Projects without `story` keep the standard layout.
  */
 export type CaseStudyStory = {

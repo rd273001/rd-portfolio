@@ -364,6 +364,38 @@ export const projects: Project[] = [
       "certificate-generator-requests",
       "certificate-generator-issued",
     ],
+    story: {
+      eyebrow: "How it works",
+      title: "Request, approve, generate, store.",
+      lead: "A personal learning / full-stack MERN project—not employment. Users request a certificate; an admin reviews it; pdf-lib generates the PDF; Drive stores the issued file.",
+      narrative: [
+        {
+          id: "certificate-generator-request",
+          eyebrow: "01",
+          title: "Request",
+          body: "React and Redux Toolkit post certificate requests to Express REST APIs. MongoDB and Mongoose persist the records.",
+        },
+        {
+          id: "certificate-generator-approval",
+          eyebrow: "02",
+          title: "Approval",
+          body: "Requests stay pending until an admin reviews them. CRUD on that queue is the approval step—not auto-issue.",
+        },
+        {
+          id: "certificate-generator-pdf",
+          eyebrow: "03",
+          title: "PDF",
+          body: "Approved requests generate certificate PDFs with pdf-lib on the Node backend.",
+        },
+        {
+          id: "certificate-generator-drive",
+          eyebrow: "04",
+          title: "Drive",
+          body: "The Google APIs Node client and Google Drive API upload issued PDFs so files stay retrievable.",
+        },
+      ],
+      chapters: [],
+    },
     caseStudyHref: "/work/certificate-generator",
     screenshots: [],
   },
