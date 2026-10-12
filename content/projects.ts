@@ -431,6 +431,32 @@ export function getCaseStudyProject(id: string): Project | undefined {
   return project;
 }
 
+export type CaseStudyNavProject = Project & {
+  caseStudyHref: string;
+};
+
+/** Prev/next among case-study routes, in prominence order. */
+export function getAdjacentCaseStudies(id: string): {
+  previous: CaseStudyNavProject | null;
+  next: CaseStudyNavProject | null;
+} {
+  const list = getCaseStudyProjects().filter(
+    (project): project is CaseStudyNavProject =>
+      typeof project.caseStudyHref === "string" &&
+      project.caseStudyHref.length > 0,
+  );
+  const index = list.findIndex((project) => project.id === id);
+
+  if (index < 0) {
+    return { previous: null, next: null };
+  }
+
+  return {
+    previous: list[index - 1] ?? null,
+    next: list[index + 1] ?? null,
+  };
+}
+
 export function getCaseStudyHighlights(project: Project): string[] {
   return [...project.highlights, ...(project.caseStudyHighlights ?? [])];
 }

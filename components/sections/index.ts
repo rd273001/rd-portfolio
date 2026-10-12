@@ -2,6 +2,7 @@ export { ContactCta } from "./ContactCta";
 export { CareerJourney } from "./CareerJourney";
 export { EducationSection } from "./EducationSection";
 export { ExperienceSection } from "./ExperienceSection";
+export { HashScroll } from "./HashScroll";
 export { Hero } from "./Hero";
 export { ImpactDashboard } from "./ImpactDashboard";
 export { PageLoading } from "./PageLoading";

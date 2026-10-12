@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 import { BrandMark } from "@/components/primitives";
 import type { NavigationItem } from "@/content/types";
 import { cn } from "@/lib/cn";
+import { scrollToHashId } from "@/lib/scroll-to-hash";
 
 type HeaderAction = {
   id: string;
@@ -70,6 +71,31 @@ export function SiteHeader({
     if (menuRef.current) {
       menuRef.current.open = false;
     }
+  };
+
+  /** Home section links (`/#work`) must land on the section, not only `/`. */
+  const onHomeSectionClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (!href.startsWith("/#")) {
+      closeMenu();
+      return;
+    }
+
+    const id = href.slice(2);
+    closeMenu();
+
+    if (window.location.pathname === "/") {
+      event.preventDefault();
+      window.history.pushState(null, "", href);
+      scrollToHashId(id);
+      return;
+    }
+
+    // Full navigation so the hash is applied after the homepage mounts.
+    event.preventDefault();
+    window.location.assign(href);
   };
 
   useEffect(() => {
@@ -138,6 +164,7 @@ export function SiteHeader({
               <a
                 key={item.id}
                 href={item.href}
+                onClick={(event) => onHomeSectionClick(event, item.href)}
                 className={cn(
                   "rounded-md py-2 text-sm text-muted transition-colors [@media(hover:hover)]:hover:text-foreground",
                   focusRing,
@@ -197,7 +224,7 @@ export function SiteHeader({
                         "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-lg px-3 py-3.5 text-center text-base font-medium text-foreground transition-[transform,background-color] duration-150 [@media(hover:hover)]:hover:bg-foreground/6 active:scale-[0.98] active:bg-foreground/8",
                         focusRing,
                       )}
-                      onClick={closeMenu}
+                      onClick={(event) => onHomeSectionClick(event, item.href)}
                     >
                       {item.label}
                     </a>
