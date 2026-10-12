@@ -88,6 +88,9 @@ function MetricCallouts({ metrics }: { metrics: Metric[] }) {
   );
 }
 
+const storySectionClassName =
+  "scroll-mt-20 border-t border-border py-16 sm:py-20";
+
 export function CaseStudyStory({ story }: CaseStudyStoryProps) {
   const narrative = story.narrative.filter(
     (block) => block.title.trim() && block.body.trim(),
@@ -101,124 +104,135 @@ export function CaseStudyStory({ story }: CaseStudyStoryProps) {
     return null;
   }
 
-  return (
-    <CaseStudyStoryMotion>
-      <Container>
-        <div className="max-w-2xl">
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
-            {story.eyebrow}
-          </p>
-          <h2
-            id="case-study-story-title"
-            className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl"
-          >
-            {story.title}
-          </h2>
-          <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
-            {story.lead}
-          </p>
-        </div>
+  const inner = (
+    <Container>
+      <div className="max-w-2xl">
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
+          {story.eyebrow}
+        </p>
+        <h2
+          id="case-study-story-title"
+          className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl"
+        >
+          {story.title}
+        </h2>
+        <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
+          {story.lead}
+        </p>
+      </div>
 
-        {narrative.length > 0 ? (
-          <div className="mt-10 grid gap-5">
-            {narrative.map((block) => (
-              <article
-                key={block.id}
-                className="rounded-3xl border border-border bg-surface p-5 sm:p-6"
-              >
-                {block.eyebrow ? (
-                  <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
-                    {block.eyebrow}
-                  </p>
-                ) : null}
-                <h3 className="mt-3 text-lg font-semibold tracking-[-0.03em]">
-                  {block.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-foreground sm:text-base sm:leading-7">
-                  {block.body}
+      {narrative.length > 0 ? (
+        <ol className="mt-10 grid gap-4 sm:grid-cols-2">
+          {narrative.map((block) => (
+            <li
+              key={block.id}
+              className="rounded-3xl border border-border bg-surface p-5 sm:p-6"
+            >
+              {block.eyebrow ? (
+                <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
+                  {block.eyebrow}
                 </p>
-              </article>
-            ))}
-          </div>
-        ) : null}
+              ) : null}
+              <h3 className="mt-3 text-lg font-semibold tracking-[-0.03em]">
+                {block.title}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-muted sm:text-base sm:leading-7">
+                {block.body}
+              </p>
+            </li>
+          ))}
+        </ol>
+      ) : null}
 
-        {chapters.length > 0 ? (
-          <div className="mt-10 sm:mt-14">
-            <div data-case-story-stage>
-              <ol data-case-story-steps className="hidden">
-                {chapters.map((chapter, index) => (
-                  <li key={chapter.id}>
-                    <button
-                      type="button"
-                      data-case-story-step
-                      data-case-story-step-index={index}
-                      data-active={index === 0 ? "true" : "false"}
-                      className="font-mono text-xs font-medium uppercase tracking-[0.16em]"
+      {chapters.length > 0 ? (
+        <div className="mt-10 sm:mt-14">
+          <div data-case-story-stage>
+            <ol data-case-story-steps className="hidden">
+              {chapters.map((chapter, index) => (
+                <li key={chapter.id}>
+                  <button
+                    type="button"
+                    data-case-story-step
+                    data-case-story-step-index={index}
+                    data-active={index === 0 ? "true" : "false"}
+                    className="font-mono text-xs font-medium uppercase tracking-[0.16em]"
+                  >
+                    {chapter.eyebrow}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <div data-case-story-progress-track className="hidden">
+              <div data-case-story-progress />
+            </div>
+            <div data-case-story-skip className="hidden">
+              <button type="button" data-case-story-skip-dir="-1">
+                Back to start
+              </button>
+              <button type="button" data-case-story-skip-dir="1">
+                Skip to end
+              </button>
+            </div>
+            <div data-case-story-layout>
+              {screens.length > 0 ? (
+                <div data-case-story-visual>
+                  <AndroidPhoneFrame
+                    layers={screens}
+                    alt={screens[screens.length - 1]?.alt ?? ""}
+                    size="stack"
+                    sizes="(min-width: 1024px) 240px, 176px"
+                  />
+                </div>
+              ) : null}
+              <ol data-case-story-chapters>
+                {chapters.map((chapter) => {
+                  const metrics = getMetricsByIds(chapter.metricIds).filter(
+                    (metric) => metric.status === "verified",
+                  );
+                  const indexes = screenIndexes(chapter, screens);
+
+                  return (
+                    <li
+                      key={chapter.id}
+                      data-case-story-chapter
+                      {...(indexes.length > 0
+                        ? {
+                            "data-case-story-screens": indexes.join(","),
+                          }
+                        : {})}
+                      className="w-full rounded-3xl border border-border bg-surface p-5 sm:p-7"
                     >
-                      {chapter.eyebrow}
-                    </button>
-                  </li>
-                ))}
+                      <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
+                        {chapter.eyebrow}
+                      </p>
+                      <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-balance text-foreground sm:text-3xl">
+                        {chapter.title}
+                      </h3>
+                      <p className="mt-3 max-w-xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
+                        {chapter.body}
+                      </p>
+                      <MetricCallouts metrics={metrics} />
+                    </li>
+                  );
+                })}
               </ol>
-              <div data-case-story-progress-track className="hidden">
-                <div data-case-story-progress />
-              </div>
-              <div data-case-story-skip className="hidden">
-                <button type="button" data-case-story-skip-dir="-1">
-                  Back to start
-                </button>
-                <button type="button" data-case-story-skip-dir="1">
-                  Skip to end
-                </button>
-              </div>
-              <div data-case-story-layout>
-                {screens.length > 0 ? (
-                  <div data-case-story-visual>
-                    <AndroidPhoneFrame
-                      layers={screens}
-                      alt={screens[screens.length - 1]?.alt ?? ""}
-                      size="stack"
-                      sizes="(min-width: 1024px) 240px, 176px"
-                    />
-                  </div>
-                ) : null}
-                <ol data-case-story-chapters>
-                  {chapters.map((chapter) => {
-                    const metrics = getMetricsByIds(chapter.metricIds).filter(
-                      (metric) => metric.status === "verified",
-                    );
-                    const indexes = screenIndexes(chapter, screens);
-
-                    return (
-                      <li
-                        key={chapter.id}
-                        data-case-story-chapter
-                        {...(indexes.length > 0
-                          ? {
-                              "data-case-story-screens": indexes.join(","),
-                            }
-                          : {})}
-                        className="w-full rounded-3xl border border-border bg-surface p-5 sm:p-7"
-                      >
-                        <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
-                          {chapter.eyebrow}
-                        </p>
-                        <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-balance text-foreground sm:text-3xl">
-                          {chapter.title}
-                        </h3>
-                        <p className="mt-3 max-w-xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
-                          {chapter.body}
-                        </p>
-                        <MetricCallouts metrics={metrics} />
-                      </li>
-                    );
-                  })}
-                </ol>
-              </div>
             </div>
           </div>
-        ) : null}
-      </Container>
-    </CaseStudyStoryMotion>
+        </div>
+      ) : null}
+    </Container>
   );
+
+  if (chapters.length === 0) {
+    return (
+      <section
+        aria-labelledby="case-study-story-title"
+        className={storySectionClassName}
+      >
+        {inner}
+      </section>
+    );
+  }
+
+  return <CaseStudyStoryMotion>{inner}</CaseStudyStoryMotion>;
 }

@@ -221,14 +221,14 @@ Full numbered brief (sections 1–36): `docs/product-polish-pass.md` (also refer
 | --- | --- | --- | --- |
 | A | Header + Resume + Hero photo + Skills copy | `feat/header-resume-and-hero` | merged |
 | B | Case-study content model + DFC scroll storytelling | `feat/case-study-storytelling` | merged |
-| C | AptiBooster + Certificate Generator storytelling + case-study navigation | `feat/aptibooster-case-study` | AptiBooster story in progress; Certificate Generator story + case-study nav still open |
+| C | AptiBooster + Certificate Generator storytelling + case-study navigation | `feat/aptibooster-case-study` | AptiBooster + motion merged; Certificate Generator static how-it-works in progress |
 | D | Contact form + feedback collection (Resend; no DB) | `feat/contact-and-feedback` | merged |
 | E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | planned |
 | F | All projects / archive + achievement integration | `feat/work-archive` | planned |
 | G | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | planned |
 | H | Final responsive / a11y / performance QA | `chore/final-qa` | planned |
 
-**PR C notes:** AptiBooster story reuses DFC’s `project.story` + `CaseStudyStory` / `CaseStudyStoryMotion`. Arc: timed test → telemetry → API-backed analysis/report UX (no Gemini / backend AI ownership claims), then constrained-device Home lab figures and selective TanStack Query persistence from `content/metrics.ts` / achievements, then the verified release-size metric. Do not treat the Home lab as the cause of the 23.7 MB → 20.4 MB release change. Certificate Generator storytelling and case-study reading aids are still open. Add anchors, sticky chapter nav, and prev/next only where they help—do not overbuild.
+**PR C notes:** AptiBooster story and shared case-study motion are merged (`project.story` + `CaseStudyStory` / `CaseStudyStoryMotion`). Arc: timed test → telemetry → API-backed analysis/report UX (no Gemini / backend AI ownership claims), then constrained-device Home lab figures and selective TanStack Query persistence from `content/metrics.ts` / achievements, then the verified release-size metric. Do not treat the Home lab as the cause of the 23.7 MB → 20.4 MB release change. Certificate Generator is a personal/learning MERN project, not a flagship pin: use `story.narrative` only (request → approval → PDF → Drive) with empty `chapters` so GSAP does not mount. Verified 400+ pending / 466+ issued stay in `content/metrics.ts` on the standard metrics section. Case-study reading aids (anchors, sticky chapter nav, prev/next) remain PR C4—add them only where they help (long DFC / AptiBooster pages); do not overbuild a TOC on Certificate Generator.
 
 **PR D notes:** Next.js Route Handler + Resend emails submissions to Ravi. **No database in this PR.** Public testimonials render only from verified `content/testimonials.ts` rows; empty list hides the section. `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (verified `ravidubey.in` domain in Resend) are required in production. Direct Email remains the fallback. Field-level validation + form-level send errors. **Do not** add `/admin`, OAuth, or DB here— that is PR E.
 
@@ -284,7 +284,7 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR 6 production polish
 - [x] PR A header, resume utilities, hero identity, skills copy
 - [x] PR B DFC case-study scroll story (`project.story`, GSAP pin)
-- [ ] PR C AptiBooster story on `feat/aptibooster-case-study` (Certificate Generator story + case-study nav still open)
+- [ ] PR C AptiBooster + motion merged; Certificate Generator static how-it-works in progress on `feat/certificate-generator-case-study` (case-study nav still open)
 - [x] PR D contact form + private feedback (`feat/contact-and-feedback`)
 - [ ] PR E admin feedback dashboard + dynamic testimonials
 - [ ] PR F–H (see **Product polish phase** table)
@@ -295,7 +295,7 @@ Reduced-motion and 3D fallbacks remain as shipped in PR 5.
 
 ### Case-study scroll story
 
-Optional `project.story` in `content/types.ts`: narrative blocks stay in normal flow; chapters can pin. Chapter `metricIds` resolve through `content/metrics.ts`. Do not hardcode those values in UI. Citing Google Play Console or Play delivery in copy is fine. Do not publish Play Console **dashboard** screenshots in the UI—state verified figures in `content/metrics.ts` only. DFC’s story is the Zoom Meeting SDK moved to an Android Dynamic Feature Module / on-demand delivery. 161 MB is the on-demand feature_zoom module; 161.1 MB is Release delivery reduction vs 177 MB Zoom-in-base production—not compression. AptiBooster’s story is the live test client, API-backed analysis and report UX, the constrained-device Home lab, selective query persistence, and the verified release-size metric. Other case studies keep the standard layout until they have `story` content.
+Optional `project.story` in `content/types.ts`: narrative blocks stay in normal flow; chapters can pin. Chapter `metricIds` resolve through `content/metrics.ts`. Do not hardcode those values in UI. Citing Google Play Console or Play delivery in copy is fine. Do not publish Play Console **dashboard** screenshots in the UI—state verified figures in `content/metrics.ts` only. DFC’s story is the Zoom Meeting SDK moved to an Android Dynamic Feature Module / on-demand delivery. 161 MB is the on-demand feature_zoom module; 161.1 MB is Release delivery reduction vs 177 MB Zoom-in-base production—not compression. AptiBooster’s story is the live test client, API-backed analysis and report UX, the constrained-device Home lab, selective query persistence, and the verified release-size metric. Certificate Generator uses `story.narrative` only (static how-it-works: request → approval → pdf-lib → Google Drive); do not pin it. Personal/learning, not employment; verified 400+ pending / 466+ issued stay on the standard metrics section. Other case studies keep the standard layout until they have `story` content.
 
 GSAP for that story lives in `components/sections/case-study/CaseStudyStoryMotion.tsx` and only targets `[data-case-story-*]` on `/work/[projectId]`. Scroll progress is the story. Desktop pins one beat at a time beside one phone: the screen stays blank on the short Before beat, the download UI fades in on Architecture, and Product flow crossfades download → restart → join inside the same frame. Later beats keep the last screen. Below 1024px the beats stack and that same single phone sits above them (no per-chapter frames). `prefers-reduced-motion: reduce` shows every beat at once with the last screen visible. Do not call `ScrollTrigger.getAll()` — the career journey uses the same plugin on the homepage.
 
