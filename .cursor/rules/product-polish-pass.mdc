@@ -1,0 +1,40 @@
+---
+description: Full product polish pass spec (sections 1–36). Read when starting or continuing PR A–H polish work.
+alwaysApply: false
+---
+
+# Product polish pass (PR A–H)
+
+This is **not** a new portfolio build. PR 1–6 are done. The polish phase makes the site feel like one product: evidence-driven story, purposeful interaction, production polish.
+
+## When to read
+
+At the start of a **polish-phase** Agent chat (PR A–H), read:
+
+1. `AGENTS.md` — **Product polish phase (PR A–H)** table and PR-specific notes (canonical PR order and branches).
+2. `docs/product-polish-pass.md` — full numbered specification (sections 1–36).
+
+Read only the implementation files needed for the current PR. Do not reload the entire brief into chat if the doc is on disk.
+
+## PR order (overrides §34 in the doc if it still says A–G only)
+
+| PR | Scope |
+| --- | --- |
+| A | Header, resume, hero photo, skills copy |
+| B | Case-study model + DFC scroll story |
+| C | AptiBooster + Certificate Generator stories + case-study nav *(waiting on AptiBooster metrics)* |
+| D | Contact + feedback forms, Resend, **no DB** |
+| E | **Admin feedback dashboard**, OAuth allowlist, DB, publish testimonials |
+| F | Work archive + achievements |
+| G | Animation / evidence interactions |
+| H | Final responsive, a11y, performance QA |
+
+## Constraints (always)
+
+- Repository facts: `content/*`, `portfolio-agent.mdc`, `AGENTS.md` — never invent metrics or testimonials.
+- Do not rebuild Career Journey or 3D showcase unless the current PR explicitly scopes it.
+- One focused PR per conversation; do not mix unrelated features (e.g. do not put PR E admin on the PR D branch).
+
+## Completion report
+
+When finishing a polish PR, follow §35–36 in `docs/product-polish-pass.md` (validation + what changed / preserved / TODOs / next PR / model).

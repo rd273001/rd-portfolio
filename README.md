@@ -55,9 +55,11 @@ Production builds use Webpack (`npm run build`) on this setup. See `AGENTS.md` f
 
 ```text
 app/                 Routes, layout, global styles
+app/admin/           Protected feedback dashboard
 components/          UI primitives and page sections
 content/             Typed profile, projects, metrics, etc.
-lib/                 Shared helpers
+lib/                 Shared helpers (auth, contact, feedback)
+supabase/migrations/ SQL for the feedback table
 .cursor/rules/       Cursor Agent rules for this repo
 AGENTS.md            Architecture, PR plan, agent prompts
 ```
@@ -79,16 +81,26 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 
 ## Contact form (Resend)
 
-Submissions go through `POST /api/contact` and email Ravi. There is no database.
+Inquiry submissions go through `POST /api/contact` and email Ravi. They stay email-only.
 
 1. Create a Resend account and API key.
 2. Verify `ravidubey.in` at [resend.com/domains](https://resend.com/domains).
 3. Copy `.env.example` to `.env.local` and set `RESEND_API_KEY` plus `CONTACT_FROM_EMAIL` (must be on the verified domain).
 4. On Vercel (or your host), add the same server env vars. Never prefix them with `NEXT_PUBLIC_`.
 
-Until those vars exist, the form returns an error and the Email CTA remains the fallback.
+Until those vars exist, the inquiry form returns an error and the Email CTA remains the fallback.
 
-Public “What collaborators say” only appears when `content/testimonials.ts` has verified entries.
+## Feedback admin (Auth.js + Supabase)
+
+Private feedback is emailed and stored as `pending`. The public “What collaborators say” section reads **published** rows only and stays hidden when that list is empty. The form checkbox is intent — never auto-publish. `content/testimonials.ts` remains an optional seed/legacy source.
+
+1. Create a Google Cloud OAuth client (Web). Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google` and `https://ravidubey.in/api/auth/callback/google`.
+2. Generate `AUTH_SECRET` (`npx auth secret`). Set `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `ADMIN_EMAIL_ALLOWLIST` (comma-separated Google emails).
+3. Create a Supabase project. Run `supabase/migrations/20261012_feedback_submissions.sql` in the SQL editor.
+4. Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Do **not** prefix these with `NEXT_PUBLIC_`.
+5. Open `/admin` and sign in with an allowlisted Google account.
+
+Sessions are httpOnly JWTs (8 hours). Login attempts are rate-limited. Every publish / archive / delete checks the allowlist on the server.
 
 Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.
 

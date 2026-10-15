@@ -77,9 +77,11 @@ Keep the change scoped to the DFC case study.
 AGENTS.md
 content/                 Professional data + types
 app/                     Routes, layout, globals
+app/admin/               Auth.js-protected feedback dashboard
 components/primitives/   Reusable UI used across sections
 components/sections/     Page sections (added per PR)
 lib/                     Shared helpers, cn(), metadata helpers
+supabase/migrations/     Feedback table SQL
 public/                  Images, screenshots, favicon
 ```
 
@@ -223,7 +225,7 @@ Full numbered brief (sections 1–36): `docs/product-polish-pass.md` (also refer
 | B | Case-study content model + DFC scroll storytelling | `feat/case-study-storytelling` | merged |
 | C | AptiBooster + Certificate Generator storytelling + case-study navigation | `feat/aptibooster-case-study` | merged |
 | D | Contact form + feedback collection (Resend; no DB) | `feat/contact-and-feedback` | merged |
-| E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | planned |
+| E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | this PR |
 | F | All projects / archive + achievement integration | `feat/work-archive` | planned |
 | G | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | planned |
 | H | Final responsive / a11y / performance QA | `chore/final-qa` | planned |
@@ -232,7 +234,7 @@ Full numbered brief (sections 1–36): `docs/product-polish-pass.md` (also refer
 
 **PR D notes:** Next.js Route Handler + Resend emails submissions to Ravi. **No database in this PR.** Public testimonials render only from verified `content/testimonials.ts` rows; empty list hides the section. `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (verified `ravidubey.in` domain in Resend) are required in production. Direct Email remains the fallback. Field-level validation + form-level send errors. **Do not** add `/admin`, OAuth, or DB here— that is PR E.
 
-**PR E notes:** Separate PR after D merges. Protected `/admin` (e.g. `/admin/feedback`): **Auth.js** (or equivalent) with **Google sign-in + email allowlist**; **authorization** on every server mutation. Persist feedback submissions (e.g. Supabase): `pending` → admin **publish** / **archive** / **delete**; homepage “What collaborators say” reads **published** rows from DB (optional: keep `content/testimonials.ts` as seed/legacy). Checkbox on the public form is intent only—**never** auto-publish. Rate-limit login; httpOnly session; no admin secrets in `NEXT_PUBLIC_*`. Inquiry form can stay email-only.
+**PR E notes:** Protected `/admin/feedback` with **Auth.js** Google sign-in + `ADMIN_EMAIL_ALLOWLIST`. JWT httpOnly session (8h). Rate-limit `/admin/login` and `/api/auth`. Authorize `requireAdmin()` on every publish / archive / unpublish / delete. Supabase `feedback_submissions`: inserts are always `pending` (checkbox is intent only). Homepage “What collaborators say” reads published DB rows plus optional `content/testimonials.ts` seed; empty list hides the section. Inquiry form stays Resend email-only. No admin secrets in `NEXT_PUBLIC_*`. Do not add `/admin` to the sitemap.
 
 **Source of truth:** `content/*`, `portfolio-agent.mdc`, and this file—not old chat prompts. Verified DFC/AptiBooster figures may differ from an early polish brief; never invent metrics.
 
@@ -286,7 +288,7 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR B DFC case-study scroll story (`project.story`, GSAP pin)
 - [x] PR C AptiBooster pin + Certificate Generator how-it-works + case-study reading aids
 - [x] PR D contact form + private feedback (`feat/contact-and-feedback`)
-- [ ] PR E admin feedback dashboard + dynamic testimonials
+- [x] PR E admin feedback dashboard + dynamic testimonials
 - [ ] PR F–H (see **Product polish phase** table)
 
 PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
