@@ -1,0 +1,3 @@
+export const AUTH_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+export const AUTH_RATE_LIMIT_MAX = 10;
+export const ADMIN_SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
