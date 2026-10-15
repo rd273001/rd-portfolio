@@ -1,8 +1,8 @@
 import { Container } from "@/components/primitives";
-import { getVerifiedTestimonials } from "@/content/testimonials";
+import { getHomepageTestimonials } from "@/lib/feedback/testimonials";
 
-export function TestimonialsSection() {
-  const quotes = getVerifiedTestimonials();
+export async function TestimonialsSection() {
+  const quotes = await getHomepageTestimonials();
 
   if (quotes.length === 0) {
     return null;

@@ -19,23 +19,38 @@ function prune(now: number) {
   }
 }
 
-export function getRequestIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
+export function getRequestIpFromHeaders(headers: Headers): string {
+  const forwarded = headers.get("x-forwarded-for");
   const first = forwarded?.split(",")[0]?.trim();
-  return first || request.headers.get("x-real-ip") || "unknown";
+  return first || headers.get("x-real-ip") || "unknown";
 }
 
+export function getRequestIp(request: Request): string {
+  return getRequestIpFromHeaders(request.headers);
+}
+
+type RateLimitOptions = {
+  max?: number;
+  windowMs?: number;
+};
+
 /** Best-effort per-instance limit. Serverless instances do not share this map. */
-export function consumeRateLimit(key: string, now = Date.now()): boolean {
+export function consumeRateLimit(
+  key: string,
+  now = Date.now(),
+  options?: RateLimitOptions,
+): boolean {
   prune(now);
+  const max = options?.max ?? RATE_LIMIT_MAX;
+  const windowMs = options?.windowMs ?? RATE_LIMIT_WINDOW_MS;
   const existing = buckets.get(key);
 
   if (!existing || existing.resetAt <= now) {
-    buckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    buckets.set(key, { count: 1, resetAt: now + windowMs });
     return true;
   }
 
-  if (existing.count >= RATE_LIMIT_MAX) {
+  if (existing.count >= max) {
     return false;
   }
 

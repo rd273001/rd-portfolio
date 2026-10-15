@@ -1,6 +1,7 @@
 import { site } from "@/content/site";
 import { consumeRateLimit, getRequestIp } from "@/lib/contact/rate-limit";
 import { sendContactMail } from "@/lib/contact/mail";
+import { insertPendingFeedback } from "@/lib/feedback/queries";
 import {
   isHoneypotFilled,
   isSubmittedTooFast,
@@ -67,9 +68,41 @@ export async function POST(request: Request) {
     return json({ error: fieldError }, 400);
   }
 
-  const result = await sendContactMail(parsed);
+  if (parsed.kind === "inquiry") {
+    const result = await sendContactMail(parsed);
 
-  if (!result.ok && result.code === "not_configured") {
+    if (!result.ok && result.code === "not_configured") {
+      return json(
+        {
+          error:
+            "The form is not configured on this environment yet. Please use email instead.",
+          code: "not_configured",
+        },
+        503,
+      );
+    }
+
+    if (!result.ok) {
+      return json(
+        { error: "Could not send the message. Please try email instead." },
+        502,
+      );
+    }
+
+    return json({ ok: true });
+  }
+
+  const persistResult = await insertPendingFeedback(parsed);
+  const mailResult = await sendContactMail(parsed);
+
+  if (persistResult.ok || mailResult.ok) {
+    return json({ ok: true });
+  }
+
+  if (
+    persistResult.code === "not_configured" &&
+    mailResult.code === "not_configured"
+  ) {
     return json(
       {
         error:
@@ -80,12 +113,8 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!result.ok) {
-    return json(
-      { error: "Could not send the message. Please try email instead." },
-      502,
-    );
-  }
-
-  return json({ ok: true });
+  return json(
+    { error: "Could not send the message. Please try email instead." },
+    502,
+  );
 }
