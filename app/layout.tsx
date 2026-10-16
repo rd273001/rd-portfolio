@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { PublicChrome } from "@/components/layout/PublicChrome";
 import { SkipToContent } from "@/components/primitives";
 import { HashScroll, SiteHeader } from "@/components/sections";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -89,14 +90,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <JsonLd data={getPersonJsonLd()} />
         <JsonLd data={getWebSiteJsonLd()} />
         <SkipToContent />
-        <HashScroll />
-        <SiteHeader
-          brand={site.name}
-          navigation={site.navigation}
-          resume={resume}
-          utilities={utilities}
-        />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <PublicChrome
+          header={
+            <>
+              <HashScroll />
+              <SiteHeader
+                brand={site.name}
+                navigation={site.navigation}
+                resume={resume}
+                utilities={utilities}
+              />
+            </>
+          }
+        >
+          <div className="flex flex-1 flex-col">{children}</div>
+        </PublicChrome>
       </body>
     </html>
   );

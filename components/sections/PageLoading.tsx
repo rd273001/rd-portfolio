@@ -1,7 +1,7 @@
 export function PageLoading({ label = "Loading" }: { label?: string }) {
   return (
     <div
-      className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="mx-auto w-full max-w-5xl animate-pulse px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
       role="status"
       aria-live="polite"
       aria-label={label}

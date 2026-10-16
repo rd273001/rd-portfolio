@@ -1,5 +1,6 @@
 import type { Testimonial } from "./types";
 
+/** Legacy/seed quotes. Homepage prefers published Supabase rows. */
 export const testimonials: Testimonial[] = [];
 
 export function getVerifiedTestimonials(): Testimonial[] {

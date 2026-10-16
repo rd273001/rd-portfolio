@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@/components/primitives/LoadingSpinner";
+import { LoadingSpinner } from "@/components/primitives";
 
 type FormSubmitButtonLabelProps = {
   busy: boolean;
