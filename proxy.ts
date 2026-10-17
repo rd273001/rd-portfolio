@@ -42,3 +42,5 @@ export const proxy = auth((request) => {
 export const config = {
   matcher: ["/admin", "/admin/:path*", "/api/auth/:path*"],
 };
+
+export default proxy;
