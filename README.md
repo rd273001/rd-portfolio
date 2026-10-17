@@ -68,16 +68,25 @@ AGENTS.md            Architecture, PR plan, agent prompts
 
 Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that still need real data (education, dates, testimonials). Do not invent metrics or employers in components.
 
-## Roadmap (initial build)
+## Roadmap
 
-1. **Foundation** — Next.js, theme, content module, primitives
-2. **Core portfolio** — hero, navigation, CTA
-3. **Professional story** — experience, impact, skills, education
-4. **Projects** — selected work and case studies
-5. **Creative interaction** — GSAP storytelling and 3D mobile showcase
-6. **Production polish** — SEO, accessibility, performance, QA
-7. **Case-study storytelling** — DFC on-demand Zoom delivery *(merged)*
-8. **Product polish A–H** — see `AGENTS.md` and `docs/product-polish-pass.md`. PR C waits on AptiBooster metrics. **PR D** = contact + feedback; **PR E** = admin feedback dashboard (after D).
+### Initial Foundation (PR 1–6)
+* [x] **PR 1: Foundation** — Next.js, theme, content module, primitives
+* [x] **PR 2: Core portfolio** — hero, navigation, CTA
+* [x] **PR 3: Professional story** — experience, impact, skills, education
+* [x] **PR 4: Projects** — selected work and case studies
+* [x] **PR 5: Creative interaction** — GSAP storytelling and 3D mobile showcase
+* [x] **PR 6: Production polish** — SEO, accessibility, performance, QA
+
+### Product Polish Pass (PR A–H)
+* [x] **PR A: Header & Hero** — header navigation, resume utilities, hero identity, skills copy
+* [x] **PR B: DFC Storytelling** — on-demand Zoom Dynamic Feature Module scroll story
+* [x] **PR C: AptiBooster & Cert Generator** — test client story, constrained device lab, reading aids
+* [x] **PR D: Contact & Feedback** — Resend email routing for inquiries and feedback
+* [x] **PR E: Admin Dashboard** — Auth.js Google sign-in, Supabase feedback storage, dynamic testimonials
+* [ ] **PR F: Work Archive** — all projects archive and achievement integration (planned)
+* [ ] **PR G: Evidence Interactions** — purposeful animation polish and evidence interactions (planned)
+* [ ] **PR H: Final QA** — final responsive, accessibility, and performance QA (planned)
 
 ## Contact form (Resend)
 
