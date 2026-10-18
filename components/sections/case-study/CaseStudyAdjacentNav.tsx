@@ -8,7 +8,7 @@ type CaseStudyAdjacentNavProps = {
 };
 
 const linkClassName =
-  "group inline-flex w-fit max-w-[calc(50%-0.5rem)] sm:max-w-xs md:max-w-sm touch-manipulation flex-col gap-1 rounded-md outline-none transition-opacity duration-150 ease-out [@media(hover:hover)]:hover:opacity-75 active:opacity-60 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background";
+  "group inline-flex w-fit touch-manipulation flex-col gap-1 rounded-md outline-none transition-opacity duration-150 ease-out [@media(hover:hover)]:hover:opacity-75 active:opacity-60 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background";
 
 const titleRowClassName =
   "block min-w-0 text-base font-semibold tracking-[-0.03em] text-foreground sm:text-xl break-words";
@@ -66,6 +66,11 @@ export function CaseStudyAdjacentNav({
     return null;
   }
 
+  const hasBoth = Boolean(previous && next);
+  const widthClassName = hasBoth
+    ? "max-w-[calc(50%-0.5rem)] sm:max-w-xs md:max-w-sm"
+    : "max-w-full sm:max-w-xs md:max-w-sm";
+
   return (
     <nav
       aria-label="Other case studies"
@@ -74,7 +79,7 @@ export function CaseStudyAdjacentNav({
       {previous ? (
         <Link
           href={previous.caseStudyHref}
-          className={`${linkClassName} self-start items-start text-left`}
+          className={`${linkClassName} ${widthClassName} self-start items-start text-left`}
         >
           <span className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
             Previous
@@ -98,7 +103,7 @@ export function CaseStudyAdjacentNav({
       {next ? (
         <Link
           href={next.caseStudyHref}
-          className={`${linkClassName} ml-auto self-start items-end text-right`}
+          className={`${linkClassName} ${widthClassName} ml-auto self-start items-end text-right`}
         >
           <span className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
             Next

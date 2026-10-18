@@ -33,7 +33,7 @@ export const metrics: Metric[] = [
   },
   {
     id: "dfc-bundle-optimization",
-    label: "DFC base app bundle (production)",
+    label: "DFC release optimization",
     value: "5.12 MB",
     previous: "21.02 MB",
     current: "15.9 MB",
@@ -42,7 +42,7 @@ export const metrics: Metric[] = [
     status: "verified",
     project: "dfc-app",
     note: "R8, ProGuard, and App Bundle work on the same Play listing. Separate from on-demand Zoom.",
-    surfaces: ["impact", "achievement"],
+    surfaces: ["impact", "work", "achievement"],
   },
   {
     id: "dfc-crash-rate-improvement",
@@ -93,7 +93,7 @@ export const metrics: Metric[] = [
     status: "verified",
     project: "dfc-app",
     note: "Play base module for a new install after Zoom left the first download.",
-    surfaces: ["work"],
+    surfaces: [],
   },
   {
     id: "dfc-zoom-download-time",

@@ -489,10 +489,7 @@ export function MobileShowcaseEnhancement({
             aria-live="polite"
             className="mt-8"
           >
-            <p className="text-sm font-medium text-background/65">
-              {activeProject.role}
-            </p>
-            <h4 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
+            <h4 className="text-3xl font-semibold tracking-[-0.04em]">
               {activeProject.name}
             </h4>
             <p className="mt-4 min-h-14 text-base leading-7 text-background/70">
