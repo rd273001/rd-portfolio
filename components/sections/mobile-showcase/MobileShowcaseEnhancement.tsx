@@ -234,11 +234,28 @@ function useYieldingCanvasMount(enabled: boolean) {
   return allowed;
 }
 
+const SCREEN_LABEL_OVERRIDES: Record<string, string> = {
+  "zoom-restart-after-download": "Restart Download",
+  "student-onboarding": "Onboarding",
+  "zoom-on-demand": "Zoom On Demand",
+  "zoom-join-preview": "Join Preview",
+  "zoom-cancel-download": "Cancel Download",
+  "zoom-dfm-preparing": "Preparing",
+  "test-session": "Live Test",
+  "test-overview": "Overview",
+  "test-analysis-charts": "Analysis Charts",
+  "test-analysis": "Test Analysis",
+};
+
 function getScreenLabel(screenshot: string) {
   const filename = screenshot.split("/").at(-1)?.replace(/\.[^.]+$/, "");
 
   if (!filename) {
     return "Screen";
+  }
+
+  if (SCREEN_LABEL_OVERRIDES[filename]) {
+    return SCREEN_LABEL_OVERRIDES[filename];
   }
 
   return filename
@@ -248,7 +265,7 @@ function getScreenLabel(screenshot: string) {
 }
 
 const screenChipButtonClass =
-  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-3 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background";
+  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-2.5 text-center text-xs sm:text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background";
 
 /**
  * Touch: fill / half-row chips. Mouse/trackpad (`compact`): label-sized wrap like DFC / AptiBooster tabs.
@@ -264,18 +281,18 @@ function getScreenChipGroupClass(screenCount: number, compact: boolean) {
 
 function getScreenChipButtonClass(screenCount: number, compact: boolean) {
   if (compact) {
-    return `${screenChipButtonClass} max-w-full whitespace-nowrap`;
+    return `${screenChipButtonClass} max-w-full truncate`;
   }
 
   if (screenCount >= 4) {
-    return `${screenChipButtonClass} w-full min-w-0 whitespace-nowrap`;
+    return `${screenChipButtonClass} w-full min-w-0 truncate`;
   }
 
   if (screenCount === 3) {
-    return `${screenChipButtonClass} max-w-full whitespace-nowrap max-lg:max-w-[calc(50%-0.25rem)] max-lg:flex-[1_1_calc(50%-0.25rem)] lg:max-w-none lg:flex-none`;
+    return `${screenChipButtonClass} max-w-full truncate max-lg:max-w-[calc(50%-0.25rem)] max-lg:flex-[1_1_calc(50%-0.25rem)] lg:max-w-none lg:flex-none`;
   }
 
-  return `${screenChipButtonClass} max-w-full whitespace-nowrap`;
+  return `${screenChipButtonClass} max-w-full truncate`;
 }
 
 /** Desktop Work 3D stage — same height/width cap side-by-side or stacked. */
@@ -472,10 +489,7 @@ export function MobileShowcaseEnhancement({
             aria-live="polite"
             className="mt-8"
           >
-            <p className="text-sm font-medium text-background/65">
-              {activeProject.role}
-            </p>
-            <h4 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
+            <h4 className="text-3xl font-semibold tracking-[-0.04em]">
               {activeProject.name}
             </h4>
             <p className="mt-4 min-h-14 text-base leading-7 text-background/70">
@@ -528,7 +542,9 @@ export function MobileShowcaseEnhancement({
                         compactChips,
                       )}
                     >
-                      {getScreenLabel(screenshot)}
+                      <span className="truncate max-w-full">
+                        {getScreenLabel(screenshot)}
+                      </span>
                     </button>
                   ))}
                 </div>

@@ -19,10 +19,7 @@ export function MobileShowcasePresentation({
             <MobileProjectPhone project={project} />
 
             <div className="mt-6">
-              <p className="text-sm font-medium text-background/65">
-                {project.role}
-              </p>
-              <h4 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">
+              <h4 className="text-2xl font-semibold tracking-[-0.03em]">
                 {project.name}
               </h4>
               <p className="mt-3 text-sm leading-6 text-background/70">
