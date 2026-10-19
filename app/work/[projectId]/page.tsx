@@ -190,7 +190,7 @@ export default async function ProjectCaseStudyPage({
                 Verified metrics
               </p>
               <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl">
-                Results recorded in the project content source.
+                Measured production outcomes.
               </h2>
             </div>
 

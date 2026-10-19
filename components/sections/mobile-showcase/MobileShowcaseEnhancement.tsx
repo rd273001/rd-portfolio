@@ -265,7 +265,7 @@ function getScreenLabel(screenshot: string) {
 }
 
 const screenChipButtonClass =
-  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-2.5 text-center text-xs sm:text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background";
+  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/20 bg-background/10 px-3 text-center text-xs sm:text-sm font-medium text-background/75 transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/35 [@media(hover:hover)]:hover:bg-background/20 [@media(hover:hover)]:hover:text-background active:scale-[0.98] active:bg-background/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background/55 aria-pressed:bg-background/30 aria-pressed:text-background aria-pressed:shadow-[0_0_12px_-2px_rgba(255,255,255,0.18)] [@media(hover:hover)]:aria-pressed:hover:bg-background/35 [@media(hover:hover)]:aria-pressed:hover:border-background/70 active:aria-pressed:bg-background/40";
 
 /**
  * Touch: fill / half-row chips. Mouse/trackpad (`compact`): label-sized wrap like DFC / AptiBooster tabs.
@@ -471,13 +471,8 @@ export function MobileShowcaseEnhancement({
                 key={project.id}
                 type="button"
                 aria-pressed={index === state.projectIndex}
-                onPointerUp={(event) => {
-                  if (event.pointerType === "touch") {
-                    selectProject(index);
-                  }
-                }}
                 onClick={() => selectProject(index)}
-                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background"
+                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/60 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background [@media(hover:hover)]:aria-pressed:hover:text-foreground"
               >
                 {project.name}
               </button>
@@ -531,11 +526,6 @@ export function MobileShowcaseEnhancement({
                       key={screenshot}
                       type="button"
                       aria-pressed={index === state.screenIndex}
-                      onPointerUp={(event) => {
-                        if (event.pointerType === "touch") {
-                          selectScreen(index);
-                        }
-                      }}
                       onClick={() => selectScreen(index)}
                       className={getScreenChipButtonClass(
                         screenCount,

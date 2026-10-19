@@ -24,28 +24,21 @@ type CareerJourneyMotionProps = {
 function showStaticJourney(
   progress: HTMLElement,
   revealTargets: HTMLElement[],
-  cards: HTMLElement[] = [],
 ) {
   try {
-    gsap.set(progress, { clearProps: "transform" });
-    gsap.set(revealTargets, { clearProps: "opacity,visibility,transform" });
-    if (cards.length > 0) {
-      gsap.set(cards, {
-        "--journey-fade-stop": 100,
-        "--journey-fade-end": 1,
-        clearProps: "--journey-fade-stop,--journey-fade-end",
-      });
-    }
+    gsap.set(progress, { scaleY: 1, clearProps: "transform" });
+    gsap.set(revealTargets, {
+      autoAlpha: 1,
+      y: 0,
+      clearProps: "opacity,visibility,transform,willChange",
+    });
   } catch {
     progress.style.transform = "";
     for (const target of revealTargets) {
       target.style.opacity = "";
       target.style.visibility = "";
       target.style.transform = "";
-    }
-    for (const card of cards) {
-      card.style.removeProperty("--journey-fade-stop");
-      card.style.removeProperty("--journey-fade-end");
+      target.style.willChange = "";
     }
   }
 }
@@ -81,7 +74,6 @@ function createJourneyTimeline({
   revealOnStep = false,
   revealFromAlpha = 0.18,
   revealEase = "none",
-  progressiveMask = false,
 }: {
   list: HTMLElement;
   progress: HTMLElement;
@@ -95,7 +87,6 @@ function createJourneyTimeline({
   revealOnStep?: boolean;
   revealFromAlpha?: number;
   revealEase?: string;
-  progressiveMask?: boolean;
 }) {
   const revealTargets = revealOnStep ? steps : getRevealTargets(steps);
 
@@ -110,7 +101,14 @@ function createJourneyTimeline({
       start: listStart,
       end: listEnd,
       scrub,
+      fastScrollEnd: true,
       invalidateOnRefresh: true,
+      onLeave: () => {
+        gsap.set(progress, { scaleY: 1 });
+      },
+      onLeaveBack: () => {
+        gsap.set(progress, { scaleY: 0 });
+      },
     },
   });
 
@@ -123,6 +121,7 @@ function createJourneyTimeline({
           start: revealStart,
           end: revealEnd,
           scrub,
+          fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
       });
@@ -133,23 +132,6 @@ function createJourneyTimeline({
         { autoAlpha: 1, y: 0 },
         0,
       );
-
-      if (progressiveMask) {
-        const card = step.querySelector<HTMLElement>("[data-journey-card]");
-
-        if (card) {
-          timeline.fromTo(
-            card,
-            { "--journey-fade-stop": 42, "--journey-fade-end": 0.38 },
-            {
-              "--journey-fade-stop": 100,
-              "--journey-fade-end": 1,
-              autoRound: false,
-            },
-            0,
-          );
-        }
-      }
 
       continue;
     }
@@ -210,11 +192,8 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
       }
 
       const cardRevealTargets = getRevealTargets(steps);
-      const cards = steps
-        .map((step) => step.querySelector<HTMLElement>("[data-journey-card]"))
-        .filter((card): card is HTMLElement => card !== null);
       const showStatic = () =>
-        showStaticJourney(progress, [...steps, ...cardRevealTargets], cards);
+        showStaticJourney(progress, [...steps, ...cardRevealTargets]);
 
       try {
         const media = gsap.matchMedia();
@@ -240,7 +219,6 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
                 revealOnStep: true,
                 revealFromAlpha: 0.18,
                 revealEase: "power2.in",
-                progressiveMask: true,
               });
             } catch {
               showStatic();
@@ -278,6 +256,12 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
         };
         const refreshId = window.requestAnimationFrame(refresh);
         window.addEventListener("load", refresh);
+
+        document.fonts?.ready
+          .then(() => {
+            refresh();
+          })
+          .catch(() => {});
 
         return () => {
           window.cancelAnimationFrame(refreshId);
