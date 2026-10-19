@@ -8,7 +8,7 @@ export const projects: Project[] = [
     prominence: 1,
     tagline: "Production education app with on-demand Zoom delivery.",
     summary:
-      "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. I own the revamp on the existing listing — a new TypeScript codebase with onboarding, deep links, offline usage, role-based access, Kotlin/Android native modules where needed, and Android delivery architecture.",
+      "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. Owned the revamp on the existing listing — a new TypeScript codebase with onboarding, deep links, offline usage, role-based access, Kotlin/Android native modules where needed, and Android delivery architecture.",
     role: "Software Engineer 1 (Mobile) · production ownership",
     downloads: "10K+",
     storeUrl:
