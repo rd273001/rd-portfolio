@@ -58,7 +58,7 @@ export function CareerJourney() {
                     <div
                       aria-hidden="true"
                       data-journey-badge
-                      className="absolute left-0 top-1 grid size-8 place-items-center rounded-full border border-border bg-background font-mono text-xs font-medium"
+                      className="absolute left-0 top-1 grid size-8 place-items-center rounded-full border border-border bg-background font-mono text-xs font-medium text-muted transition-all duration-300 data-[active=true]:border-foreground data-[active=true]:font-semibold data-[active=true]:text-foreground data-[active=true]:ring-4 data-[active=true]:ring-foreground/5"
                     >
                       {index + 1}
                     </div>
