@@ -89,6 +89,31 @@ function pinStart() {
   return `top ${Math.round(height + 12)}px`;
 }
 
+function isTouchViewport() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+/**
+ * Mobile Chrome/Safari change `innerHeight` when the URL bar shows or hides.
+ * Pin length and clip height must not follow that, or a tiny scroll up
+ * resizes the pin spacer and drops the reader back inside the story.
+ * Cache per width so orientation changes still recompute.
+ */
+let stableViewport = { width: 0, height: 0 };
+
+function storyViewportHeight() {
+  if (!isTouchViewport()) {
+    return window.innerHeight;
+  }
+
+  const width = window.innerWidth;
+  if (width !== stableViewport.width || stableViewport.height === 0) {
+    stableViewport = { width, height: window.innerHeight };
+  }
+
+  return stableViewport.height;
+}
+
 function parseScreenIndexes(chapter: HTMLElement) {
   const raw = chapter.getAttribute("data-case-story-screens");
   if (!raw) {
@@ -209,7 +234,7 @@ function chapterClipHeight(stage: HTMLElement, mode: StoryPinMode = "desktop") {
       : 0;
     const bottomSafe = 16;
     const available =
-      window.innerHeight -
+      storyViewportHeight() -
       headerHeight -
       pinOffset -
       phoneHeight -
@@ -227,7 +252,7 @@ function chapterClipHeight(stage: HTMLElement, mode: StoryPinMode = "desktop") {
   );
   const stepsHeight = stepsEl ? stepsEl.getBoundingClientRect().height : 0;
   const trackBlock = progressTrack ? marginBoxHeight(progressTrack) : 0;
-  const available = window.innerHeight - headerHeight - pinOffset;
+  const available = storyViewportHeight() - headerHeight - pinOffset;
 
   return Math.max(200, Math.round(available - stepsHeight - trackBlock));
 }
@@ -382,7 +407,7 @@ function mountDesktopStory(
   const overflowDurations = chapterOverflows.map((overflow) =>
     overflowDurationForBeat(overflow, availableForChapters, beat),
   );
-  const scrollPerTimelineUnit = window.innerHeight * 0.85;
+  const scrollPerTimelineUnit = storyViewportHeight() * 0.85;
 
   if (chaptersEl) {
     chaptersEl.style.maxHeight = `${availableForChapters}px`;
@@ -894,10 +919,21 @@ function mountDesktopStoryWithRemount(
       // Font loading is optional; ignore failures.
     });
 
+  let lastWidth = window.innerWidth;
+
   const onResize = () => {
     if (disposed) {
       return;
     }
+
+    // URL bar show/hide on touch devices is a height-only resize. Rebuilding
+    // the pin there resizes the spacer and jumps scroll into the story.
+    const width = window.innerWidth;
+    if (isTouchViewport() && width === lastWidth) {
+      return;
+    }
+    lastWidth = width;
+
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       remountIfNeeded(true);

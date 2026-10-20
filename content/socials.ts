@@ -29,7 +29,7 @@ export const socials: Social[] = [
     id: "devto",
     label: "DEV",
     href: "https://dev.to/@rd273001",
-    status: "verified",
+    status: "placeholder",
   },
 ];
 

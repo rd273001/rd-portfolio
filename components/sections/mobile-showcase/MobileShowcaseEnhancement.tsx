@@ -265,7 +265,7 @@ function getScreenLabel(screenshot: string) {
 }
 
 const screenChipButtonClass =
-  "inline-flex min-h-11 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-2.5 text-center text-xs sm:text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background";
+  "inline-flex min-h-10 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/20 bg-background/10 px-3 text-center text-xs sm:text-sm font-medium text-background/75 transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/35 [@media(hover:hover)]:hover:bg-background/20 [@media(hover:hover)]:hover:text-background active:scale-[0.98] active:bg-background/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background/55 aria-pressed:bg-background/30 aria-pressed:text-background aria-pressed:shadow-[0_0_12px_-2px_rgba(255,255,255,0.18)] [@media(hover:hover)]:aria-pressed:hover:bg-background/35 [@media(hover:hover)]:aria-pressed:hover:border-background/70 active:aria-pressed:bg-background/40";
 
 /**
  * Touch: fill / half-row chips. Mouse/trackpad (`compact`): label-sized wrap like DFC / AptiBooster tabs.
@@ -471,13 +471,8 @@ export function MobileShowcaseEnhancement({
                 key={project.id}
                 type="button"
                 aria-pressed={index === state.projectIndex}
-                onPointerUp={(event) => {
-                  if (event.pointerType === "touch") {
-                    selectProject(index);
-                  }
-                }}
                 onClick={() => selectProject(index)}
-                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[transform,color,background-color] duration-150 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background"
+                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/60 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background [@media(hover:hover)]:aria-pressed:hover:text-foreground"
               >
                 {project.name}
               </button>
@@ -487,26 +482,26 @@ export function MobileShowcaseEnhancement({
           <div
             id="mobile-showcase-project"
             aria-live="polite"
-            className="mt-8"
+            className="mt-7 sm:mt-8"
           >
-            <h4 className="text-3xl font-semibold tracking-[-0.04em]">
+            <h4 className="text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
               {activeProject.name}
             </h4>
-            <p className="mt-4 min-h-14 text-base leading-7 text-background/70">
+            <p className="mt-3.5 min-h-12 text-sm leading-6 text-background/70 sm:mt-4 sm:min-h-14 sm:text-base sm:leading-7">
               {activeProject.tagline}
             </p>
 
             {activeProject.metrics.length > 0 ? (
-              <dl className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              <dl className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-1 xl:grid-cols-2">
                 {activeProject.metrics.map((metric) => (
                   <div
                     key={metric.id}
-                    className="rounded-2xl border border-background/20 p-4"
+                    className="rounded-2xl border border-background/20 p-3.5 sm:p-4"
                   >
-                    <dt className="text-xs leading-5 text-background/65">
+                    <dt className="truncate text-xs leading-5 text-background/65">
                       {metric.label}
                     </dt>
-                    <dd className="mt-1 text-2xl font-semibold tracking-tight">
+                    <dd className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
                       {metric.value}
                     </dd>
                   </div>
@@ -516,7 +511,7 @@ export function MobileShowcaseEnhancement({
 
             {activeProject.screenshots.length > 1 ? (
               <div
-                className="mt-7"
+                className="mt-6 sm:mt-7"
                 role="group"
                 aria-label={`${activeProject.name} app screens`}
               >
@@ -531,11 +526,6 @@ export function MobileShowcaseEnhancement({
                       key={screenshot}
                       type="button"
                       aria-pressed={index === state.screenIndex}
-                      onPointerUp={(event) => {
-                        if (event.pointerType === "touch") {
-                          selectScreen(index);
-                        }
-                      }}
                       onClick={() => selectScreen(index)}
                       className={getScreenChipButtonClass(
                         screenCount,
@@ -554,8 +544,8 @@ export function MobileShowcaseEnhancement({
             <div
               className={
                 compactChips
-                  ? "mt-7 flex flex-wrap gap-3 border-t border-background/15 pt-5"
-                  : "mt-7 grid grid-cols-2 gap-2 border-t border-background/15 pt-5"
+                  ? "mt-6 flex flex-wrap gap-3 border-t border-background/15 pt-5 sm:mt-7"
+                  : "mt-6 grid grid-cols-2 gap-2 border-t border-background/15 pt-5 sm:mt-7"
               }
               role="group"
               aria-label="Project links"
@@ -588,7 +578,7 @@ export function MobileShowcaseEnhancement({
         </div>
 
         <div
-          className={`relative overflow-hidden border-t border-background/15 bg-[#050505] p-8 lg:border-l lg:border-t-0 ${
+          className={`relative overflow-hidden border-t border-background/15 bg-[#050505] p-8 sm:p-10 lg:border-l lg:border-t-0 lg:p-10 ${
             preferWebGLShowcase || capabilities.desktopLayout
               ? "min-h-176"
               : "min-h-144 lg:min-h-176"

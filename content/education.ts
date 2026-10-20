@@ -15,9 +15,9 @@ export const education: Education[] = [
     id: "srmcem-btech",
     institution:
       "Shri Ramswaroop Memorial College of Engineering and Management, Lucknow",
-    credential: "B.Tech",
-    start: "TODO_BTECH_START",
-    end: "TODO_BTECH_END",
-    status: "placeholder",
+    credential: "Bachelor of Technology (B.Tech)",
+    start: "2018",
+    end: "2022",
+    status: "verified",
   },
 ];

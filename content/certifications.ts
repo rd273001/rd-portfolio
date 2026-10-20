@@ -15,7 +15,7 @@ export const certifications: Certification[] = [
     issuer: "Great Learning",
     year: "Jun 2022",
     url: "https://verify.mygreatlearning.com/SDPHYGIE",
-    status: "verified",
+    status: "placeholder",
   },
   {
     id: "upgrad-core-java",
@@ -23,6 +23,6 @@ export const certifications: Certification[] = [
     issuer: "upGrad",
     year: "Jul 2021",
     url: "https://www.credential.net/0684d4b8-e6df-47a5-853b-8a1900b40f11",
-    status: "verified",
+    status: "placeholder",
   },
 ];

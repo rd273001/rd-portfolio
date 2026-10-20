@@ -5,6 +5,13 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+function isTouchViewport(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
 let motionPluginsReady = false;
 
 if (typeof window !== "undefined") {
@@ -24,17 +31,18 @@ type CareerJourneyMotionProps = {
 function showStaticJourney(
   progress: HTMLElement,
   revealTargets: HTMLElement[],
-  cards: HTMLElement[] = [],
 ) {
   try {
-    gsap.set(progress, { clearProps: "transform" });
-    gsap.set(revealTargets, { clearProps: "opacity,visibility,transform" });
-    if (cards.length > 0) {
-      gsap.set(cards, {
-        "--journey-fade-stop": 100,
-        "--journey-fade-end": 1,
-        clearProps: "--journey-fade-stop,--journey-fade-end",
-      });
+    gsap.set(progress, { scaleY: 1, clearProps: "transform" });
+    gsap.set(revealTargets, {
+      autoAlpha: 1,
+      y: 0,
+      clearProps: "opacity,visibility,transform,willChange",
+    });
+    for (const target of revealTargets) {
+      if (target.hasAttribute("data-journey-badge")) {
+        target.setAttribute("data-active", "true");
+      }
     }
   } catch {
     progress.style.transform = "";
@@ -42,10 +50,10 @@ function showStaticJourney(
       target.style.opacity = "";
       target.style.visibility = "";
       target.style.transform = "";
-    }
-    for (const card of cards) {
-      card.style.removeProperty("--journey-fade-stop");
-      card.style.removeProperty("--journey-fade-end");
+      target.style.willChange = "";
+      if (target.hasAttribute("data-journey-badge")) {
+        target.setAttribute("data-active", "true");
+      }
     }
   }
 }
@@ -78,10 +86,8 @@ function createJourneyTimeline({
   revealEnd,
   scrub,
   stepY,
-  revealOnStep = false,
-  revealFromAlpha = 0.18,
-  revealEase = "none",
-  progressiveMask = false,
+  revealFromAlpha = 0.2,
+  revealEase = "power1.out",
 }: {
   list: HTMLElement;
   progress: HTMLElement;
@@ -92,12 +98,10 @@ function createJourneyTimeline({
   revealEnd: string;
   scrub: number;
   stepY: number;
-  revealOnStep?: boolean;
   revealFromAlpha?: number;
   revealEase?: string;
-  progressiveMask?: boolean;
 }) {
-  const revealTargets = revealOnStep ? steps : getRevealTargets(steps);
+  const revealTargets = getRevealTargets(steps);
 
   gsap.set(progress, { scaleY: 0, transformOrigin: "top center" });
   gsap.set(revealTargets, { willChange: "transform, opacity" });
@@ -110,53 +114,20 @@ function createJourneyTimeline({
       start: listStart,
       end: listEnd,
       scrub,
+      fastScrollEnd: true,
       invalidateOnRefresh: true,
+      onLeave: () => {
+        gsap.set(progress, { scaleY: 1 });
+      },
+      onLeaveBack: () => {
+        gsap.set(progress, { scaleY: 0 });
+      },
     },
   });
 
   for (const step of steps) {
-    if (revealOnStep) {
-      const timeline = gsap.timeline({
-        defaults: { ease: revealEase, immediateRender: false },
-        scrollTrigger: {
-          trigger: step,
-          start: revealStart,
-          end: revealEnd,
-          scrub,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      timeline.fromTo(
-        step,
-        { autoAlpha: revealFromAlpha, y: stepY },
-        { autoAlpha: 1, y: 0 },
-        0,
-      );
-
-      if (progressiveMask) {
-        const card = step.querySelector<HTMLElement>("[data-journey-card]");
-
-        if (card) {
-          timeline.fromTo(
-            card,
-            { "--journey-fade-stop": 42, "--journey-fade-end": 0.38 },
-            {
-              "--journey-fade-stop": 100,
-              "--journey-fade-end": 1,
-              autoRound: false,
-            },
-            0,
-          );
-        }
-      }
-
-      continue;
-    }
-
     const card = step.querySelector<HTMLElement>("[data-journey-card]");
     const badge = step.querySelector<HTMLElement>("[data-journey-badge]");
-    const trigger = card ?? step;
     const targets = [card, badge].filter(
       (element): element is HTMLElement => element !== null,
     );
@@ -174,14 +145,24 @@ function createJourneyTimeline({
         ease: revealEase,
         immediateRender: false,
         scrollTrigger: {
-          trigger,
+          trigger: step,
           start: revealStart,
           end: revealEnd,
           scrub,
+          fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
       },
     );
+
+    if (badge) {
+      ScrollTrigger.create({
+        trigger: step,
+        start: "top 66%",
+        onEnter: () => badge.setAttribute("data-active", "true"),
+        onLeaveBack: () => badge.removeAttribute("data-active"),
+      });
+    }
   }
 }
 
@@ -210,11 +191,8 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
       }
 
       const cardRevealTargets = getRevealTargets(steps);
-      const cards = steps
-        .map((step) => step.querySelector<HTMLElement>("[data-journey-card]"))
-        .filter((card): card is HTMLElement => card !== null);
       const showStatic = () =>
-        showStaticJourney(progress, [...steps, ...cardRevealTargets], cards);
+        showStaticJourney(progress, [...steps, ...cardRevealTargets]);
 
       try {
         const media = gsap.matchMedia();
@@ -232,15 +210,13 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
                 progress,
                 steps,
                 listStart: "top 88%",
-                listEnd: "bottom 50%",
-                revealStart: "top bottom",
-                revealEnd: "center 54%",
-                scrub: 0.5,
-                stepY: 44,
-                revealOnStep: true,
-                revealFromAlpha: 0.18,
-                revealEase: "power2.in",
-                progressiveMask: true,
+                listEnd: "bottom 45%",
+                revealStart: "top 78%",
+                revealEnd: "top 54%",
+                scrub: 0.4,
+                stepY: 28,
+                revealFromAlpha: 0.2,
+                revealEase: "power1.out",
               });
             } catch {
               showStatic();
@@ -256,12 +232,14 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
                 list,
                 progress,
                 steps,
-                listStart: "top 78%",
-                listEnd: "bottom 42%",
-                revealStart: "top 82%",
-                revealEnd: "top 44%",
-                scrub: 0.5,
-                stepY: 72,
+                listStart: "top 80%",
+                listEnd: "bottom 45%",
+                revealStart: "top 80%",
+                revealEnd: "top 56%",
+                scrub: 0.4,
+                stepY: 36,
+                revealFromAlpha: 0.2,
+                revealEase: "power1.out",
               });
             } catch {
               showStatic();
@@ -276,10 +254,40 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
             showStatic();
           }
         };
-        const refreshId = window.requestAnimationFrame(refresh);
+
+        const refreshId = window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(refresh);
+        });
         window.addEventListener("load", refresh);
 
+        let lastWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+        let resizeTimer: number | undefined;
+        const onResize = () => {
+          const width = window.innerWidth;
+          // Ignore height-only resizes on touch viewports (e.g. mobile Chrome URL bar auto-hide/show)
+          if (isTouchViewport() && width === lastWidth) {
+            return;
+          }
+          lastWidth = width;
+
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(refresh, 150);
+        };
+        window.addEventListener("resize", onResize);
+        window.addEventListener("orientationchange", onResize);
+        window.addEventListener("hashchange", refresh);
+
+        document.fonts?.ready
+          .then(() => {
+            refresh();
+          })
+          .catch(() => {});
+
         return () => {
+          window.clearTimeout(resizeTimer);
+          window.removeEventListener("resize", onResize);
+          window.removeEventListener("orientationchange", onResize);
+          window.removeEventListener("hashchange", refresh);
           window.cancelAnimationFrame(refreshId);
           window.removeEventListener("load", refresh);
           try {

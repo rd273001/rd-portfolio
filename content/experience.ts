@@ -7,7 +7,7 @@ export const experience: Experience[] = [
     companyUrl: "https://dfc.org.in/",
     role: "Software Engineer 1 (Mobile)",
     start: "Apr 2025",
-    end: "Present",
+    end: "Oct 2026",
     startStatus: "verified",
     endStatus: "verified",
     kind: "production-app",
@@ -15,7 +15,7 @@ export const experience: Experience[] = [
     summary:
       "Production ownership of DFC and AptiBooster, from feature work through Play Store release and maintenance.",
     highlights: [
-      "Own and maintain two production Android apps: DFC and AptiBooster.",
+      "Owned and maintained two production Android apps: DFC and AptiBooster.",
       "Led the DFC mobile revamp on the existing Play listing — new TypeScript and TanStack Query codebase with onboarding, deep-link navigation, offline usage, and stronger auth/API error handling.",
       "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors (~100 ms / 11.2% faster); ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
       "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors that report actionable failures without flooding Crashlytics.",
@@ -85,7 +85,7 @@ export const experience: Experience[] = [
     kind: "internship",
     prominence: 4,
     summary:
-      "Internship on IKIOR’s wellness mobile app—period tracking was the hero feature at the time. Built React Native UI from Figma, inspired by established period and health apps on the Play Store. The product has since been heavily revamped; today’s live app is not these internship surfaces.",
+      "Internship on IKIOR’s wellness mobile app—period tracking was the hero feature at the time. Built React Native UI from Figma, inspired by established period tracking and lifestyle wellness apps on the Play Store. The product has since been heavily revamped; today’s live app is not these internship surfaces.",
     highlights: [
       "Shipped period-tracking UI when it was the product hero—a cycle calendar with marked dates and per-day layouts built to surface insights as analysis was planned.",
       "Instagram Reels–inspired UI with react-native-video; multi-step period report flow; Health, Care, and Sleep section screens from Figma.",
