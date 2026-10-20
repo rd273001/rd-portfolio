@@ -274,6 +274,12 @@ export const projects: Project[] = [
       ],
     },
     caseStudyHref: "/work/aptibooster",
+    workShowcaseScreenshots: [
+      "/screenshots/aptibooster/test-session.webp",
+      "/screenshots/aptibooster/test-overview.webp",
+      "/screenshots/aptibooster/test-analysis-charts.webp",
+      "/screenshots/aptibooster/test-analysis.webp",
+    ],
     screenshots: [
       "/screenshots/aptibooster/test-session.webp",
       "/screenshots/aptibooster/test-overview.webp",
