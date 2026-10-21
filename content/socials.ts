@@ -10,7 +10,7 @@ export const socials: Social[] = [
   {
     id: "linkedin",
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/ravi-dubey-948130174",
+    href: "https://www.linkedin.com/in/ravidubeys-profile",
     status: "verified",
   },
   {

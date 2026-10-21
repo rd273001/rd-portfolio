@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 
 import { BrandMark } from "@/components/primitives";
 import type { NavigationItem } from "@/content/types";
@@ -65,6 +65,9 @@ export function SiteHeader({
   utilities,
 }: SiteHeaderProps) {
   const menuRef = useRef<HTMLDetailsElement>(null);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const isNavigatingRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const showUtilities = Boolean(resume) || utilities.length > 0;
 
   const closeMenu = () => {
@@ -85,6 +88,17 @@ export function SiteHeader({
 
     const id = href.slice(2);
     closeMenu();
+    setActiveSection(id);
+    isNavigatingRef.current = true;
+
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    // Lock scroll-spy updates during the programmatic smooth scroll so intermediate sections
+    // (e.g. Work when traveling to Skills) never cause jump/flicker. Unlocks automatically on scrollend.
+    scrollTimeoutRef.current = setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 2500);
 
     if (window.location.pathname === "/") {
       event.preventDefault();
@@ -97,6 +111,101 @@ export function SiteHeader({
     event.preventDefault();
     window.location.assign(href);
   };
+
+  // Passive scroll spy for highlighting the active section anchor on the homepage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateActiveSection = () => {
+      if (isNavigatingRef.current) {
+        return;
+      }
+
+      if (window.location.pathname !== "/") {
+        setActiveSection("");
+        return;
+      }
+
+      const sectionIds = navigation.map((item) => item.id);
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Bottom-of-page check: highlight last section when near footer
+      if (scrollY + windowHeight >= documentHeight - 60) {
+        const lastId = sectionIds[sectionIds.length - 1];
+        if (lastId) {
+          setActiveSection(lastId);
+          return;
+        }
+      }
+
+      // If at the very top of page
+      if (scrollY < 120 && sectionIds.length > 0) {
+        setActiveSection(sectionIds[0]);
+        return;
+      }
+
+      // Cumulative reading threshold from top:
+      // The active section is the furthest section whose top has scrolled past the header (~180px)
+      const triggerY = 180;
+      let currentActive = sectionIds[0];
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= triggerY) {
+          currentActive = id;
+        }
+      }
+
+      if (currentActive) {
+        setActiveSection(currentActive);
+      }
+    };
+
+    const unlockNavigation = () => {
+      if (isNavigatingRef.current) {
+        isNavigatingRef.current = false;
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+        }
+        updateActiveSection();
+      }
+    };
+
+    // On initial mount, respect hash if present
+    if (window.location.hash) {
+      const hashId = window.location.hash.slice(1);
+      if (navigation.some((item) => item.id === hashId)) {
+        setActiveSection(hashId);
+      } else {
+        updateActiveSection();
+      }
+    } else {
+      updateActiveSection();
+    }
+
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection, { passive: true });
+    window.addEventListener("scrollend", unlockNavigation);
+    window.addEventListener("wheel", unlockNavigation, { passive: true });
+    window.addEventListener("touchmove", unlockNavigation, { passive: true });
+    window.addEventListener("pointerdown", unlockNavigation, { passive: true });
+
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+      window.removeEventListener("scrollend", unlockNavigation);
+      window.removeEventListener("wheel", unlockNavigation);
+      window.removeEventListener("touchmove", unlockNavigation);
+      window.removeEventListener("pointerdown", unlockNavigation);
+    };
+  }, [navigation]);
 
   useEffect(() => {
     const menu = menuRef.current;
@@ -145,14 +254,21 @@ export function SiteHeader({
         <Link
           href="/"
           className={cn(
-            "inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2.5 rounded-md text-sm font-semibold tracking-tight md:gap-3 md:text-base",
+            "inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2.5 rounded-md tracking-tight md:gap-3",
             focusRing,
           )}
-          aria-label={brand}
+          aria-label={`${brand} — Software Engineer`}
           onClick={closeMenu}
         >
           <BrandMark className="md:size-9" />
-          <span>{brand}</span>
+          <div className="flex flex-col justify-center gap-0.5 text-left">
+            <span className="text-[15px] font-semibold leading-tight tracking-tight text-foreground md:text-[17px]">
+              {brand}
+            </span>
+            <span className="text-[11px] font-normal leading-tight tracking-[0.03em] text-muted">
+              Software Engineer
+            </span>
+          </div>
         </Link>
 
         <nav
@@ -160,19 +276,32 @@ export function SiteHeader({
           aria-label="Primary navigation"
         >
           <div className="flex items-center gap-4 lg:gap-5">
-            {navigation.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                onClick={(event) => onHomeSectionClick(event, item.href)}
-                className={cn(
-                  "rounded-md py-2 text-sm text-muted transition-colors [@media(hover:hover)]:hover:text-foreground",
-                  focusRing,
-                )}
-              >
-                {item.label}
-              </a>
-            ))}
+            {navigation.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={(event) => onHomeSectionClick(event, item.href)}
+                  className={cn(
+                    "relative py-1.5 text-sm transition-colors duration-150",
+                    isActive
+                      ? "font-medium text-foreground"
+                      : "text-muted [@media(hover:hover)]:hover:text-foreground",
+                    focusRing,
+                  )}
+                  aria-current={isActive ? "location" : undefined}
+                >
+                  <span>{item.label}</span>
+                  {isActive ? (
+                    <span
+                      className="absolute -bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-foreground"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </a>
+              );
+            })}
           </div>
           {resume ? (
             <ActionLink
@@ -194,12 +323,23 @@ export function SiteHeader({
         >
           <summary
             className={cn(
-              "inline-flex min-h-11 min-w-19 cursor-pointer touch-manipulation list-none items-center justify-center overflow-hidden rounded-lg border border-border bg-surface px-4 text-sm font-medium text-foreground transition-[transform,background-color,color,border-color,opacity] duration-150 [@media(hover:hover)]:hover:bg-accent [@media(hover:hover)]:group-open:hover:bg-foreground [@media(hover:hover)]:group-open:hover:opacity-90 active:scale-[0.98] active:bg-accent group-open:border-foreground group-open:bg-foreground group-open:text-background group-open:active:bg-foreground group-open:active:opacity-90",
+              "inline-flex size-11 cursor-pointer touch-manipulation list-none items-center justify-center rounded-lg text-foreground transition-opacity duration-150 [@media(hover:hover)]:hover:opacity-75 active:scale-95 [&::-webkit-details-marker]:hidden",
               focusRing,
             )}
+            aria-label="Toggle navigation menu"
           >
-            <span className="group-open:hidden">Menu</span>
-            <span className="hidden group-open:inline">Close</span>
+            <div
+              className="relative flex size-5 items-center justify-center"
+              aria-hidden="true"
+            >
+              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out -translate-y-1.5 group-open:translate-y-0 group-open:rotate-45" />
+              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-150 ease-out translate-y-0 group-open:scale-x-0 group-open:opacity-0" />
+              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out translate-y-1.5 group-open:translate-y-0 group-open:-rotate-45" />
+            </div>
+            <span className="sr-only">
+              <span className="group-open:hidden">Open navigation menu</span>
+              <span className="hidden group-open:inline">Close navigation menu</span>
+            </span>
           </summary>
 
           <div className="fixed inset-x-0 top-16 z-40">
@@ -216,19 +356,32 @@ export function SiteHeader({
             >
               <div className="overflow-y-auto px-3 pb-6 pt-3">
                 <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-1">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.id}
-                      href={item.href}
-                      className={cn(
-                        "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-lg px-3 py-3.5 text-center text-base font-medium text-foreground transition-[transform,background-color] duration-150 [@media(hover:hover)]:hover:bg-foreground/6 active:scale-[0.98] active:bg-foreground/8",
-                        focusRing,
-                      )}
-                      onClick={(event) => onHomeSectionClick(event, item.href)}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
+                  {navigation.map((item) => {
+                    const isActive = activeSection === item.id;
+                    return (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        className={cn(
+                          "flex min-h-12 w-full touch-manipulation items-center justify-between rounded-xl px-4 py-3 text-base transition-[transform,background-color] duration-150 active:scale-[0.99]",
+                          isActive
+                            ? "bg-foreground/10 font-semibold text-foreground"
+                            : "font-medium text-foreground [@media(hover:hover)]:hover:bg-foreground/6 active:bg-foreground/8",
+                          focusRing,
+                        )}
+                        onClick={(event) => onHomeSectionClick(event, item.href)}
+                        aria-current={isActive ? "location" : undefined}
+                      >
+                        <span>{item.label}</span>
+                        {isActive ? (
+                          <span
+                            className="size-1.5 rounded-full bg-foreground"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                      </a>
+                    );
+                  })}
                   {showUtilities ? (
                     <div
                       className="mt-3 border-t border-border pt-3"
@@ -280,4 +433,4 @@ export function SiteHeader({
       </div>
     </header>
   );
-}
+}

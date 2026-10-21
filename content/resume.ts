@@ -7,7 +7,7 @@ import type { Resume } from "./types";
  */
 export const resume: Resume = {
   label: "Resume",
-  url: "https://drive.google.com/file/d/1h2enFSwk96hrasS8OS0RrPqv4mlHfFaE/view",
+  url: "/resume/ravi-dubey-resume.pdf",
   status: "verified",
 };
 
