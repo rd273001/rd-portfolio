@@ -8,8 +8,8 @@ export const contentType = "image/png";
 
 export default function OpenGraphImage() {
   return createOpenGraphImage({
-    kicker: profile.identity,
-    title: profile.name,
+    kicker: "Software Engineer · Web & Mobile Experiences",
+    title: "Interface craft, production reliability, and measurable product outcomes.",
     description: profile.positioning,
   });
 }

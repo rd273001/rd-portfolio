@@ -7,7 +7,7 @@ export const site: Site = {
   titleTemplate: "%s · Ravi Dubey",
   defaultTitle: "Ravi Dubey · Software Engineer",
   description:
-    "Specializing in Web & Mobile Experiences. Production ownership of DFC and AptiBooster with verified Play Console results.",
+    "Specializing in Web & Mobile Experiences. Focused on interface craft, production reliability, and measurable product outcomes.",
   locale: "en_IN",
   navigation: [
     {

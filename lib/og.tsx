@@ -69,21 +69,44 @@ export function createOpenGraphImage({
           padding: 72,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
           <OgBrandMark />
-          <div style={{ display: "flex", fontSize: 28, fontWeight: 600 }}>
-            {site.name}
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <div
+              style={{
+                display: "flex",
+                fontSize: 26,
+                fontWeight: 600,
+                letterSpacing: "-0.025em",
+                color: colors.foreground,
+                lineHeight: 1.1,
+              }}
+            >
+              {site.name}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                fontSize: 13,
+                fontWeight: 500,
+                color: colors.muted,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+              }}
+            >
+              Software Engineer
+            </div>
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", maxWidth: 980 }}>
+        <div style={{ display: "flex", flexDirection: "column", maxWidth: 1000 }}>
           <div
             style={{
               display: "flex",
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: 500,
               fontFamily: "ui-monospace, monospace",
-              letterSpacing: "0.18em",
+              letterSpacing: "0.16em",
               textTransform: "uppercase",
               color: colors.muted,
             }}
@@ -93,11 +116,11 @@ export function createOpenGraphImage({
           <div
             style={{
               display: "flex",
-              marginTop: 18,
-              fontSize: 58,
+              marginTop: 16,
+              fontSize: 50,
               fontWeight: 600,
-              letterSpacing: "-0.045em",
-              lineHeight: 1.08,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.15,
             }}
           >
             {title}
@@ -105,18 +128,37 @@ export function createOpenGraphImage({
           <div
             style={{
               display: "flex",
-              marginTop: 22,
-              fontSize: 28,
-              lineHeight: 1.4,
+              marginTop: 20,
+              fontSize: 24,
+              lineHeight: 1.45,
               color: colors.muted,
+              maxWidth: 920,
             }}
           >
             {description}
           </div>
         </div>
 
-        <div style={{ display: "flex", fontSize: 22, color: colors.muted }}>
-          {site.domain}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            fontSize: 20,
+            color: colors.muted,
+          }}
+        >
+          <div style={{ display: "flex" }}>{site.domain}</div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 16,
+              letterSpacing: "0.02em",
+            }}
+          >
+            ravidubey.in
+          </div>
         </div>
       </div>
     ),
