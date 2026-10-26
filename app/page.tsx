@@ -1,13 +1,13 @@
+import { Suspense } from "react";
+
 import {
   CareerJourney,
   ContactCta,
   EducationSection,
-  ExperienceSection,
   Hero,
   ImpactDashboard,
   PageShell,
   ProjectsSection,
-  SiteMetrics,
   SkillsSection,
   TestimonialsSection,
 } from "@/components/sections";
@@ -17,13 +17,13 @@ export default function Home() {
     <PageShell>
       <Hero />
       <ImpactDashboard />
-      <ExperienceSection />
-      <CareerJourney />
       <ProjectsSection />
+      <CareerJourney />
       <SkillsSection />
       <EducationSection />
-      <SiteMetrics />
-      <TestimonialsSection />
+      <Suspense fallback={null}>
+        <TestimonialsSection />
+      </Suspense>
       <ContactCta />
     </PageShell>
   );

@@ -306,7 +306,7 @@ function CareerJourneyMotionInner({ children }: CareerJourneyMotionProps) {
   return (
     <section
       ref={sectionRef}
-      id="journey"
+      id="experience"
       className="scroll-mt-20 border-t border-border py-16 sm:py-20"
     >
       {children}
@@ -332,7 +332,7 @@ class JourneyMotionBoundary extends Component<
 export function CareerJourneyMotion({ children }: CareerJourneyMotionProps) {
   const staticSection = (
     <section
-      id="journey"
+      id="experience"
       className="scroll-mt-20 border-t border-border py-16 sm:py-20"
     >
       {children}

@@ -131,8 +131,14 @@ export function SiteHeader({
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Bottom-of-page check: highlight last section when near footer
-      if (scrollY + windowHeight >= documentHeight - 60) {
+      // If at the very top of page
+      if (scrollY < 120 && sectionIds.length > 0) {
+        setActiveSection(sectionIds[0]);
+        return;
+      }
+
+      // Bottom-of-page check: highlight last section when scrolled far down and near footer
+      if (scrollY > 300 && scrollY + windowHeight >= documentHeight - 60) {
         const lastId = sectionIds[sectionIds.length - 1];
         if (lastId) {
           setActiveSection(lastId);
@@ -140,29 +146,33 @@ export function SiteHeader({
         }
       }
 
-      // If at the very top of page
-      if (scrollY < 120 && sectionIds.length > 0) {
-        setActiveSection(sectionIds[0]);
-        return;
-      }
+      // Visual page sections in top-to-bottom scroll order, mapped to corresponding header nav IDs
+      // Education is now directly in navigation; unlisted sections (collaborators) clear highlight
+      const pageSectionMappings: { sectionId: string; navId: string }[] = [
+        { sectionId: "about", navId: "about" },
+        { sectionId: "impact", navId: "impact" },
+        { sectionId: "work", navId: "work" },
+        { sectionId: "experience", navId: "experience" },
+        { sectionId: "skills", navId: "skills" },
+        { sectionId: "education", navId: "education" },
+        { sectionId: "collaborators", navId: "" },
+        { sectionId: "contact", navId: "contact" },
+      ];
 
-      // Cumulative reading threshold from top:
-      // The active section is the furthest section whose top has scrolled past the header (~180px)
+      // Cumulative reading threshold from top (~180px past header)
       const triggerY = 180;
-      let currentActive = sectionIds[0];
+      let currentNavId = sectionIds[0] ?? "";
 
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
+      for (const item of pageSectionMappings) {
+        const el = document.getElementById(item.sectionId);
         if (!el) continue;
         const rect = el.getBoundingClientRect();
         if (rect.top <= triggerY) {
-          currentActive = id;
+          currentNavId = item.navId;
         }
       }
 
-      if (currentActive) {
-        setActiveSection(currentActive);
-      }
+      setActiveSection(currentNavId);
     };
 
     const unlockNavigation = () => {
@@ -175,26 +185,30 @@ export function SiteHeader({
       }
     };
 
-    // On initial mount, respect hash if present
-    if (window.location.hash) {
-      const hashId = window.location.hash.slice(1);
-      if (navigation.some((item) => item.id === hashId)) {
-        setActiveSection(hashId);
+    // On initial mount, defer active section resolution to next frame
+    const initFrame = window.requestAnimationFrame(() => {
+      if (window.location.hash) {
+        const hashId = window.location.hash.slice(1);
+        if (navigation.some((item) => item.id === hashId)) {
+          setActiveSection(hashId);
+        } else {
+          updateActiveSection();
+        }
       } else {
         updateActiveSection();
       }
-    } else {
-      updateActiveSection();
-    }
+    });
 
     window.addEventListener("scroll", updateActiveSection, { passive: true });
     window.addEventListener("resize", updateActiveSection, { passive: true });
     window.addEventListener("scrollend", unlockNavigation);
     window.addEventListener("wheel", unlockNavigation, { passive: true });
+    window.addEventListener("touchstart", unlockNavigation, { passive: true });
     window.addEventListener("touchmove", unlockNavigation, { passive: true });
     window.addEventListener("pointerdown", unlockNavigation, { passive: true });
 
     return () => {
+      window.cancelAnimationFrame(initFrame);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
@@ -202,6 +216,7 @@ export function SiteHeader({
       window.removeEventListener("resize", updateActiveSection);
       window.removeEventListener("scrollend", unlockNavigation);
       window.removeEventListener("wheel", unlockNavigation);
+      window.removeEventListener("touchstart", unlockNavigation);
       window.removeEventListener("touchmove", unlockNavigation);
       window.removeEventListener("pointerdown", unlockNavigation);
     };
@@ -275,7 +290,7 @@ export function SiteHeader({
           className="hidden items-center md:flex"
           aria-label="Primary navigation"
         >
-          <div className="flex items-center gap-4 lg:gap-5">
+          <div className="flex items-center gap-3 lg:gap-5">
             {navigation.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -363,10 +378,10 @@ export function SiteHeader({
                         key={item.id}
                         href={item.href}
                         className={cn(
-                          "flex min-h-12 w-full touch-manipulation items-center justify-between rounded-xl px-4 py-3 text-base transition-[transform,background-color] duration-150 active:scale-[0.99]",
+                          "flex min-h-12 w-full touch-manipulation items-center justify-between rounded-xl px-4 py-3 text-base transition-[transform,background-color] duration-150 active:scale-[0.99] [@media(hover:hover)]:hover:bg-foreground/5 active:bg-foreground/5",
                           isActive
-                            ? "bg-foreground/10 font-semibold text-foreground"
-                            : "font-medium text-foreground [@media(hover:hover)]:hover:bg-foreground/6 active:bg-foreground/8",
+                            ? "font-semibold text-foreground"
+                            : "font-medium text-foreground/80 [@media(hover:hover)]:hover:text-foreground active:text-foreground",
                           focusRing,
                         )}
                         onClick={(event) => onHomeSectionClick(event, item.href)}
@@ -393,7 +408,7 @@ export function SiteHeader({
                           href={resume.href}
                           onClick={closeMenu}
                           className={cn(
-                            "inline-flex min-h-12 w-full cursor-pointer touch-manipulation items-center justify-center rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90",
+                            "inline-flex min-h-12 w-full cursor-pointer touch-manipulation items-center justify-center rounded-xl bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90",
                             focusRing,
                           )}
                         >
@@ -414,7 +429,7 @@ export function SiteHeader({
                               href={item.href}
                               onClick={closeMenu}
                               className={cn(
-                                "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-full border border-foreground/20 bg-background/35 px-3 text-sm font-medium text-foreground backdrop-blur-sm transition-[transform,background-color,border-color] duration-150 [@media(hover:hover)]:hover:border-foreground/25 [@media(hover:hover)]:hover:bg-background/90 active:scale-[0.98] active:border-foreground/25 active:bg-background/90",
+                                "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-xl border border-foreground/20 bg-background/35 px-3 text-sm font-medium text-foreground backdrop-blur-sm transition-[transform,background-color,border-color] duration-150 [@media(hover:hover)]:hover:border-foreground/25 [@media(hover:hover)]:hover:bg-background/90 active:scale-[0.98] active:border-foreground/25 active:bg-background/90",
                                 focusRing,
                               )}
                             >
