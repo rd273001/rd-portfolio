@@ -10,20 +10,6 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
-export function ArrowLeftIcon({ className = "size-4" }: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      aria-hidden
-      focusable="false"
-    >
-      {/* Tip stays at x=5; only the shaft’s right end is longer than stock Lucide. */}
-      <path d="M21 12H5" {...stroke} />
-      <path d="m12 19-7-7 7-7" {...stroke} />
-    </svg>
-  );
-}
 
 export function AlertCircleIcon({ className = "size-4" }: IconProps) {
   return (

@@ -496,12 +496,12 @@ export function MobileShowcaseEnhancement({
                 {activeProject.metrics.map((metric) => (
                   <div
                     key={metric.id}
-                    className="rounded-2xl border border-background/20 p-3.5 sm:p-4"
+                    className="flex flex-col justify-between rounded-2xl border border-background/20 p-3.5 sm:p-4"
                   >
-                    <dt className="truncate text-xs leading-5 text-background/65">
+                    <dt className="text-xs leading-snug text-background/65 text-pretty sm:leading-5">
                       {metric.label}
                     </dt>
-                    <dd className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
+                    <dd className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
                       {metric.value}
                     </dd>
                   </div>

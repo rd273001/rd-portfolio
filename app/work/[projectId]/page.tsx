@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Button, Container } from "@/components/primitives";
+import { ArrowLeftIcon, Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
 import { CaseStudyAdjacentNav } from "@/components/sections/case-study/CaseStudyAdjacentNav";
 import { CaseStudyStory } from "@/components/sections/case-study/CaseStudyStory";
@@ -109,9 +109,10 @@ export default async function ProjectCaseStudyPage({
         <Container>
           <Link
             href="/#work"
-            className="inline-flex rounded-md text-sm font-medium text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            className="group inline-flex items-center gap-2 rounded-md text-sm font-medium text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground active:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
-            Back to selected work
+            <ArrowLeftIcon className="size-4 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:-translate-x-1 group-active:!-translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+            <span>Back to selected work</span>
           </Link>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start lg:gap-16">

@@ -4,11 +4,10 @@ import { Suspense } from "react";
 
 import {
   AlertCircleIcon,
-  ArrowLeftIcon,
   GoogleMark,
   ShieldIcon,
 } from "@/components/admin/AdminIcons";
-import { Button, Container } from "@/components/primitives";
+import { ArrowLeftIcon, Button, Container } from "@/components/primitives";
 import { isGoogleAuthConfigured } from "@/lib/auth/config";
 import { signInErrorMessage } from "@/lib/auth/errors";
 import { cn } from "@/lib/cn";
@@ -28,10 +27,10 @@ type LoginPageProps = {
 };
 
 const backLinkClass = cn(
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-md text-sm text-muted",
-  "transition-colors duration-150",
+  "group inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-md text-sm text-muted",
+  "underline decoration-border underline-offset-4 transition-[color,text-decoration-color] duration-150",
+  "hover:text-foreground hover:decoration-foreground active:text-foreground active:decoration-foreground",
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-  "[@media(hover:hover)]:hover:text-foreground",
 );
 
 async function LoginErrorMessage({
@@ -100,8 +99,8 @@ export default function AdminLoginPage({ searchParams }: LoginPageProps) {
 
           <div className="mt-6 border-t border-border pt-5">
             <Link href="/" className={backLinkClass}>
-              <ArrowLeftIcon className="size-4 shrink-0" />
-              Back to portfolio
+              <ArrowLeftIcon className="size-3.5 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:-translate-x-1 group-active:!-translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+              <span>Back to portfolio</span>
             </Link>
           </div>
         </div>

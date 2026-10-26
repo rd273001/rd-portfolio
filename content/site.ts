@@ -21,19 +21,24 @@ export const site: Site = {
       href: "/#impact",
     },
     {
-      id: "experience",
-      label: "Experience",
-      href: "/#experience",
-    },
-    {
       id: "work",
       label: "Work",
       href: "/#work",
     },
     {
+      id: "experience",
+      label: "Experience",
+      href: "/#experience",
+    },
+    {
       id: "skills",
       label: "Skills",
       href: "/#skills",
+    },
+    {
+      id: "education",
+      label: "Education",
+      href: "/#education",
     },
     {
       id: "contact",
@@ -63,8 +68,8 @@ export const site: Site = {
     feedback: {
       eyebrow: "Feedback",
       intro:
-        "For collaborators only — not for job applications. Your note stays private unless we agree to publish it later.",
-      title: "Leave feedback",
+        "Have feedback, thoughts on my work, or a note to share? Your note stays private unless we agree to publish it later.",
+      title: "Share feedback or testimonial",
       description: "",
       submitLabel: "Send feedback",
     },
