@@ -25,6 +25,8 @@ export const projects: Project[] = [
       "Google Play In-App Updates",
       "Axios",
       "Context API",
+      "Formik",
+      "Yup",
     ],
     highlights: [
       "Led the DFC mobile revamp on the existing Play listing: new TypeScript and TanStack Query codebase with auth/API integration and the full student onboarding flow built from scratch.",
@@ -37,6 +39,7 @@ export const projects: Project[] = [
       "Production stability: 0.1% user-perceived crash rate on current production (Google Play)—10.36% lower than the pre-revamp baseline when I took over mobile.",
     ],
     caseStudyHighlights: [
+      "Built form management and schema-based client validation using Formik and Yup across multi-step student onboarding, auth, and profile workflows.",
       "Integrated OneSignal for push notifications and in-app messaging on the production app.",
       "Shipped Google Play in-app updates so users can install new releases from inside the app.",
       "Upgraded React Native from 0.76.5 to 0.81.0—updated dependencies for the new RN version, applied Android changes required by the upgrade (including edge-to-edge layout and safe-area handling), and validated behavior across supported OS versions.",
@@ -170,6 +173,8 @@ export const projects: Project[] = [
       "Google Play In-App Updates",
       "Context API",
       "Axios",
+      "Formik",
+      "Yup",
     ],
     highlights: [
       "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",

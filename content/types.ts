@@ -174,6 +174,8 @@ export type SkillGroup = {
   id: string;
   label: string;
   items: string[];
+  /** Spans the full grid width on tablet and desktop. */
+  featured?: boolean;
 };
 
 export type Education = {

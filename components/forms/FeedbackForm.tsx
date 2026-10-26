@@ -73,6 +73,8 @@ type FeedbackFormProps = {
   submitLabel: string;
   emailHref: string | null;
   successTitleId?: string;
+  shellClassName?: string;
+  unstyledShell?: boolean;
 };
 
 export function FeedbackForm({
@@ -80,6 +82,8 @@ export function FeedbackForm({
   submitLabel,
   emailHref,
   successTitleId = "contact-feedback-status",
+  shellClassName,
+  unstyledShell = false,
 }: FeedbackFormProps) {
   const [draft, updateDraft] = useReducer(draftReducer, emptyDraft);
   const form = useContactForm();
@@ -120,25 +124,50 @@ export function FeedbackForm({
   }
 
   const isSuccess = form.status === "success";
+  const FormShell = unstyledShell ? "div" : ContactFormShell;
 
   return (
     <ContactFormHeightSwap viewKey={isSuccess ? "success" : "form"}>
       {isSuccess ? (
-        <ContactFormSuccess
-          title="Feedback sent"
-          titleId={successTitleId}
-          message="It stays private unless I follow up with you."
-          resetLabel="Send more feedback"
-          onReset={form.reset}
-        />
+        unstyledShell ? (
+          <div className={cn("flex flex-col", shellClassName)}>
+            <div>
+              <h3
+                id={successTitleId}
+                className="text-lg font-semibold tracking-[-0.03em] text-foreground"
+              >
+                Feedback sent
+              </h3>
+              <p className="mt-3 text-base leading-7 text-muted" role="status">
+                It stays private unless I follow up with you.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={form.reset}
+              className="-mx-1 mt-6 inline-flex w-auto max-w-full cursor-pointer self-start rounded-md px-2 py-1.5 text-sm font-medium text-foreground/85 underline decoration-foreground/35 underline-offset-4 transition-[color,background-color,text-decoration-color] duration-150 hover:bg-foreground/8 hover:text-foreground hover:decoration-foreground/70 active:bg-foreground/12 active:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+            >
+              Send more feedback
+            </button>
+          </div>
+        ) : (
+          <ContactFormSuccess
+            className={shellClassName}
+            title="Feedback sent"
+            titleId={successTitleId}
+            message="It stays private unless I follow up with you."
+            resetLabel="Send more feedback"
+            onReset={form.reset}
+          />
+        )
       ) : (
-    <ContactFormShell>
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-1 flex-col gap-5"
-      noValidate
-      aria-labelledby="contact-feedback-title"
-    >
+        <FormShell className={shellClassName}>
+          <form
+            onSubmit={onSubmit}
+            className="flex flex-1 flex-col gap-5"
+            noValidate
+            aria-labelledby="contact-feedback-title"
+          >
       {description ? (
         <p className="text-sm leading-6 text-muted">{description}</p>
       ) : null}
@@ -262,11 +291,10 @@ export function FeedbackForm({
           onChange={(event) =>
             updateDraft({ type: "permission", value: event.target.checked })
           }
-          className="mt-1 size-4 shrink-0 rounded border-border accent-foreground"
+          className="mt-1 size-4 shrink-0 rounded border-border accent-foreground cursor-pointer"
         />
-        <label htmlFor="feedback-permission" className="cursor-pointer">
-          I’m comfortable with this being published later if you follow up
-          with me first.
+        <label htmlFor="feedback-permission" className="cursor-pointer select-none text-muted transition-colors hover:text-foreground">
+          Allow this note to be featured as a testimonial.
         </label>
       </div>
 
@@ -280,12 +308,12 @@ export function FeedbackForm({
         type="submit"
         disabled={submitting}
         aria-busy={submitting}
-        className="w-full sm:w-auto sm:min-w-36"
+        className="w-full sm:w-auto sm:min-w-40 font-medium"
       >
         <FormSubmitButtonLabel busy={submitting} idleLabel={submitLabel} />
       </Button>
-    </form>
-    </ContactFormShell>
+      </form>
+    </FormShell>
       )}
     </ContactFormHeightSwap>
   );
