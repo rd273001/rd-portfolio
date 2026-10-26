@@ -1,6 +1,7 @@
-import { FeedbackForm } from "@/components/forms/FeedbackForm";
+import Link from "next/link";
+
 import { InquiryForm } from "@/components/forms/InquiryForm";
-import { Button, Container } from "@/components/primitives";
+import { ArrowRightIcon, Container } from "@/components/primitives";
 import { profile } from "@/content/profile";
 import { site } from "@/content/site";
 import { socials } from "@/content/socials";
@@ -8,9 +9,6 @@ import { socials } from "@/content/socials";
 export function ContactCta() {
   const primaryCta = socials.find(
     (social) => social.id === site.contact.primarySocialId,
-  );
-  const secondaryCta = socials.find(
-    (social) => social.id === site.contact.secondarySocialId,
   );
   const visibleSocials = socials.filter(
     (social) => social.status === "verified",
@@ -20,15 +18,15 @@ export function ContactCta() {
     : (socials.find((social) => social.id === "email")?.href ?? null);
 
   return (
-    <>
-      <section
-        id="contact"
-        className="scroll-mt-20 border-t border-border py-16 sm:py-20"
-      >
-        <Container className="max-w-6xl">
-          <div className="rounded-3xl bg-foreground px-6 py-10 text-background sm:px-10 sm:py-14 lg:px-14">
-            <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-12 xl:gap-16">
-              <div className="min-w-0">
+    <section
+      id="contact"
+      className="scroll-mt-20 border-t border-border py-16 sm:py-20"
+    >
+      <Container className="max-w-6xl">
+        <div className="rounded-3xl bg-foreground px-6 py-10 text-background sm:px-10 sm:py-14 lg:px-14">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-12 xl:gap-16">
+            <div className="flex min-w-0 flex-col justify-between">
+              <div>
                 <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-background/60">
                   {profile.name}
                 </p>
@@ -39,30 +37,8 @@ export function ContactCta() {
                   {site.contact.description}
                 </p>
 
-                {primaryCta || secondaryCta ? (
-                  <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                    {primaryCta ? (
-                      <Button
-                        href={primaryCta.href}
-                        className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36 bg-background text-foreground [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90 focus-visible:outline-background"
-                      >
-                        {primaryCta.label}
-                      </Button>
-                    ) : null}
-                    {secondaryCta ? (
-                      <Button
-                        href={secondaryCta.href}
-                        variant="secondary"
-                        className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36 border-background/45 bg-transparent text-background [@media(hover:hover)]:hover:border-background/55 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:border-background/55 active:bg-background/10 focus-visible:outline-background"
-                      >
-                        {secondaryCta.label}
-                      </Button>
-                    ) : null}
-                  </div>
-                ) : null}
-
                 {visibleSocials.length > 0 ? (
-                  <ul className="mt-10 flex flex-wrap gap-x-5 gap-y-3 border-t border-background/15 pt-6">
+                  <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-3">
                     {visibleSocials.map((social) => {
                       const isWebUrl = social.href.startsWith("http");
 
@@ -86,55 +62,46 @@ export function ContactCta() {
                 ) : null}
               </div>
 
-              <div
-                className="flex min-w-0 flex-col lg:min-h-0 lg:h-full"
-                aria-labelledby="contact-inquiry-title"
-              >
-                <InquiryForm
-                  title={site.contact.inquiry.title}
-                  description={site.contact.inquiry.description}
-                  submitLabel={site.contact.inquiry.submitLabel}
-                  reasons={site.contact.inquiry.reasons}
-                  emailHref={emailHref}
-                  titleId="contact-inquiry-title"
-                  tone="on-dark"
-                />
-              </div>
+              <p className="hidden mt-8 border-t border-background/15 pt-5 text-xs text-background/60 lg:block">
+                Have feedback or thoughts?{" "}
+                <Link
+                  href="/feedback"
+                  className="group inline-flex touch-manipulation items-center gap-1.5 text-background underline decoration-background/30 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-background hover:decoration-background active:text-background active:decoration-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background"
+                >
+                  <span>Share feedback or a testimonial</span>
+                  <ArrowRightIcon className="size-3 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:translate-x-1 group-active:!translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+                </Link>
+              </p>
             </div>
-          </div>
-        </Container>
-      </section>
 
-      <section
-        id="feedback"
-        className="scroll-mt-20 border-t border-border py-16 sm:py-20"
-        aria-labelledby="contact-feedback-title"
-      >
-        <Container>
-          <div className="mx-auto max-w-2xl">
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
-              {site.contact.feedback.eyebrow}
-            </p>
-            <h2
-              id="contact-feedback-title"
-              className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-balance sm:text-3xl"
+            <div
+              className="flex min-w-0 flex-col lg:min-h-0 lg:h-full"
+              aria-labelledby="contact-inquiry-title"
             >
-              {site.contact.feedback.title}
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-6 text-muted sm:text-base sm:leading-7">
-              {site.contact.feedback.intro}
-            </p>
-            <div className="mt-8">
-              <FeedbackForm
-                description={site.contact.feedback.description}
-                submitLabel={site.contact.feedback.submitLabel}
+              <InquiryForm
+                title={site.contact.inquiry.title}
+                description={site.contact.inquiry.description}
+                submitLabel={site.contact.inquiry.submitLabel}
+                reasons={site.contact.inquiry.reasons}
                 emailHref={emailHref}
-                successTitleId="contact-feedback-status"
+                titleId="contact-inquiry-title"
+                tone="on-dark"
               />
             </div>
           </div>
-        </Container>
-      </section>
-    </>
+
+          <p className="mt-8 border-t border-background/15 pt-5 text-xs text-background/60 lg:hidden">
+            Have feedback or thoughts?{" "}
+            <Link
+              href="/feedback"
+              className="group inline-flex touch-manipulation items-center gap-1.5 text-background underline decoration-background/30 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-background hover:decoration-background active:text-background active:decoration-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background"
+            >
+              <span>Share feedback or a testimonial</span>
+              <ArrowRightIcon className="size-3 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:translate-x-1 group-active:!translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+            </Link>
+          </p>
+        </div>
+      </Container>
+    </section>
   );
 }

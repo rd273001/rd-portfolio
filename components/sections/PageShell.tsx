@@ -4,9 +4,10 @@ import { SiteFooter } from "./SiteFooter";
 
 type PageShellProps = {
   children: ReactNode;
+  hideFeedbackLink?: boolean;
 };
 
-export function PageShell({ children }: PageShellProps) {
+export function PageShell({ children, hideFeedbackLink = false }: PageShellProps) {
   return (
     <div className="flex flex-1 flex-col">
       <main
@@ -16,7 +17,7 @@ export function PageShell({ children }: PageShellProps) {
       >
         {children}
       </main>
-      <SiteFooter />
+      <SiteFooter hideFeedbackLink={hideFeedbackLink} />
     </div>
   );
 }

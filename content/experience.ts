@@ -15,7 +15,7 @@ export const experience: Experience[] = [
     summary:
       "Production ownership of DFC and AptiBooster, from feature work through Play Store release and maintenance.",
     highlights: [
-      "Owned and maintained two production Android apps: DFC and AptiBooster.",
+      "Managed end-to-end Google Play releases, phased rollouts, and in-app update flows for DFC and AptiBooster.",
       "Led the DFC mobile revamp on the existing Play listing — new TypeScript and TanStack Query codebase with onboarding, deep-link navigation, offline usage, and stronger auth/API error handling.",
       "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors (~100 ms / 11.2% faster); ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
       "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors that report actionable failures without flooding Crashlytics.",
@@ -38,7 +38,7 @@ export const experience: Experience[] = [
       "Axios",
       "Context API",
     ],
-    metricIds: ["dfc-app-start-p90"],
+    metricIds: [],
     projectIds: ["dfc-app", "aptibooster"],
   },
   {
@@ -47,7 +47,7 @@ export const experience: Experience[] = [
     companyUrl: "https://dfc.org.in/",
     role: "Software Engineer Intern",
     start: "Dec 2024",
-    end: "Mar 2025",
+    end: "Apr 2025",
     startStatus: "verified",
     endStatus: "verified",
     kind: "internship",

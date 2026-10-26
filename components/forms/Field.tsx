@@ -96,22 +96,23 @@ export function controlClassName(
   const onDark = tone === "on-dark";
 
   return cn(
-    "min-h-11 w-full rounded-xl border px-3.5 text-base",
-    "outline-none transition-[border-color,box-shadow] duration-150",
+    "min-h-11 w-full appearance-none rounded-xl border px-3.5 text-base",
+    "outline-none transition-[border-color,background-color] duration-150",
+    "focus:outline-none",
     onDark
       ? cn(
           "border-background/25 bg-background/10 text-background",
           "placeholder:text-background/45",
-          "focus-visible:border-background/50 focus-visible:ring-2 focus-visible:ring-background/20",
-          invalid &&
-            "border-background/55 focus-visible:ring-background/25",
+          "hover:border-background/40",
+          "focus:border-background focus:bg-background/15",
+          invalid && "border-background/60",
         )
       : cn(
-          "border-border bg-surface text-foreground",
-          "placeholder:text-muted/80",
-          "focus-visible:border-foreground/35 focus-visible:ring-2 focus-visible:ring-foreground/15",
-          invalid &&
-            "border-foreground/45 focus-visible:ring-foreground/20",
+          "border-border bg-background/50 text-foreground",
+          "placeholder:text-muted/70",
+          "hover:border-foreground/25",
+          "focus:border-foreground focus:bg-surface",
+          invalid && "border-foreground/60",
         ),
   );
 }

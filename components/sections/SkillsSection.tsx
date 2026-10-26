@@ -1,5 +1,6 @@
 import { Container } from "@/components/primitives";
 import { skills, skillsIntro } from "@/content/skills";
+import { cn } from "@/lib/cn";
 
 export function SkillsSection() {
   const visibleSkillGroups = skills.filter((group) => group.items.length > 0);
@@ -25,12 +26,15 @@ export function SkillsSection() {
             {visibleSkillGroups.map((group) => (
               <article
                 key={group.id}
-                className="rounded-3xl border border-border bg-surface p-5 sm:p-6"
+                className={cn(
+                  "rounded-3xl border border-border bg-surface p-5 sm:p-6",
+                  group.featured && "sm:col-span-2",
+                )}
               >
                 <h3 className="text-base font-semibold tracking-tight">
                   {group.label}
                 </h3>
-                <ul className="mt-5 flex flex-wrap gap-2">
+                <ul className="mt-4 flex flex-wrap gap-2">
                   {group.items.map((skill) => (
                     <li
                       key={skill}
