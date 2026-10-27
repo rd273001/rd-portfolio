@@ -31,7 +31,7 @@ const projectKindLabels: Record<Project["kind"], string> = {
   "personal-project": "Personal / learning project",
 };
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return getCaseStudyProjects().map((project) => ({
