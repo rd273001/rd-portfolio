@@ -11,11 +11,6 @@ export const site: Site = {
   locale: "en_IN",
   navigation: [
     {
-      id: "about",
-      label: "About",
-      href: "/#about",
-    },
-    {
       id: "impact",
       label: "Impact",
       href: "/#impact",
@@ -24,6 +19,11 @@ export const site: Site = {
       id: "work",
       label: "Work",
       href: "/#work",
+    },
+    {
+      id: "about",
+      label: "About",
+      href: "/#about",
     },
     {
       id: "experience",

@@ -9,7 +9,7 @@ export const profile: Profile = {
   employer: "Dnyandeep Foundation Centre",
   employerShort: "DFC",
   employerUrl: "https://dfc.org.in/",
-  location: "Remote",
+  location: "Gorakhpur, Uttar Pradesh, India",
   locationStatus: "verified",
   headline: "Specializing in Web & Mobile Experiences.",
   summary:

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import {
+  AboutSection,
   CareerJourney,
   ContactCta,
   EducationSection,
@@ -18,6 +19,7 @@ export default function Home() {
       <Hero />
       <ImpactDashboard />
       <ProjectsSection />
+      <AboutSection />
       <CareerJourney />
       <SkillsSection />
       <EducationSection />

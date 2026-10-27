@@ -123,10 +123,7 @@ export function SiteHeader({
         window.history.pushState(null, "", "/");
       }
 
-      const firstNavId = navigation[0]?.id;
-      if (firstNavId) {
-        setActiveSection(firstNavId);
-      }
+      setActiveSection("");
 
       isNavigatingRef.current = true;
       if (scrollTimeoutRef.current) {
@@ -166,9 +163,9 @@ export function SiteHeader({
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // If at the very top of page
-      if (scrollY < 120 && sectionIds.length > 0) {
-        setActiveSection(sectionIds[0]);
+      // Top of page (Hero): no section anchor highlighted
+      if (scrollY < 120) {
+        setActiveSection("");
         return;
       }
 
@@ -182,11 +179,10 @@ export function SiteHeader({
       }
 
       // Visual page sections in top-to-bottom scroll order, mapped to corresponding header nav IDs
-      // Education is now directly in navigation; unlisted sections (collaborators) clear highlight
       const pageSectionMappings: { sectionId: string; navId: string }[] = [
-        { sectionId: "about", navId: "about" },
         { sectionId: "impact", navId: "impact" },
         { sectionId: "work", navId: "work" },
+        { sectionId: "about", navId: "about" },
         { sectionId: "experience", navId: "experience" },
         { sectionId: "skills", navId: "skills" },
         { sectionId: "education", navId: "education" },
@@ -196,7 +192,7 @@ export function SiteHeader({
 
       // Cumulative reading threshold from top (~180px past header)
       const triggerY = 180;
-      let currentNavId = sectionIds[0] ?? "";
+      let currentNavId = "";
 
       for (const item of pageSectionMappings) {
         const el = document.getElementById(item.sectionId);
