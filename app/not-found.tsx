@@ -17,7 +17,7 @@ export default function NotFound() {
       <SparsePageContent
         kind="not-found"
         title="Page not found."
-        description="The link may be outdated, or this case study does not exist."
+        description="The page you are looking for doesn't exist, has been moved, or the link may be outdated."
         actions={
           <>
             <Button
