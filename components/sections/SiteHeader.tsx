@@ -112,6 +112,41 @@ export function SiteHeader({
     window.location.assign(href);
   };
 
+  /** Clicking the brand logo or name returns to top smoothly. */
+  const onBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    closeMenu();
+
+    if (window.location.pathname === "/") {
+      event.preventDefault();
+
+      if (window.location.hash) {
+        window.history.pushState(null, "", "/");
+      }
+
+      const firstNavId = navigation[0]?.id;
+      if (firstNavId) {
+        setActiveSection(firstNavId);
+      }
+
+      isNavigatingRef.current = true;
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        isNavigatingRef.current = false;
+      }, 2500);
+
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+    }
+  };
+
   // Passive scroll spy for highlighting the active section anchor on the homepage
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -199,8 +234,17 @@ export function SiteHeader({
       }
     });
 
-    window.addEventListener("scroll", updateActiveSection, { passive: true });
-    window.addEventListener("resize", updateActiveSection, { passive: true });
+    let rAFId = 0;
+    const onScrollOrResize = () => {
+      if (rAFId) return;
+      rAFId = window.requestAnimationFrame(() => {
+        rAFId = 0;
+        updateActiveSection();
+      });
+    };
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
     window.addEventListener("scrollend", unlockNavigation);
     window.addEventListener("wheel", unlockNavigation, { passive: true });
     window.addEventListener("touchstart", unlockNavigation, { passive: true });
@@ -209,11 +253,14 @@ export function SiteHeader({
 
     return () => {
       window.cancelAnimationFrame(initFrame);
+      if (rAFId) {
+        window.cancelAnimationFrame(rAFId);
+      }
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
-      window.removeEventListener("scroll", updateActiveSection);
-      window.removeEventListener("resize", updateActiveSection);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
       window.removeEventListener("scrollend", unlockNavigation);
       window.removeEventListener("wheel", unlockNavigation);
       window.removeEventListener("touchstart", unlockNavigation);
@@ -273,7 +320,7 @@ export function SiteHeader({
             focusRing,
           )}
           aria-label={`${brand} — Software Engineer`}
-          onClick={closeMenu}
+          onClick={onBrandClick}
         >
           <BrandMark className="md:size-9" />
           <div className="flex flex-col justify-center gap-0.5 text-left">
