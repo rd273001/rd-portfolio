@@ -273,3 +273,17 @@ export type Site = {
     mobile3DShowcase: boolean;
   };
 };
+
+export type AboutPillar = {
+  title: string;
+  items: string[];
+};
+
+export type AboutContent = {
+  eyebrow: string;
+  headline: string;
+  lead: string;
+  paragraphs: string[];
+  location: string;
+  pillars: AboutPillar[];
+};

@@ -9,11 +9,11 @@ export const profile: Profile = {
   employer: "Dnyandeep Foundation Centre",
   employerShort: "DFC",
   employerUrl: "https://dfc.org.in/",
-  location: "Remote",
+  location: "Gorakhpur, Uttar Pradesh, India",
   locationStatus: "verified",
   headline: "Specializing in Web & Mobile Experiences.",
   summary:
-    "I build and scale production web and mobile experiences. At Dnyandeep Foundation Centre, I built and maintained DFC and AptiBooster — leading the DFC mobile revamp, in-app payments, push notifications, and Android delivery work with verified Play Console results.",
+    "Software engineer with 2+ years of experience building and scaling web and mobile applications. At Dnyandeep Foundation Centre, I owned development, native builds, and Play Store releases for DFC (10K+ downloads; 3,554 enrolled students) and AptiBooster (1K+ downloads) — executing the full TypeScript revamp, in-app payments, and Android delivery with verified Play Console results.",
   currentRoleStarted: "Apr 2025",
   currentRoleStartedStatus: "verified",
   photo: {

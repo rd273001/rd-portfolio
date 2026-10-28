@@ -1,3 +1,4 @@
+export { AboutSection } from "./AboutSection";
 export { ContactCta } from "./ContactCta";
 export { CareerJourney } from "./CareerJourney";
 export { EducationSection } from "./EducationSection";
