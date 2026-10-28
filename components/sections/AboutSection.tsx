@@ -29,37 +29,25 @@ export function AboutSection() {
             ) : null}
             <div className="space-y-3">
               <div>
-                <p className="text-lg font-semibold tracking-tight text-foreground">
-                  {profile.name}
-                </p>
-                <p className="text-sm text-muted">
-                  Software Engineer · Web & Mobile
-                </p>
-              </div>
-
-              <div className="border-t border-border pt-3">
                 <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
-                  Recent role
+                  Status
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-foreground">
-                  {profile.currentTitle}
-                </p>
-                <a
-                  href={profile.employerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-0.5 inline-flex text-xs text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground active:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  {profile.employer}
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <span className="relative flex size-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <p className="text-xs font-medium text-foreground">
+                    Open to opportunities & collaboration
+                  </p>
+                </div>
               </div>
 
               <div className="border-t border-border pt-3">
                 <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
                   Location
                 </p>
-                <p className="mt-0.5 text-sm text-foreground">
+                <p className="mt-1 text-xs text-foreground">
                   {profile.location}
                 </p>
               </div>
@@ -86,7 +74,7 @@ export function AboutSection() {
             </div>
 
             {about.pillars.length > 0 ? (
-              <div className="mt-10 grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-10 grid gap-4 sm:grid-cols-2">
                 {about.pillars.map((pillar) => (
                   <div
                     key={pillar.title}

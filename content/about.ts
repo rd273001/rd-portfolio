@@ -18,13 +18,5 @@ export const about: AboutContent = {
       title: "Web engineering",
       items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "APIs"],
     },
-    {
-      title: "Foundation & craft",
-      items: [
-        "PG Diploma in Advanced Computing",
-        "C-DAC",
-        "Performance & UI craft",
-      ],
-    },
   ],
 };
