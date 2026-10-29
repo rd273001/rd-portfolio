@@ -31,9 +31,9 @@ function workShowcaseMetricLabel(metric: Metric): string {
 
 const SHOWCASE_TAGLINES: Partial<Record<string, string>> = {
   "dfc-app":
-    "Coaching institute mobile platform delivering live interactive lectures, batch announcements, and structured study material to 3,554 enrolled students (10K+ downloads).",
+    "Coaching institute mobile platform delivering live interactive lectures, batch announcements, and structured study material to 3,554 enrolled students.",
   "aptibooster":
-    "AI-powered exam prep platform featuring timed live test sessions, AI-driven performance insights, and detailed question analytics.",
+    "AI-powered exam prep platform featuring timed live tests, AI-driven performance insights, and gamified mastery with flashcards.",
 };
 
 export function MobileShowcase() {

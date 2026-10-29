@@ -180,6 +180,8 @@ export const projects: Project[] = [
       "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",
       "In-app subscription payments via Razorpay.",
       "Integrated API-backed analysis UX: insight callouts on full test analysis, personalized suggestions on Analytics, and downloadable performance reports from Profile—the backend produces the content; the app renders and ships the flows.",
+      "Engineered a multi-step student onboarding flow with step-level persistence, allowing users to safely exit and resume registration without losing progress.",
+      "Built gamified learning flows, including syllabus-linked flashcards and mastery paths to drive retention and engagement across aptitude topics.",
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search; subscriptions unlock the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
