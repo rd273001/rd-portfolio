@@ -40,6 +40,7 @@ export const projects: Project[] = [
     ],
     caseStudyHighlights: [
       "Built form management and schema-based client validation using Formik and Yup across multi-step student onboarding, auth, and profile workflows.",
+      "Consolidated duplicate empty and error state screens into shared status components — eliminating ~30 redundant files and cutting 700+ lines of duplicate code to prevent UI drift.",
       "Integrated OneSignal for push notifications and in-app messaging on the production app.",
       "Shipped Google Play in-app updates so users can install new releases from inside the app.",
       "Upgraded React Native from 0.76.5 to 0.81.0—updated dependencies for the new RN version, applied Android changes required by the upgrade (including edge-to-edge layout and safe-area handling), and validated behavior across supported OS versions.",
@@ -180,6 +181,8 @@ export const projects: Project[] = [
       "Built the live test client so revisits, option changes, and countdown time stay consistent enough to power scoring, peer comparison, and structured analysis data.",
       "In-app subscription payments via Razorpay.",
       "Integrated API-backed analysis UX: insight callouts on full test analysis, personalized suggestions on Analytics, and downloadable performance reports from Profile—the backend produces the content; the app renders and ships the flows.",
+      "Engineered a multi-step student onboarding flow with step-level persistence, allowing users to safely exit and resume registration without losing progress.",
+      "Built an adaptive flashcard review system with 3-tier mastery tracking (Learning, Reviewing, Mastered) and spaced repetition — repeating questions until mastered twice, with instant verification and haptic feedback.",
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search; subscriptions unlock the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
