@@ -100,10 +100,7 @@ function ProjectCard({
 }) {
   const cardMetric = getProjectCardMetric(project.id);
   /** Home cards only — full lists stay on /work case studies. */
-  const visibleHighlights =
-    project.id === "certificate-generator"
-      ? project.highlights
-      : project.highlights.slice(0, isFeatured ? 3 : 2);
+  const visibleHighlights = project.highlights.slice(0, 2);
   const visibleTechnologies = project.technologies.slice(
     0,
     isFeatured ? HOME_FEATURED_PROJECT_TECH_VISIBLE : HOME_PROJECT_TECH_VISIBLE,

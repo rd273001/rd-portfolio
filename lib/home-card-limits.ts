@@ -6,7 +6,7 @@
 export const HOME_EXPERIENCE_TECH_VISIBLE = 9;
 
 /** Home Work featured project card (e.g. DFC). */
-export const HOME_FEATURED_PROJECT_TECH_VISIBLE = 9;
+export const HOME_FEATURED_PROJECT_TECH_VISIBLE = 6;
 
 /** Home Work supporting project cards. */
-export const HOME_PROJECT_TECH_VISIBLE = 6;
+export const HOME_PROJECT_TECH_VISIBLE = 5;
