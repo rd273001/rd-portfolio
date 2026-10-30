@@ -77,7 +77,7 @@ export const metrics: Metric[] = [
   },
   {
     id: "dfc-zoom-delivery",
-    label: "Base delivery reduction",
+    label: "Base download reduction",
     value: "161 MB",
     previous: "177 MB",
     current: "15.9 MB",
