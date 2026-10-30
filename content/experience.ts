@@ -13,14 +13,13 @@ export const experience: Experience[] = [
     kind: "production-app",
     prominence: 1,
     summary:
-      "Production ownership of DFC and AptiBooster, from feature work through Play Store release and maintenance.",
+      "Independent engineering ownership across DFC and AptiBooster, covering features, native builds, and Google Play releases.",
     highlights: [
       "Managed end-to-end Google Play releases, phased rollouts, and in-app update flows for DFC and AptiBooster.",
-      "Led the DFC mobile revamp on the existing Play listing — new TypeScript and TanStack Query codebase with onboarding, deep-link navigation, offline usage, and stronger auth/API error handling.",
-      "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors (~100 ms / 11.2% faster); ~5 MB lower JS heap at Home idle in internal profiling after the same work.",
-      "Shipped a Firebase Crashlytics logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors that report actionable failures without flooding Crashlytics.",
-      "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module.",
-      "Built AptiBooster so scoring, peer comparison, and analysis derive from one timed test attempt, and wired the mobile surfaces for API-backed insights, suggestions, and downloadable reports.",
+      "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module (161 MB on-demand, reducing base download from 177 MB to 15.9 MB).",
+      "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors; ~5 MB lower JS heap at Home idle in internal profiling.",
+      "Refactored DFC modules and UI state handling (including cleaning up peer intern contributions), maintaining a 0.1% user-perceived crash rate (10.36% lower than baseline).",
+      "Shipped Firebase Crashlytics structured contextual logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors.",
     ],
     /** Shared + DFC + AptiBooster — priority order; home shows first 9 only. */
     technologies: [
@@ -53,10 +52,12 @@ export const experience: Experience[] = [
     kind: "internship",
     prominence: 4,
     summary:
-      "Internship on the new DFC and AptiBooster apps—implemented most of the DFC mobile revamp in a fresh TypeScript repository (product flows, API layer, and screen work), with AptiBooster test and result analysis surfaces on the side.",
+      "Maintained legacy JavaScript codebase in a separate repo while developing the new DFC replacement app in a fresh React Native & TypeScript repository.",
     highlights: [
-      "Implemented the bulk of the new DFC app: replaced the legacy JavaScript codebase with TypeScript, TanStack Query, Axios (configured interceptors), and custom hooks so screens stay UI-focused and API logic stays separate.",
-      "Shipped DFC onboarding with authentication and authorization API integration, additional DFC modules, and AptiBooster test and result analysis surfaces.",
+      "Explored legacy JavaScript codebase, resolved existing bugs, and implemented in-app YouTube lecture redirection.",
+      "Built the new DFC replacement app in a fresh TypeScript repo, implementing centralized Axios interceptors to bridge dual API token contracts (request body for legacy endpoints vs. Authorization header for modern endpoints).",
+      "Built multi-step onboarding flow with role routing (students, teachers, admins) and implemented localization (i18n).",
+      "Contributed early AptiBooster test and result analysis mobile surfaces.",
     ],
     technologies: [
       "React Native",
@@ -85,10 +86,10 @@ export const experience: Experience[] = [
     kind: "internship",
     prominence: 4,
     summary:
-      "Internship on IKIOR’s wellness mobile app—period tracking was the hero feature at the time. Built React Native UI from Figma, inspired by established period tracking and lifestyle wellness apps on the Play Store. The product has since been heavily revamped; today’s live app is not these internship surfaces.",
+      "Frontend mobile development on IKIOR's React Native wellness application, translating Figma designs into responsive mobile screens and feature flows.",
     highlights: [
-      "Shipped period-tracking UI when it was the product hero—a cycle calendar with marked dates and per-day layouts built to surface insights as analysis was planned.",
-      "Instagram Reels–inspired UI with react-native-video; multi-step period report flow; Health, Care, and Sleep section screens from Figma.",
+      "Shipped period-tracking cycle calendar with marked dates and daily breakdown views to surface user insights.",
+      "Built Instagram Reels–inspired video feed using react-native-video, multi-step period reporting flow, and wellness section screens from Figma.",
     ],
     technologies: [
       "React Native",
