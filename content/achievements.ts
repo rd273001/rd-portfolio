@@ -5,7 +5,7 @@ export const achievements: Achievement[] = [
     id: "dfc-zoom-ondemand",
     title: "On-demand Zoom delivery",
     description:
-      "On-demand Zoom for live lectures—download progress, cancel, restart after install, resume in-meeting—via feature_zoom (161 MB on-demand on Play): 15.9 MB base new-install download vs 177 MB prior production with Zoom in base (161.1 MB Release delivery reduction).",
+      "On-demand Zoom for live lectures—download progress, cancel, restart after install, resume in-meeting—via an Android Dynamic Feature Module (161 MB on-demand on Play): 15.9 MB base new-install download vs 177 MB prior production with Zoom in base (161.1 MB Release delivery reduction).",
     metricId: "dfc-zoom-delivery",
     status: "verified",
   },

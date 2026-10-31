@@ -18,7 +18,7 @@ export const experience: Experience[] = [
       "Managed end-to-end Google Play releases, phased rollouts, and in-app update flows for DFC and AptiBooster.",
       "Moved Zoom Meeting SDK out of DFC base delivery with an Android Dynamic Feature Module (161 MB on-demand, reducing base download from 177 MB to 15.9 MB).",
       "Cut DFC p90 app start from ~894 ms to 794 ms on production Android with lazy-loaded navigators and startup-path refactors; ~5 MB lower JS heap at Home idle in internal profiling.",
-      "Refactored DFC modules and UI state handling (including cleaning up peer intern contributions), maintaining a 0.1% user-perceived crash rate (10.36% lower than baseline).",
+      "Maintained a 0.1% user-perceived crash rate on Google Play production (10.36% lower than baseline) through structured crash monitoring, defensive error boundaries, and proactive stability fixes.",
       "Shipped Firebase Crashlytics structured contextual logger for fatal and non-fatal exceptions, with stack trace, API URL, and component context, plus selective axios interceptors.",
     ],
     /** Shared + DFC + AptiBooster — priority order; home shows first 9 only. */
@@ -54,10 +54,10 @@ export const experience: Experience[] = [
     summary:
       "Maintained legacy JavaScript codebase in a separate repo while developing the new DFC replacement app in a fresh React Native & TypeScript repository.",
     highlights: [
-      "Explored legacy JavaScript codebase, resolved existing bugs, and implemented in-app YouTube lecture redirection.",
-      "Built the new DFC replacement app in a fresh TypeScript repo, implementing centralized Axios interceptors to bridge dual API token contracts (request body for legacy endpoints vs. Authorization header for modern endpoints).",
-      "Built multi-step onboarding flow with role routing (students, teachers, admins) and implemented localization (i18n).",
-      "Contributed early AptiBooster test and result analysis mobile surfaces.",
+      "Maintained legacy JavaScript codebase, resolved bugs, and added in-app YouTube video lecture redirection within the study material module.",
+      "Built the new DFC replacement app in a fresh TypeScript repo, implementing centralized Axios interceptors to bridge dual API token contracts across legacy and modern endpoints.",
+      "Built multi-step onboarding flow with role-based routing for students, teachers, and admins.",
+      "Contributed early AptiBooster test and result analysis modules.",
     ],
     technologies: [
       "React Native",
@@ -90,6 +90,7 @@ export const experience: Experience[] = [
     highlights: [
       "Shipped period-tracking cycle calendar with marked dates and daily breakdown views to surface user insights.",
       "Built Instagram Reels–inspired video feed using react-native-video, multi-step period reporting flow, and wellness section screens from Figma.",
+      "Implemented app-wide localization using Context API for scalable multi-language support, starting with Hindi.",
     ],
     technologies: [
       "React Native",
