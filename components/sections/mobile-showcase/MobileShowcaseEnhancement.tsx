@@ -5,6 +5,7 @@ import {
   Component,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useRef,
   useState,
@@ -12,6 +13,7 @@ import {
 } from "react";
 
 import { Button } from "@/components/primitives";
+import { cn } from "@/lib/cn";
 import { site } from "@/content/site";
 import {
   MobileProjectPhone,
@@ -265,7 +267,7 @@ function getScreenLabel(screenshot: string) {
 }
 
 const screenChipButtonClass =
-  "inline-flex min-h-10 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/20 bg-background/10 px-3 text-center text-xs sm:text-sm font-medium text-background/75 transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/35 [@media(hover:hover)]:hover:bg-background/20 [@media(hover:hover)]:hover:text-background active:scale-[0.98] active:bg-background/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background/55 aria-pressed:bg-background/30 aria-pressed:text-background aria-pressed:shadow-[0_0_12px_-2px_rgba(255,255,255,0.18)] [@media(hover:hover)]:aria-pressed:hover:bg-background/35 [@media(hover:hover)]:aria-pressed:hover:border-background/70 active:aria-pressed:bg-background/40";
+  "relative z-1 inline-flex min-h-10 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/20 bg-background/10 px-3 text-center text-xs sm:text-sm font-medium text-background/75 transition-[background-color,border-color,color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/35 [@media(hover:hover)]:hover:bg-background/20 [@media(hover:hover)]:hover:text-background active:scale-[0.98] active:bg-background/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-transparent aria-pressed:bg-transparent aria-pressed:text-background";
 
 /**
  * Touch: fill / half-row chips. Mouse/trackpad (`compact`): label-sized wrap like DFC / AptiBooster tabs.
@@ -424,6 +426,119 @@ export function MobileShowcaseEnhancement({
     setSceneFailed(true);
   }, []);
 
+  const allScreenshots = useMemo(
+    () => projects.flatMap((p) => p.screenshots),
+    [projects],
+  );
+
+  useEffect(() => {
+    if (!isNearViewport) {
+      return;
+    }
+
+    for (const s of allScreenshots) {
+      const img = new window.Image();
+      img.decoding = "async";
+      img.src = s;
+    }
+  }, [allScreenshots, isNearViewport]);
+
+  const projectTabsRef = useRef<HTMLDivElement>(null);
+  const projectBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [projectIndicator, setProjectIndicator] = useState<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    opacity: number;
+  } | null>(null);
+  const [projectTransitionReady, setProjectTransitionReady] = useState(false);
+
+  const screenChipsRef = useRef<HTMLDivElement>(null);
+  const screenBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [screenIndicator, setScreenIndicator] = useState<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    opacity: number;
+  } | null>(null);
+  const [screenTransitionReady, setScreenTransitionReady] = useState(false);
+
+  const updateProjectIndicator = useCallback(() => {
+    const container = projectTabsRef.current;
+    const activeBtn = projectBtnRefs.current[state.projectIndex];
+    if (!container || !activeBtn) {
+      setProjectIndicator(null);
+      return;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    const borderLeft = parseFloat(
+      getComputedStyle(container).borderLeftWidth || "0",
+    );
+    const borderTop = parseFloat(
+      getComputedStyle(container).borderTopWidth || "0",
+    );
+    setProjectIndicator({
+      left: btnRect.left - containerRect.left - borderLeft,
+      top: btnRect.top - containerRect.top - borderTop,
+      width: btnRect.width,
+      height: btnRect.height,
+      opacity: 1,
+    });
+  }, [state.projectIndex]);
+
+  const updateScreenIndicator = useCallback(() => {
+    const container = screenChipsRef.current;
+    const activeBtn = screenBtnRefs.current[state.screenIndex];
+    if (!container || !activeBtn) {
+      setScreenIndicator(null);
+      return;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    const borderLeft = parseFloat(
+      getComputedStyle(container).borderLeftWidth || "0",
+    );
+    const borderTop = parseFloat(
+      getComputedStyle(container).borderTopWidth || "0",
+    );
+    setScreenIndicator({
+      left: btnRect.left - containerRect.left - borderLeft,
+      top: btnRect.top - containerRect.top - borderTop,
+      width: btnRect.width,
+      height: btnRect.height,
+      opacity: 1,
+    });
+  }, [state.screenIndex]);
+
+  useEffect(() => {
+    updateProjectIndicator();
+    const timer = setTimeout(() => setProjectTransitionReady(true), 60);
+    return () => clearTimeout(timer);
+  }, [updateProjectIndicator]);
+
+  useEffect(() => {
+    updateScreenIndicator();
+    const timer = setTimeout(() => setScreenTransitionReady(true), 60);
+    return () => clearTimeout(timer);
+  }, [updateScreenIndicator, state.projectIndex]);
+
+  useEffect(() => {
+    if (typeof ResizeObserver === "undefined") return;
+
+    const ro = new ResizeObserver(() => {
+      updateProjectIndicator();
+      updateScreenIndicator();
+    });
+
+    if (projectTabsRef.current) ro.observe(projectTabsRef.current);
+    if (screenChipsRef.current) ro.observe(screenChipsRef.current);
+
+    return () => ro.disconnect();
+  }, [updateProjectIndicator, updateScreenIndicator]);
+
   const activeProject = projects[state.projectIndex] ?? projects[0];
   const activeScreenshot =
     activeProject?.screenshots[state.screenIndex] ??
@@ -462,21 +577,51 @@ export function MobileShowcaseEnhancement({
       <div className="grid border-t border-background/15 lg:grid-cols-[minmax(18rem,0.8fr)_minmax(22rem,1.2fr)]">
         <div className="p-6 sm:p-8 lg:p-10">
           <div
+            ref={projectTabsRef}
             role="group"
             aria-label="Production mobile project"
-            className="flex flex-wrap gap-2"
+            className="relative inline-flex w-full sm:w-auto rounded-full border border-background/25 bg-background/10 p-1"
           >
-            {projects.map((project, index) => (
-              <button
-                key={project.id}
-                type="button"
-                aria-pressed={index === state.projectIndex}
-                onClick={() => selectProject(index)}
-                className="inline-flex min-h-11 min-w-36 cursor-pointer touch-manipulation items-center justify-center overflow-hidden rounded-full border border-background/45 px-6 text-center text-sm font-medium transition-[background-color,border-color,transform] duration-150 ease-out [@media(hover:hover)]:hover:border-background/60 [@media(hover:hover)]:hover:bg-background/10 active:scale-[0.98] active:bg-background/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background aria-pressed:border-background aria-pressed:bg-background aria-pressed:text-foreground [@media(hover:hover)]:aria-pressed:hover:bg-background [@media(hover:hover)]:aria-pressed:hover:text-foreground"
-              >
-                {project.name}
-              </button>
-            ))}
+            {projectIndicator ? (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "pointer-events-none absolute top-0 left-0 rounded-full bg-background shadow-sm",
+                  projectTransitionReady && capabilities.motionAllowed
+                    ? "transition-[transform,width,height,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    : "transition-none",
+                )}
+                style={{
+                  transform: `translate3d(${projectIndicator.left}px, ${projectIndicator.top}px, 0)`,
+                  width: projectIndicator.width,
+                  height: projectIndicator.height,
+                  opacity: projectIndicator.opacity,
+                }}
+              />
+            ) : null}
+
+            {projects.map((project, index) => {
+              const isSelected = index === state.projectIndex;
+              return (
+                <button
+                  key={project.id}
+                  ref={(el) => {
+                    projectBtnRefs.current[index] = el;
+                  }}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => selectProject(index)}
+                  className={cn(
+                    "relative z-1 flex-1 min-w-0 sm:flex-none sm:min-w-36 inline-flex min-h-10 sm:min-h-11 cursor-pointer touch-manipulation items-center justify-center rounded-full border-0 px-6 text-center text-sm font-medium transition-colors duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background",
+                    isSelected
+                      ? "text-foreground font-semibold"
+                      : "text-background/75 hover:text-background",
+                  )}
+                >
+                  <span className="relative z-1">{project.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div
@@ -519,27 +664,56 @@ export function MobileShowcaseEnhancement({
                   Screen
                 </p>
                 <div
-                  className={getScreenChipGroupClass(screenCount, compactChips)}
+                  ref={screenChipsRef}
+                  className={cn(
+                    "relative",
+                    getScreenChipGroupClass(screenCount, compactChips),
+                  )}
                 >
-                  {activeProject.screenshots.map((screenshot, index) => (
-                    <button
-                      key={screenshot}
-                      type="button"
-                      aria-pressed={index === state.screenIndex}
-                      onClick={() => selectScreen(index)}
-                      className={getScreenChipButtonClass(
-                        screenCount,
-                        compactChips,
+                  {screenIndicator ? (
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "pointer-events-none absolute top-0 left-0 rounded-full border border-background/55 bg-background/30 shadow-[0_0_12px_-2px_rgba(255,255,255,0.18)]",
+                        screenTransitionReady && capabilities.motionAllowed
+                          ? "transition-[transform,width,height,opacity] duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                          : "transition-none",
                       )}
-                    >
-                      <span className="truncate max-w-full">
-                        {getScreenLabel(screenshot)}
-                      </span>
-                    </button>
-                  ))}
+                      style={{
+                        transform: `translate3d(${screenIndicator.left}px, ${screenIndicator.top}px, 0)`,
+                        width: screenIndicator.width,
+                        height: screenIndicator.height,
+                        opacity: screenIndicator.opacity,
+                      }}
+                    />
+                  ) : null}
+
+                  {activeProject.screenshots.map((screenshot, index) => {
+                    const isSelected = index === state.screenIndex;
+                    return (
+                      <button
+                        key={screenshot}
+                        ref={(el) => {
+                          screenBtnRefs.current[index] = el;
+                        }}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => selectScreen(index)}
+                        className={getScreenChipButtonClass(
+                          screenCount,
+                          compactChips,
+                        )}
+                      >
+                        <span className="relative z-1 truncate max-w-full">
+                          {getScreenLabel(screenshot)}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}
+
 
             <div
               className={
@@ -648,6 +822,7 @@ export function MobileShowcaseEnhancement({
                   <SceneErrorBoundary onError={markSceneFailed}>
                     <MobileShowcaseScene
                       screenshot={activeScreenshot}
+                      allScreenshots={allScreenshots}
                       enableDrag={capabilities.finePointer}
                       idleMotion={false}
                       performanceProfile={
