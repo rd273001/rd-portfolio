@@ -75,12 +75,11 @@ export function ProductPhonePlaceholder({
   project: MobileShowcaseProject;
   screenshotIndex?: number;
 }) {
-  const screenshot = project.screenshots[screenshotIndex];
-
   return (
     <AndroidPhoneFrame
-      screenshot={screenshot}
-      alt=""
+      screens={project.screenshots}
+      activeScreenIndex={screenshotIndex}
+      alt={`${project.name} app screen`}
       size="panel"
       sizes="40vw"
     />
@@ -95,11 +94,10 @@ export function MobileProjectPhone({
   project: MobileShowcaseProject;
   screenshotIndex?: number;
 }) {
-  const screenshot = project.screenshots[screenshotIndex];
-
   return (
     <AndroidPhoneFrame
-      screenshot={screenshot}
+      screens={project.screenshots}
+      activeScreenIndex={screenshotIndex}
       alt={`${project.name} production app screen`}
       size="stack"
       sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"

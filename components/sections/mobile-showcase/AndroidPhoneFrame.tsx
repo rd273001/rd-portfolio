@@ -1,9 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
+import { cn } from "@/lib/cn";
 import { phoneFrontLayout } from "./phoneFrontLayout";
 
 type AndroidPhoneFrameProps = {
   screenshot?: string;
+  /** Multi-screen set with instant CSS crossfade (for showcase tab switching without re-fetch). */
+  screens?: string[];
+  activeScreenIndex?: number;
   alt?: string;
   /** Stacked screen images for case-study scroll (frame stays; screens crossfade). */
   layers?: {
@@ -27,6 +34,8 @@ type AndroidPhoneFrameProps = {
  */
 export function AndroidPhoneFrame({
   screenshot,
+  screens,
+  activeScreenIndex = 0,
   alt = "",
   layers,
   size = "stack",
@@ -34,7 +43,11 @@ export function AndroidPhoneFrame({
   priority = false,
   className,
 }: AndroidPhoneFrameProps) {
+  const [loadedScreens, setLoadedScreens] = useState<Record<string, boolean>>({});
   const isPanel = size === "panel";
+
+  const activeSrc = screens && screens.length > 0 ? screens[activeScreenIndex] : screenshot;
+  const isCurrentScreenLoaded = activeSrc ? Boolean(loadedScreens[activeSrc]) : true;
 
   return (
     <div
@@ -81,7 +94,42 @@ export function AndroidPhoneFrame({
                 borderRadius: phoneFrontLayout.screen.borderRadius,
               }}
             >
-              {screenshot ? (
+              {screens && screens.length > 0 ? (
+                <>
+                  {!isCurrentScreenLoaded ? (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] transition-opacity duration-200">
+                      <div className="size-6 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
+                      <span className="mt-2 font-mono text-[10px] tracking-wider uppercase text-white/60">
+                        Loading
+                      </span>
+                    </div>
+                  ) : null}
+                  {screens.map((src, index) => {
+                    const isActive = index === activeScreenIndex;
+                    return (
+                      <Image
+                        key={src}
+                        src={src}
+                        alt={isActive ? alt : ""}
+                        fill
+                        sizes={sizes}
+                        quality={95}
+                        className={cn(
+                          "object-fill transition-opacity duration-200 ease-out",
+                          isActive
+                            ? "opacity-100 z-1"
+                            : "opacity-0 pointer-events-none z-0",
+                        )}
+                        priority={index === 0 || priority}
+                        onLoad={() =>
+                          setLoadedScreens((prev) => ({ ...prev, [src]: true }))
+                        }
+                        aria-hidden={isActive ? undefined : true}
+                      />
+                    );
+                  })}
+                </>
+              ) : screenshot ? (
                 <Image
                   src={screenshot}
                   alt={alt}
@@ -90,6 +138,11 @@ export function AndroidPhoneFrame({
                   quality={95}
                   className="object-fill"
                   priority={priority}
+                  onLoad={() => {
+                    if (screenshot) {
+                      setLoadedScreens((prev) => ({ ...prev, [screenshot]: true }));
+                    }
+                  }}
                 />
               ) : null}
               {layers?.map((layer, index) => (
@@ -102,7 +155,7 @@ export function AndroidPhoneFrame({
                   quality={95}
                   data-case-story-screen=""
                   data-active="false"
-                  className="object-fill"
+                  className="object-fill bg-background"
                   priority={priority && index === 0}
                   aria-hidden={index === 0 ? undefined : true}
                 />
