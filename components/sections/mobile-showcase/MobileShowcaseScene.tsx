@@ -37,7 +37,7 @@ import {
 } from "three";
 
 import { cn } from "@/lib/cn";
-import { yieldUntilQuiet } from "./sceneScheduler";
+import { yieldToMain, yieldUntilQuiet } from "./sceneScheduler";
 
 setConsoleFunction((type, message, ...rest) => {
   const text = [message, ...rest].map(String).join(" ");
@@ -67,6 +67,7 @@ type ShowcasePerformanceProfile = "desktop" | "mobile";
 
 type MobileShowcaseSceneProps = {
   screenshot: string;
+  allScreenshots?: string[];
   enableDrag: boolean;
   idleMotion?: boolean;
   performanceProfile?: ShowcasePerformanceProfile;
@@ -325,6 +326,39 @@ async function createScreenMap(image: HTMLImageElement) {
 
 const screenMapCache = new Map<string, Texture>();
 
+async function loadScreenTexture(src: string): Promise<Texture | null> {
+  const cached = screenMapCache.get(src);
+  if (cached) {
+    return cached;
+  }
+
+  return new Promise((resolve) => {
+    const image = new window.Image();
+    image.decoding = "async";
+
+    const handleLoad = () => {
+      void createScreenMap(image)
+        .then((nextMap) => {
+          if (nextMap) {
+            screenMapCache.set(src, nextMap);
+            resolve(nextMap);
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(() => resolve(null));
+    };
+
+    image.src = src;
+    if (image.complete && image.naturalWidth > 0) {
+      handleLoad();
+    } else {
+      image.addEventListener("load", handleLoad, { once: true });
+      image.addEventListener("error", () => resolve(null), { once: true });
+    }
+  });
+}
+
 function applyScreenMap(root: Group, map: Texture) {
   root.traverse((child) => {
     if (child.name !== "Screen" || !("isMesh" in child) || !child.isMesh) {
@@ -349,12 +383,66 @@ function applyScreenMap(root: Group, map: Texture) {
   });
 }
 
+let loadingScreenTexture: Texture | null = null;
+
+function getLoadingScreenTexture(): Texture {
+  if (loadingScreenTexture) {
+    return loadingScreenTexture;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 360;
+  canvas.height = 780;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    // Dark sleek display
+    ctx.fillStyle = "#0c0d0e";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Subtle skeleton cards
+    ctx.fillStyle = "#181a1d";
+    const ctx2d = ctx as CanvasRenderingContext2D & {
+      roundRect?: (x: number, y: number, w: number, h: number, r: number) => void;
+    };
+    if (typeof ctx2d.roundRect === "function") {
+      ctx2d.roundRect(24, 70, 312, 120, 16);
+      ctx2d.fill();
+      ctx2d.roundRect(24, 210, 312, 280, 16);
+      ctx2d.fill();
+    } else {
+      ctx2d.fillRect(24, 70, 312, 120);
+      ctx2d.fillRect(24, 210, 312, 280);
+    }
+
+    // Centered loading ring
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(180, 390, 26, 0, Math.PI * 1.5);
+    ctx.stroke();
+
+    // Subtle label
+    ctx.font = "12px monospace";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.textAlign = "center";
+    ctx.fillText("LOADING", 180, 440);
+  }
+
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  texture.minFilter = LinearFilter;
+  loadingScreenTexture = texture;
+  return texture;
+}
+
 function ScreenTexture({
   screenshot,
+  allScreenshots,
   root,
   onTextureReady,
 }: {
   screenshot: string;
+  allScreenshots?: string[];
   root: Group;
   onTextureReady: () => void;
 }) {
@@ -362,6 +450,33 @@ function ScreenTexture({
   const readyRef = useRef(false);
   const requestIdRef = useRef(0);
   const invalidate = useThree((state) => state.invalidate);
+
+  // Background pre-warming of all showcase screen textures on idle
+  useEffect(() => {
+    if (!allScreenshots || allScreenshots.length === 0) {
+      return;
+    }
+
+    let cancelled = false;
+    void (async () => {
+      // Allow the active screen texture to load and render first
+      await yieldUntilQuiet();
+      if (cancelled) return;
+
+      for (const item of allScreenshots) {
+        if (cancelled) break;
+        const itemSrc = getScreenshotSrc(item);
+        if (!screenMapCache.has(itemSrc)) {
+          await loadScreenTexture(itemSrc);
+          await yieldToMain();
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allScreenshots]);
 
   useEffect(() => {
     const requestId = requestIdRef.current + 1;
@@ -387,37 +502,19 @@ function ScreenTexture({
       return;
     }
 
+    // Immediately show the loading placeholder so it never stays stuck on the old screen
+    apply(getLoadingScreenTexture());
+
     let cancelled = false;
-    const image = new window.Image();
-    image.decoding = "async";
-
-    const handleLoad = () => {
-      void createScreenMap(image)
-        .then((nextMap) => {
-          if (cancelled || requestId !== requestIdRef.current || !nextMap) {
-            nextMap?.dispose();
-            return;
-          }
-
-          screenMapCache.set(src, nextMap);
-          apply(nextMap);
-        })
-        .catch(() => {
-          /* Keep the previous screen map if the next one cannot be created. */
-        });
-    };
-
-    image.src = src;
-
-    if (image.complete && image.naturalWidth > 0) {
-      handleLoad();
-    } else {
-      image.addEventListener("load", handleLoad);
-    }
+    void loadScreenTexture(src).then((nextMap) => {
+      if (cancelled || requestId !== requestIdRef.current || !nextMap) {
+        return;
+      }
+      apply(nextMap);
+    });
 
     return () => {
       cancelled = true;
-      image.removeEventListener("load", handleLoad);
     };
   }, [invalidate, onTextureReady, root, src]);
 
@@ -500,9 +597,11 @@ function ShowcaseWarmup({
 
 function GltfPhone({
   screenshot,
+  allScreenshots,
   onTextureReady,
 }: {
   screenshot: string;
+  allScreenshots?: string[];
   onTextureReady: () => void;
 }) {
   const { scene } = useGLTF(MODEL_URL);
@@ -518,6 +617,7 @@ function GltfPhone({
       <Suspense fallback={null}>
         <ScreenTexture
           screenshot={screenshot}
+          allScreenshots={allScreenshots}
           root={root}
           onTextureReady={onTextureReady}
         />
@@ -528,6 +628,7 @@ function GltfPhone({
 
 function ProductPhone({
   screenshot,
+  allScreenshots,
   enableDrag,
   idleMotion = false,
   playIntro,
@@ -536,7 +637,7 @@ function ProductPhone({
   onTextureReady,
 }: Pick<
   MobileShowcaseSceneProps,
-  "screenshot" | "enableDrag" | "idleMotion" | "playIntro"
+  "screenshot" | "allScreenshots" | "enableDrag" | "idleMotion" | "playIntro"
 > & {
   stageRef: RefObject<HTMLDivElement | null>;
   onGrabbingChange: (grabbing: boolean) => void;
@@ -767,6 +868,7 @@ function ProductPhone({
         <Suspense fallback={null}>
           <GltfPhone
             screenshot={screenshot}
+            allScreenshots={allScreenshots}
             onTextureReady={handleTextureReady}
           />
         </Suspense>
@@ -777,6 +879,7 @@ function ProductPhone({
 
 export function MobileShowcaseScene({
   screenshot,
+  allScreenshots,
   enableDrag,
   idleMotion = false,
   performanceProfile = "desktop",
@@ -830,6 +933,7 @@ export function MobileShowcaseScene({
         <ContextLifecycle onContextLost={onContextLost} />
         <ProductPhone
           screenshot={screenshot}
+          allScreenshots={allScreenshots}
           enableDrag={enableDrag}
           idleMotion={idleMotion}
           playIntro={playIntro}
