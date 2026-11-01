@@ -58,14 +58,14 @@ export const projects: Project[] = [
     story: {
       eyebrow: "On-demand Zoom delivery",
       title: "The meeting SDK left the base download.",
-      lead: "Live lectures still use the Zoom Meeting SDK. On Google Play it ships in an on-demand module so the first install stays small; meeting tools download when a student joins a live lecture.",
+      lead: "Live lectures in the new app use the Zoom Meeting SDK. On Google Play it ships in an on-demand module so the first install stays small (15.9 MB); meeting tools download when a student joins a live lecture.",
       narrative: [],
       chapters: [
         {
           id: "dfc-zoom-before",
           eyebrow: "Before",
-          title: "Every install carried the meeting SDK",
-          body: "Live lectures use the Zoom Meeting SDK. On the prior production release with Zoom in the base download, a new install was 177 MB before a student joined any class.",
+          title: "From external links to an embedded SDK",
+          body: "The legacy app redirected students out to external Zoom links in a browser or the Zoom app. Bringing live lectures fully into the new app with the Zoom Meeting SDK solved the fragmented UX, but bundling it directly in the base build resulted in a 177 MB initial download before any student joined a lecture.",
           metricIds: [],
         },
         {
@@ -82,16 +82,25 @@ export const projects: Project[] = [
           ],
         },
         {
-          id: "dfc-zoom-flow",
-          eyebrow: "Product flow",
-          title: "Download, restart, join",
-          body: "First join shows in-app download progress and cancel, then a restart so native code loads cleanly. The app remembers the lecture and continues after permissions. If a meeting is already running, the same card returns to it.",
+          id: "dfc-zoom-download",
+          eyebrow: "On-demand flow",
+          title: "Download progress and cancel",
+          body: "First join initiates the on-demand module download with live progress tracking and cancel capability, ensuring students on cellular data have full control before large asset transfers proceed.",
           metricIds: [],
           screenshots: [
             {
               src: "/screenshots/dfc-app/zoom-on-demand.webp",
               alt: "DFC live lectures with on-demand Zoom module download in progress",
             },
+          ],
+        },
+        {
+          id: "dfc-zoom-restart",
+          eyebrow: "Restart & join",
+          title: "Clean runtime reload, seamless join",
+          body: "Once downloaded, the app prompts for a quick restart so native symbols load cleanly into the runtime. It persists the lecture target, requests camera and microphone permissions, and navigates straight into the join preview.",
+          metricIds: [],
+          screenshots: [
             {
               src: "/screenshots/dfc-app/zoom-restart-after-download.webp",
               alt: "DFC prompt to restart after meeting tools are downloaded",
@@ -105,8 +114,8 @@ export const projects: Project[] = [
         {
           id: "dfc-zoom-engineering",
           eyebrow: "Under the hood",
-          title: "Delivery, not just a smaller number",
-          body: "Moving the SDK out of the base install required Play on-demand delivery, native split loading, fixes on older Android versions, and SDK patches so host and student meeting flows worked from the module—not only a better store figure.",
+          title: "Native splits, older versions, and low-end devices",
+          body: "Moving a 161 MB native SDK out of the base build introduced complex runtime challenges. Dynamic feature modules require SplitCompat classloader handling on older Android versions where dynamic .so libraries aren't automatically in path. On memory-constrained devices, loading heavy C++ binaries in-flight risked native link failures and memory pressure. Resolved these through isolated split loading, defensive runtime fallbacks, and lifecycle patches so host and student video streams worked reliably across both low-end phones and modern Android releases—not just a better store listing.",
           metricIds: [],
         },
         {
@@ -120,13 +129,6 @@ export const projects: Project[] = [
             "dfc-zoom-download-time",
             "dfc-zoom-time-improvement",
           ],
-        },
-        {
-          id: "dfc-stability",
-          eyebrow: "Production stability",
-          title: "Lower crash rate after the rebuild",
-          body: "On current production, Play reports a 0.1% user-perceived crash rate—10.36% lower than the pre-revamp baseline from when I took over mobile, before the TypeScript rebuild and delivery work.",
-          metricIds: ["dfc-crash-rate-improvement"],
         },
       ],
     },
@@ -186,7 +188,7 @@ export const projects: Project[] = [
       "Enforced a chapter-based trial (first 2 chapters per subject) across tests, flashcards, and search; subscriptions unlock the rest of the syllabus and full analysis.",
       "Rendered exam content with HTML + LaTeX (MathJax when math-tex is present) so tables, formulae, and explanations stay readable in live test, review, and flashcards.",
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
-      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
+      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on mid-range or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
       "Migrated to TanStack Query’s official MMKV persist client: throttled disk writes, selective dehydrate (Home, profile, and analytics summaries persist; large test and analysis payloads stay in memory only), and removed a legacy unbounded on-disk cache blob.",
     ],
     caseStudyHighlights: [
@@ -231,13 +233,7 @@ export const projects: Project[] = [
           title: "Analysis, suggestions, and reports",
           body: "After the attempt, overview and full test analysis read that telemetry. Insight callouts, Analytics suggestions, and Profile downloadable reports are mobile surfaces on production APIs. The backend produces the analysis content; the app renders and ships the flows.",
           metricIds: [],
-          // First shot matches Test client so the pin does not hard-cut (same
-          // pattern as DFC Architecture → Product flow). Then overview → charts.
           screenshots: [
-            {
-              src: "/screenshots/aptibooster/test-session.webp",
-              alt: "AptiBooster live test with a match-the-following question",
-            },
             {
               src: "/screenshots/aptibooster/test-overview.webp",
               alt: "AptiBooster post-test overview",
@@ -256,7 +252,7 @@ export const projects: Project[] = [
           id: "aptibooster-home",
           eyebrow: "Constrained devices",
           title: "Home taps register on a tight phone",
-          body: "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch. That did not show up on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks, lazy loading, and a lighter startup and Home content load so taps register as soon as Home is shown. The figures are a controlled lab on that low-end phone, before and after the production release that shipped the fix: Flashlight JS-thread CPU over a 15-second Home window, the share of samples at or above 70%, and dumpsys Total PSS after Home.",
+          body: "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch. That did not show up on mid-range or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks, lazy loading, and a lighter startup and Home content load so taps register as soon as Home is shown. The figures are a controlled lab on that low-end phone, before and after the production release that shipped the fix: Flashlight JS-thread CPU over a 15-second Home window, the share of samples at or above 70%, and dumpsys Total PSS after Home.",
           metricIds: [
             "aptibooster-home-js-cpu-lab",
             "aptibooster-home-js70-samples-lab",

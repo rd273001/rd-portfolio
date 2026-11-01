@@ -65,6 +65,8 @@ export function SiteHeader({
   utilities,
 }: SiteHeaderProps) {
   const menuRef = useRef<HTMLDetailsElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHidden, setHeaderHidden] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
   const isNavigatingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -73,6 +75,9 @@ export function SiteHeader({
   const closeMenu = () => {
     if (menuRef.current) {
       menuRef.current.open = false;
+    }
+    if (headerRef.current?.contains(document.activeElement)) {
+      (document.activeElement as HTMLElement)?.blur();
     }
   };
 
@@ -274,6 +279,9 @@ export function SiteHeader({
 
     const onToggle = () => {
       document.body.style.overflow = menu.open ? "hidden" : "";
+      if (!menu.open && headerRef.current?.contains(document.activeElement)) {
+        (document.activeElement as HTMLElement)?.blur();
+      }
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -292,6 +300,73 @@ export function SiteHeader({
     };
   }, []);
 
+  // Below 1024px: keep header sticky and predictable everywhere across the
+  // site, but smoothly slide it out of view exclusively while inside the pinned
+  // case-study story to maximize vertical space for the phone frame and card.
+  useEffect(() => {
+    const compact = window.matchMedia("(max-width: 1023px)");
+    let frame = 0;
+
+    const inPinnedStory = () => {
+      const stage = document.querySelector<HTMLElement>(
+        '[data-motion="story-pin"]',
+      );
+      if (!stage) {
+        return false;
+      }
+      const spacer = stage.closest<HTMLElement>(".pin-spacer") ?? stage;
+      const rect = spacer.getBoundingClientRect();
+      // True when the story section is currently active in viewport
+      return rect.top <= 24 && rect.bottom >= 64;
+    };
+
+    const update = () => {
+      frame = 0;
+      if (!compact.matches) {
+        setHeaderHidden(false);
+        return;
+      }
+
+      const menuOpen = menuRef.current?.open ?? false;
+      const keyboardFocusInside =
+        headerRef.current?.contains(document.activeElement) &&
+        document.activeElement?.matches(":focus-visible");
+
+      if (menuOpen || keyboardFocusInside) {
+        setHeaderHidden(false);
+        return;
+      }
+
+      // Hide exclusively inside the mobile pinned case-study story
+      setHeaderHidden(inPinnedStory());
+    };
+
+    const onScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(update);
+      }
+    };
+    const onFocusIn = (event: FocusEvent) => {
+      if ((event.target as HTMLElement | null)?.matches(":focus-visible")) {
+        setHeaderHidden(false);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    const header = headerRef.current;
+    header?.addEventListener("focusin", onFocusIn as EventListener);
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      header?.removeEventListener("focusin", onFocusIn as EventListener);
+    };
+  }, []);
+
   useEffect(() => {
     const media = window.matchMedia("(min-width: 768px)");
     const onChange = () => {
@@ -306,7 +381,11 @@ export function SiteHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header
+      ref={headerRef}
+      data-hidden={headerHidden ? "true" : "false"}
+      className="sticky top-0 z-50 max-lg:transition-transform max-lg:duration-200 max-lg:ease-out max-lg:data-[hidden=true]:-translate-y-full motion-reduce:transition-none"
+    >
       <div className="header-glass-fill pointer-events-none absolute inset-0" aria-hidden />
       <div className="relative mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Link
