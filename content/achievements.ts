@@ -58,7 +58,7 @@ export const achievements: Achievement[] = [
     id: "aptibooster-home-interactivity",
     title: "AptiBooster Home interactivity on constrained Android",
     description:
-      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on medium- or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
+      "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on mid-range or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
     metricId: "aptibooster-home-js-cpu-lab",
     status: "verified",
   },

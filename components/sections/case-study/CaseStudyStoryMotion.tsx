@@ -50,7 +50,7 @@ function showStaticStory(root: HTMLElement) {
     "[data-case-story-chapters]",
   );
   const animated = gsap.utils.toArray<HTMLElement>(
-    "[data-case-story-chapter], [data-case-story-metric], [data-case-story-screen], [data-case-story-progress]",
+    "[data-case-story-chapter], [data-case-story-metric], [data-case-story-screen], [data-case-story-progress], [data-case-story-step]",
     root,
   );
 
@@ -69,6 +69,9 @@ function showStaticStory(root: HTMLElement) {
         clearProps: "opacity,visibility,transform,willChange,pointerEvents",
       });
     }
+    if (stage) {
+      gsap.set(stage, { clearProps: "all" });
+    }
     setStaticScreens(root);
   } catch {
     stage?.removeAttribute("data-motion");
@@ -77,13 +80,34 @@ function showStaticStory(root: HTMLElement) {
 
 function killCaseStudyStoryScroll() {
   try {
-    ScrollTrigger.getById(CASE_STUDY_STORY_SCROLL_ID)?.kill();
+    const trigger = ScrollTrigger.getById(CASE_STUDY_STORY_SCROLL_ID);
+    if (trigger) {
+      trigger.kill(true);
+    }
   } catch {
     // ScrollTrigger may be unavailable after teardown.
   }
+
+  // Defensively remove any lingering pin-spacers wrapping the story stage
+  const orphanedSpacers = document.querySelectorAll(
+    ".pin-spacer-case-study-story",
+  );
+  orphanedSpacers.forEach((spacer) => {
+    const stage = spacer.querySelector("[data-case-story-stage]");
+    if (stage && spacer.parentNode) {
+      spacer.parentNode.insertBefore(stage, spacer);
+      spacer.remove();
+    }
+  });
 }
 
-function pinStart() {
+function pinStart(mode: StoryPinMode = "desktop") {
+  // Mobile: the sticky header auto-hides inside the pinned story, so the pin
+  // sits near the top of the viewport instead of below the header.
+  if (mode === "mobile") {
+    return "top 12px";
+  }
+
   const header = document.querySelector("header");
   const height = header?.getBoundingClientRect().height ?? 64;
   return `top ${Math.round(height + 12)}px`;
@@ -161,7 +185,7 @@ function setActiveStep(steps: HTMLElement[], index: number) {
 
 function activeChapterFromTimes(times: number[], time: number) {
   let index = 0;
-  const switchAt = CHAPTER_FADE * 0.5;
+  const switchAt = 0;
 
   for (let i = 1; i < times.length; i += 1) {
     if (time >= (times[i] ?? 0) + switchAt) {
@@ -233,9 +257,9 @@ function chapterClipHeight(stage: HTMLElement, mode: StoryPinMode = "desktop") {
       ? Number.parseFloat(getComputedStyle(layout).rowGap) || 0
       : 0;
     const bottomSafe = 16;
+    // Header is hidden inside the pinned story on mobile.
     const available =
       storyViewportHeight() -
-      headerHeight -
       pinOffset -
       phoneHeight -
       trackBlock -
@@ -401,7 +425,7 @@ function mountDesktopStory(
   );
   const beat = 1;
   const firstBeat = 0.48;
-  const screenFade = 0.32;
+  const screenFade = 0.22;
   const screenHold = 0.58;
   const fade = CHAPTER_FADE;
   const overflowDurations = chapterOverflows.map((overflow) =>
@@ -451,6 +475,10 @@ function mountDesktopStory(
   });
   if (progress) {
     gsap.set(progress, { scaleX: 0, transformOrigin: "left center" });
+  }
+  if (steps.length > 0) {
+    gsap.set(steps, { opacity: 0.45 });
+    gsap.set(steps[0], { opacity: 1 });
   }
   setActiveStep(steps, 0);
 
@@ -565,6 +593,7 @@ function mountDesktopStory(
       chapterLandingTimes[0] = 0;
       timeline.to({}, { duration: firstBeat });
       addOverflowBeat(chapter, index);
+      timeline.to({}, { duration: 0.35 });
       return;
     }
 
@@ -588,6 +617,18 @@ function mountDesktopStory(
       },
       "<",
     );
+    if (steps[index - 1] && steps[index]) {
+      timeline.to(
+        steps[index - 1],
+        { opacity: 0.45, duration: fade },
+        "<",
+      );
+      timeline.to(
+        steps[index],
+        { opacity: 1, duration: fade },
+        "<",
+      );
+    }
 
     const laterScreens: number[] = [];
     screenIndexesForChapter.forEach((screenIndex, screenOrder) => {
@@ -621,13 +662,20 @@ function mountDesktopStory(
     // After copy, first screen, and metric cards are fully in — not mid-fade.
     chapterLandingTimes[index] = timeline.duration();
 
+    // Dedicated resting hold at y=0 so that every chapter, even ones with long
+    // overflowing content and no later screens (like Test Client), stays at rest
+    // with its card top edge, eyebrow, and title fully visible when the step lands
+    // and for a comfortable scroll distance before any vertical overflow scrolling.
+    const restingHold = laterScreens.length > 0 ? 0.35 : 0.65;
+    timeline.to({}, { duration: restingHold });
+
     laterScreens.forEach((screenIndex) => {
       timeline.to({}, { duration: screenHold });
       crossfadeTo(screenIndex, ">");
     });
 
     addOverflowBeat(chapter, index, deferredMetrics);
-    timeline.to({}, { duration: beat });
+    timeline.to({}, { duration: 0.35 });
   });
 
   if (progress) {
@@ -643,7 +691,7 @@ function mountDesktopStory(
     id: CASE_STUDY_STORY_SCROLL_ID,
     trigger: stage,
     animation: timeline,
-    start: pinStart,
+    start: () => pinStart(mode),
     end: () =>
       `+=${Math.max(1, Math.round(scrollPerTimelineUnit * timeline.duration()))}`,
     pin: true,
@@ -937,7 +985,7 @@ function mountDesktopStoryWithRemount(
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       remountIfNeeded(true);
-    }, 200);
+    }, 60);
   };
 
   window.addEventListener("resize", onResize);
