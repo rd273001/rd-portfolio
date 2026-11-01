@@ -23,7 +23,7 @@ const screenH = glassH - displayBezel * 2;
 const screenR = glassR - displayBezel;
 
 const punchOffsetFromScreenTop = 0.1;
-const punchOuterRadius = 0.032;
+const punchOuterRadius = 0.046;
 
 /** Keep in sync with MobileShowcaseScene camera + phone scale. */
 const meshScale = 0.78;
@@ -75,6 +75,29 @@ export const phoneFrontLayout = {
   punchHole: {
     centerTop: `${(punchOffsetFromScreenTop / screenH) * 100}%`,
     size: pctOfWidth(punchOuterRadius * 2, screenW),
-    lensSize: pctOfWidth(0.013 * 2, screenW),
+  },
+  speaker: {
+    width: "14%",
+    height: "clamp(1.5px, 0.4cqw, 2.5px)",
+    borderRadius: "9999px",
+    background:
+      "linear-gradient(90deg, rgba(20,21,24,0) 0%, rgba(20,21,24,0.85) 18%, rgba(28,29,33,0.9) 50%, rgba(20,21,24,0.85) 82%, rgba(20,21,24,0) 100%)",
+    boxShadow:
+      "0 0 2px 0.5px rgba(0, 0, 0, 0.55), 0 0.5px 1px rgba(255, 255, 255, 0.07)",
+    filter: "blur(0.35px)",
+  },
+  buttons: {
+    protrusion: "max(2.5px, 0.72cqw)",
+    background: "linear-gradient(90deg, #2a2b2e 0%, #3e4147 60%, #4f535a 100%)",
+    boxShadow: "none",
+    borderRadius: "0 2px 2px 0",
+    power: {
+      top: "28.75%",
+      height: "5.42%",
+    },
+    volume: {
+      top: "37.19%",
+      height: "11.88%",
+    },
   },
 };
