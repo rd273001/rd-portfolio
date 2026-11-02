@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import { scrollToHashId } from "@/lib/scroll-to-hash";
 
@@ -8,26 +9,45 @@ import { scrollToHashId } from "@/lib/scroll-to-hash";
  * Handles smooth scrolling to homepage hash sections:
  * 1. On full page load or direct URL access with hash (e.g. `/#work`).
  * 2. On browser `hashchange` events.
- * 3. On user click of in-page hash links (e.g. Hero "View my work", "Let's talk"),
+ * 3. On route transitions from another route to homepage with hash (e.g. from `/work/*` to `/#work`).
+ * 4. On user click of in-page hash links (e.g. Hero "View my work", "Let's talk"),
  *    ensuring clicking the link scrolls to the target section even if the URL
  *    hash already matches the target.
  */
 export function HashScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    const scrollFromHash = () => {
+    let cancelTimer: (() => void) | undefined;
+
+    const scrollFromHash = (behavior: ScrollBehavior = "smooth") => {
       const id = window.location.hash.replace(/^#/, "");
       if (!id) {
         return;
       }
 
-      // Wait a frame so section layout (and sticky header offset) is ready.
-      window.requestAnimationFrame(() => {
-        scrollToHashId(id, "auto");
-      });
+      let attempts = 0;
+      const tryScroll = () => {
+        const scrolled = scrollToHashId(id, behavior);
+        if (!scrolled && attempts < 10) {
+          attempts += 1;
+          window.requestAnimationFrame(tryScroll);
+        }
+      };
+
+      // Next.js App Router resets scroll to (0,0) after route navigation.
+      // Small delay ensures route DOM transition and scroll reset have finished.
+      const timer = window.setTimeout(() => {
+        window.requestAnimationFrame(tryScroll);
+      }, 60);
+
+      cancelTimer = () => window.clearTimeout(timer);
     };
 
-    scrollFromHash();
-    window.addEventListener("hashchange", scrollFromHash);
+    scrollFromHash(pathname === "/" ? "smooth" : "auto");
+
+    const onHashChange = () => scrollFromHash("smooth");
+    window.addEventListener("hashchange", onHashChange);
 
     const handleDocumentClick = (event: MouseEvent) => {
       // Ignore modified clicks (Cmd+click, Ctrl+click, etc.) or non-primary buttons
@@ -78,12 +98,13 @@ export function HashScroll() {
     document.addEventListener("click", handleDocumentClick, { capture: true });
 
     return () => {
-      window.removeEventListener("hashchange", scrollFromHash);
+      cancelTimer?.();
+      window.removeEventListener("hashchange", onHashChange);
       document.removeEventListener("click", handleDocumentClick, {
         capture: true,
       });
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
