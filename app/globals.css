@@ -132,7 +132,7 @@
     top: auto;
     z-index: auto;
     order: 2;
-    width: min(9.75rem, 42vw);
+    width: min(8.75rem, 38vw);
     margin-inline: auto;
     margin-top: auto;
     padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));

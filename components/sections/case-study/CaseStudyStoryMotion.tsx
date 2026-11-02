@@ -256,7 +256,7 @@ function chapterClipHeight(stage: HTMLElement, mode: StoryPinMode = "desktop") {
     const layoutGap = layout
       ? Number.parseFloat(getComputedStyle(layout).rowGap) || 0
       : 0;
-    const bottomSafe = 16;
+    const bottomSafe = 12;
     // Header is hidden inside the pinned story on mobile.
     const available =
       storyViewportHeight() -
@@ -267,7 +267,7 @@ function chapterClipHeight(stage: HTMLElement, mode: StoryPinMode = "desktop") {
       layoutGap -
       bottomSafe;
 
-    return Math.max(140, Math.round(available));
+    return Math.max(160, Math.round(available));
   }
 
   const stepsEl = stage.querySelector<HTMLElement>("[data-case-story-steps]");
@@ -448,12 +448,14 @@ function mountDesktopStory(
     opacity: 0,
     visibility: "hidden",
     pointerEvents: "none",
-    y: 0,
+    y: (i) => (i > 0 ? (mode === "mobile" ? 48 : 36) : 0),
+    willChange: "transform, opacity",
   });
   gsap.set(chapters[0], {
     opacity: 1,
     visibility: "visible",
     pointerEvents: "auto",
+    y: 0,
   });
   if (screens.length > 0) {
     gsap.set(
@@ -599,21 +601,34 @@ function mountDesktopStory(
 
     chapterStartTimes[index] = timeline.duration();
 
+    const prevOverflow = chapterOverflows[index - 1] ?? 0;
+    const leavingY = prevOverflow > 0 ? -prevOverflow - 24 : -24;
+    const enterY = mode === "mobile" ? 48 : 36;
+
     timeline.to(chapters[index - 1], {
       opacity: 0,
       visibility: "hidden",
       pointerEvents: "none",
-      y: 0,
+      y: leavingY,
       duration: fade,
+      ease: "power1.in",
     });
-    timeline.to(
+    timeline.fromTo(
       chapter,
+      {
+        opacity: 0,
+        visibility: "visible",
+        pointerEvents: "none",
+        y: enterY,
+      },
       {
         opacity: 1,
         visibility: "visible",
         pointerEvents: "auto",
         y: 0,
         duration: fade,
+        ease: "power1.out",
+        immediateRender: false,
       },
       "<",
     );
