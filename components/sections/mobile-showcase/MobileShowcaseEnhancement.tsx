@@ -513,17 +513,25 @@ export function MobileShowcaseEnhancement({
     });
   }, [state.screenIndex]);
 
+  const activeProject = projects[state.projectIndex] ?? projects[0];
+  const activeScreenshot =
+    activeProject?.screenshots[state.screenIndex] ??
+    activeProject?.screenshots[0];
+  const screenCount = activeProject?.screenshots.length ?? 0;
+  /** Until matchMedia runs, prefer compact pills (avoids a stretch flash on desktop). */
+  const compactChips = !capabilities.evaluated || capabilities.finePointer;
+
   useEffect(() => {
     updateProjectIndicator();
     const timer = setTimeout(() => setProjectTransitionReady(true), 60);
     return () => clearTimeout(timer);
-  }, [updateProjectIndicator]);
+  }, [updateProjectIndicator, state.projectIndex]);
 
   useEffect(() => {
     updateScreenIndicator();
     const timer = setTimeout(() => setScreenTransitionReady(true), 60);
     return () => clearTimeout(timer);
-  }, [updateScreenIndicator, state.projectIndex]);
+  }, [updateScreenIndicator, state.projectIndex, state.screenIndex, compactChips]);
 
   useEffect(() => {
     if (typeof ResizeObserver === "undefined") return;
@@ -536,22 +544,35 @@ export function MobileShowcaseEnhancement({
     if (projectTabsRef.current) ro.observe(projectTabsRef.current);
     if (screenChipsRef.current) ro.observe(screenChipsRef.current);
 
-    return () => ro.disconnect();
-  }, [updateProjectIndicator, updateScreenIndicator]);
+    const activeProjectBtn = projectBtnRefs.current[state.projectIndex];
+    if (activeProjectBtn) ro.observe(activeProjectBtn);
 
-  const activeProject = projects[state.projectIndex] ?? projects[0];
-  const activeScreenshot =
-    activeProject?.screenshots[state.screenIndex] ??
-    activeProject?.screenshots[0];
-  const screenCount = activeProject?.screenshots.length ?? 0;
+    const activeScreenBtn = screenBtnRefs.current[state.screenIndex];
+    if (activeScreenBtn) ro.observe(activeScreenBtn);
+
+    return () => ro.disconnect();
+  }, [
+    updateProjectIndicator,
+    updateScreenIndicator,
+    state.projectIndex,
+    state.screenIndex,
+    compactChips,
+  ]);
+
+  useEffect(() => {
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(() => {
+        updateProjectIndicator();
+        updateScreenIndicator();
+      });
+    }
+  }, [updateProjectIndicator, updateScreenIndicator]);
 
   if (!activeProject || !activeScreenshot) {
     return null;
   }
 
   const canRenderScene = canEvaluateScene && sceneMountAllowed;
-  /** Until matchMedia runs, prefer compact pills (avoids a stretch flash on desktop). */
-  const compactChips = !capabilities.evaluated || capabilities.finePointer;
 
   const markSceneFailed = () => {
     setSceneReady(false);
