@@ -97,6 +97,7 @@ export const experience: Experience[] = [
       "JavaScript",
       "Redux Toolkit",
       "Context API",
+      "Localization",
       "React Native Video",
       "Figma",
     ],

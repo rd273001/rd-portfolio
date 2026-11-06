@@ -1,262 +1,185 @@
-import { Button, Container } from "@/components/primitives";
-import { getProjectCardMetric } from "@/content/metrics";
-import { getCaseStudyProjects } from "@/content/projects";
-import type { Project } from "@/content/types";
+import Link from "next/link";
 import {
-  HOME_FEATURED_PROJECT_TECH_VISIBLE,
-  HOME_PROJECT_TECH_VISIBLE,
-} from "@/lib/home-card-limits";
+  ArrowRightIcon,
+  Button,
+  Container,
+  ExternalLinkIcon,
+  GitHubIcon,
+} from "@/components/primitives";
+import {
+  getAllProjects,
+  getFeaturedPersonalProjects,
+} from "@/content/projects";
+import type { Project } from "@/content/types";
 import { MobileShowcase } from "./mobile-showcase/MobileShowcase";
 
-const projectKindLabels: Record<Project["kind"], string> = {
-  "production-app": "Production app",
-  "independent-contribution": "Independent contribution",
-  internship: "Internship",
-  "personal-project": "Personal / learning project",
+const categoryLabels: Record<NonNullable<Project["category"]>, string> = {
+  production: "Production app",
+  mobile: "Mobile app",
+  web: "Web application",
+  fullstack: "Full-stack project",
+  tool: "Developer tool",
 };
 
 export function ProjectsSection() {
-  const projects = getCaseStudyProjects();
-
-  if (projects.length === 0) {
-    return null;
-  }
-
-  const [featuredProject, ...supportingProjects] = projects;
+  const featuredPersonal = getFeaturedPersonalProjects();
+  const allProjects = getAllProjects();
 
   return (
     <section id="work" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
       <Container>
+        {/* Flagship Production Mobile Showcase */}
         <div className="max-w-2xl">
           <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
             Selected work
           </p>
           <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl">
-            Project stories grounded in shipped product work.
+            Production apps with measurable engineering impact.
           </h2>
           <p className="mt-4 text-base leading-7 text-muted sm:text-lg sm:leading-8">
-            A focused set of case studies covering production mobile ownership,
-            app delivery improvements, and one personal full-stack build.
+            Mobile experiences with verified production metrics on Google Play,
+            featuring on-demand module delivery, performance profiling, and offline caching.
           </p>
         </div>
 
         <MobileShowcase />
 
-        <div className="mt-12 grid gap-5">
-          {featuredProject ? (
-            <ProjectCard project={featuredProject} isFeatured />
-          ) : null}
-
-          {supportingProjects.length > 0 ? (
-            <div className="grid gap-5 lg:grid-cols-2 lg:items-stretch">
-              {supportingProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
+        {/* Curated Technical & Open-Source Builds */}
+        <div className="mt-16 sm:mt-24 border-t border-border/80 pt-14 sm:pt-16">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-xl">
+              <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
+                Featured projects
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                Full-stack & open-source projects.
+              </h3>
+              <p className="mt-2 text-sm text-muted sm:text-base">
+                Focused full-stack, web, and mobile applications built to explore modern architectures, component systems, and API integrations.
+              </p>
             </div>
-          ) : null}
+            <Link
+              href="/work"
+              className="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              <span>Explore all projects ({allProjects.length})</span>
+              <ArrowRightIcon className="size-3.5 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:translate-x-1 group-active:!translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+            </Link>
+          </div>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {featuredPersonal.map((project) => (
+              <ProjectPreviewCard key={project.id} project={project} />
+            ))}
+          </div>
+
+          {/* Archive Banner CTA */}
+          <div className="mt-10 flex flex-col items-center justify-between gap-5 rounded-2xl border border-border bg-surface p-6 sm:flex-row sm:p-8">
+            <div>
+              <p className="text-base font-semibold text-foreground">
+                Looking for more projects and source code?
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Explore the complete engineering archive with category filters, technology stacks, and direct repository links.
+              </p>
+            </div>
+            <Button
+              href="/work"
+              variant="secondary"
+              className="shrink-0 items-center gap-2 whitespace-nowrap px-6"
+            >
+              <span>View All Projects ({allProjects.length})</span>
+              <ArrowRightIcon className="size-3.5 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:translate-x-1 group-active:!translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+            </Button>
+          </div>
         </div>
       </Container>
     </section>
   );
 }
 
-function ProjectTechChips({
-  technologies,
-  withMetric = false,
-}: {
-  technologies: string[];
-  withMetric?: boolean;
-}) {
-  if (technologies.length === 0) {
-    return null;
-  }
+function ProjectPreviewCard({ project }: { project: Project }) {
+  const visibleTech = project.technologies.slice(0, 4);
+  const hasLive = Boolean(project.liveUrl);
 
   return (
-    <ul
-      className={
-        withMetric
-          ? "mt-6 flex flex-wrap gap-2 border-t border-border pt-5"
-          : "flex flex-wrap gap-2"
-      }
-    >
-      {technologies.map((technology) => (
-        <li
-          key={technology}
-          className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted"
-        >
-          {technology}
-        </li>
-      ))}
-    </ul>
-  );
-}
+    <article className="flex h-full flex-col justify-between rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-foreground/20 sm:p-7">
+      <div>
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
+            {project.category ? categoryLabels[project.category] : "Full-stack project"}
+          </span>
+          {project.year ? (
+            <span className="font-mono text-xs text-muted">{project.year}</span>
+          ) : null}
+        </div>
 
-function ProjectCard({
-  project,
-  isFeatured = false,
-}: {
-  project: Project;
-  isFeatured?: boolean;
-}) {
-  const cardMetric = getProjectCardMetric(project.id);
-  /** Home cards only — full lists stay on /work case studies. */
-  const visibleHighlights = project.highlights.slice(0, 2);
-  const visibleTechnologies = project.technologies.slice(
-    0,
-    isFeatured ? HOME_FEATURED_PROJECT_TECH_VISIBLE : HOME_PROJECT_TECH_VISIBLE,
-  );
-  const useSplitLayout = isFeatured && Boolean(cardMetric);
+        <h4 className="mt-3 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {project.name}
+        </h4>
 
-  const highlightListClassName =
-    isFeatured && visibleHighlights.length > 1
-      ? "grid gap-3 text-sm leading-6 text-foreground sm:grid-cols-2"
-      : "grid gap-3 text-sm leading-6 text-foreground";
+        <p className="mt-2 text-sm font-medium text-foreground/90">
+          {project.tagline}
+        </p>
 
-  const cardFooter = (
-    <div className="mt-7 shrink-0 space-y-7">
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        {project.caseStudyHref ? (
-          <Button
-            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
-            href={project.caseStudyHref}
-          >
-            Read case study
-          </Button>
-        ) : null}
-        {project.storeUrl ? (
-          <Button
-            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
-            href={project.storeUrl}
-            variant="secondary"
-          >
-            View on Play Store
-          </Button>
-        ) : null}
-        {project.liveUrl ? (
-          <Button
-            className="w-full whitespace-nowrap px-6 sm:w-auto sm:min-w-36"
-            href={project.liveUrl}
-            variant="secondary"
-          >
-            View live
-          </Button>
+        <p className="mt-3 text-sm leading-6 text-muted">
+          {project.summary}
+        </p>
+
+        {project.highlights.length > 0 ? (
+          <ul className="mt-4 space-y-2 border-t border-border/70 pt-4 text-xs leading-5 text-muted">
+            {project.highlights.slice(0, 3).map((item) => (
+              <li key={item} className="flex gap-2">
+                <span
+                  aria-hidden="true"
+                  className="mt-1.5 size-1 shrink-0 rounded-full bg-foreground/60"
+                />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         ) : null}
       </div>
 
-      {!useSplitLayout && visibleTechnologies.length > 0 ? (
-        <div className="rounded-3xl border border-border bg-background p-5">
-          <ProjectTechChips technologies={visibleTechnologies} />
+      <div className="mt-6 space-y-4 border-t border-border/70 pt-4">
+        {visibleTech.length > 0 ? (
+          <ul className="flex flex-wrap gap-1.5">
+            {visibleTech.map((tech) => (
+              <li
+                key={tech}
+                className="rounded-full border border-border/80 bg-background/50 px-2.5 py-0.5 text-[11px] font-medium text-muted"
+              >
+                {tech}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {project.liveUrl ? (
+            <Button
+              href={project.liveUrl}
+              variant="primary"
+              className="inline-flex min-h-9 items-center gap-1.5 px-3.5 py-1 text-xs"
+            >
+              <span>Live Demo</span>
+              <ExternalLinkIcon className="size-3.5 shrink-0 opacity-70" />
+            </Button>
+          ) : null}
+
+          {project.githubUrl ? (
+            <Button
+              href={project.githubUrl}
+              variant={hasLive ? "secondary" : "primary"}
+              className="inline-flex min-h-9 items-center gap-1.5 px-3.5 py-1 text-xs"
+            >
+              <GitHubIcon className="size-3.5 shrink-0" />
+              <span>GitHub</span>
+              <ExternalLinkIcon className="size-3.5 shrink-0 opacity-70" />
+            </Button>
+          ) : null}
         </div>
-      ) : null}
-    </div>
-  );
-
-  return (
-    <article className="flex h-full flex-col rounded-3xl border border-border bg-surface p-5 shadow-[0_16px_40px_-34px_rgba(17,17,17,0.45)] sm:p-6 lg:p-8">
-      {useSplitLayout ? (
-        <div className="grid flex-1 gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:items-stretch">
-          <div className="flex min-h-0 flex-col">
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
-              {projectKindLabels[project.kind]}
-            </p>
-            <h3 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl">
-              {project.name}
-            </h3>
-            <p className="mt-3 text-base font-medium tracking-tight">
-              {project.tagline}
-            </p>
-            <p className="mt-4 text-base leading-7 text-muted">
-              {project.summary}
-            </p>
-
-            {visibleHighlights.length > 0 ? (
-              <div className="mt-6 flex flex-1 flex-col">
-                <ul className={highlightListClassName}>
-                  {visibleHighlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"
-                      />
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="flex-1" aria-hidden="true" />
-            )}
-
-            {cardFooter}
-          </div>
-
-          <aside className="rounded-3xl border border-border bg-background p-5">
-            {cardMetric ? (
-              <dl>
-                <div>
-                  <dt className="text-xs leading-5 text-muted">
-                    {cardMetric.label}
-                  </dt>
-                  <dd className="mt-1 text-2xl font-semibold tracking-[-0.04em]">
-                    {cardMetric.percentage ?? cardMetric.value}
-                  </dd>
-                  {cardMetric.previous && cardMetric.current ? (
-                    <p className="mt-1 text-xs leading-5 text-muted">
-                      {cardMetric.previous} to {cardMetric.current}
-                    </p>
-                  ) : null}
-                </div>
-              </dl>
-            ) : null}
-
-            <ProjectTechChips
-              technologies={visibleTechnologies}
-              withMetric={Boolean(cardMetric)}
-            />
-          </aside>
-        </div>
-      ) : (
-        <div className="flex min-h-0 flex-1 flex-col">
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-muted">
-            {projectKindLabels[project.kind]}
-          </p>
-          <h3
-            className={
-              isFeatured
-                ? "mt-4 text-3xl font-semibold tracking-[-0.04em] text-balance sm:text-4xl"
-                : "mt-4 text-2xl font-semibold tracking-[-0.04em] text-balance"
-            }
-          >
-            {project.name}
-          </h3>
-          <p className="mt-3 text-base font-medium tracking-tight">
-            {project.tagline}
-          </p>
-          <p className="mt-4 text-base leading-7 text-muted">
-            {project.summary}
-          </p>
-
-          {visibleHighlights.length > 0 ? (
-            <div className="mt-6 flex flex-1 flex-col">
-              <ul className={highlightListClassName}>
-                {visibleHighlights.map((highlight) => (
-                  <li key={highlight} className="flex gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"
-                    />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <div className="flex-1" aria-hidden="true" />
-          )}
-
-          {cardFooter}
-        </div>
-      )}
+      </div>
     </article>
   );
 }

@@ -14,7 +14,17 @@ export type ProjectId =
   | "aptibooster"
   | "inkyst"
   | "ikior"
-  | "certificate-generator";
+  | "certificate-generator"
+  | "jobdekho"
+  | "quizapp"
+  | "cnapp-dashboard"
+  | "distance-calculator"
+  | "food-order"
+  | "cached-image-gallery"
+  | "movies-app"
+  | "rent-pe-car";
+
+export type ProjectCategory = "production" | "mobile" | "web" | "fullstack" | "tool";
 
 export type ProjectPriority = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -162,6 +172,9 @@ export type Project = {
    */
   story?: CaseStudyStory;
   /** Full gallery on `/work/[id]` and anywhere that needs every capture. */
+  year?: string;
+  category?: ProjectCategory;
+  featuredPersonal?: boolean;
   screenshots: string[];
   /**
    * Home Work 3D panel only. Omit to use all `screenshots`. Keep length
@@ -286,4 +299,4 @@ export type AboutContent = {
   paragraphs: string[];
   location: string;
   pillars: AboutPillar[];
-};
+};
