@@ -12,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/work"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
     ...getCaseStudySitemapEntries().map((entry) => ({
       url: absoluteUrl(entry.path),
       lastModified,

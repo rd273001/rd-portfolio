@@ -6,6 +6,8 @@ export const projects: Project[] = [
     name: "DFC",
     kind: "production-app",
     prominence: 1,
+    year: "2024 – 2026",
+    category: "production",
     tagline: "Production education app with on-demand Zoom delivery.",
     summary:
       "Production application with 10K+ downloads, listed on Google Play as Dnyandeep Foundation Centre. Owned the revamp on the existing listing — a new TypeScript codebase with onboarding, deep links, offline usage, role-based access, Kotlin/Android native modules where needed, and Android delivery architecture.",
@@ -156,6 +158,8 @@ export const projects: Project[] = [
     name: "AptiBooster",
     kind: "production-app",
     prominence: 2,
+    year: "2024 – 2025",
+    category: "production",
     tagline:
       "Live test telemetry is the source of truth; the mobile app integrates APIs for analysis and reports.",
     summary:
@@ -297,21 +301,29 @@ export const projects: Project[] = [
     name: "Inkyst",
     kind: "independent-contribution",
     prominence: 3,
+    year: "2024",
+    category: "web",
     tagline: "Independent frontend contribution to selected production pages.",
     summary:
       "Voluntary frontend contribution: selected web pages implemented from Figma as responsive React/TypeScript UI. Do not claim product ownership. The website may currently be unavailable.",
     role: "Independent Frontend Contribution",
-    liveUrl: "https://inkyst.com",
     websiteMayBeUnavailable: true,
-    technologies: ["React", "TypeScript", "Figma"],
+    technologies: [
+      "React",
+      "TypeScript",
+      "Ant Design",
+      "SCSS",
+      "React Router",
+      "Tailwind CSS",
+      "Figma",
+    ],
     highlights: [
       "Voluntary / unpaid contribution.",
       "Selected web page implementations.",
-      "Figma to responsive React/TypeScript UI.",
+      "Figma to responsive React/TypeScript UI using Ant Design and SCSS.",
       "Production website contribution.",
     ],
     metricIds: [],
-    caseStudyHref: "/work/inkyst",
     screenshots: [],
   },
   {
@@ -319,6 +331,8 @@ export const projects: Project[] = [
     name: "IKIOR",
     kind: "internship",
     prominence: 4,
+    year: "2023",
+    category: "mobile",
     tagline: "Wellness mobile internship—period tracking as the hero feature.",
     summary:
       "Software Engineer Intern, May 2023 – Nov 2023. Mobile-only work on a life-and-wellness app: period tracking was the hero feature at the time, with UI inspired by established period and health apps on the Play Store. IKIOR has since shipped a major revamp—today’s app focuses on diet, health, sleep, and care with new UI; most period-tracking and related flows from this era were removed.",
@@ -329,6 +343,7 @@ export const projects: Project[] = [
       "JavaScript",
       "Redux Toolkit",
       "Context API",
+      "Localization",
       "React Native Video",
       "Figma",
     ],
@@ -346,11 +361,13 @@ export const projects: Project[] = [
     name: "Certificate Generator",
     kind: "personal-project",
     prominence: 5,
+    year: "2024",
+    category: "fullstack",
     tagline: "Personal MERN stack project for certificate requests and PDF delivery.",
     summary:
-      "Personal learning / full-stack MERN project. Users request certificates, which can be approved, generated as PDFs, and stored on Google Drive via the Google APIs client and Google Drive API.",
+      "Personal learning / full-stack MERN project. Users request certificates, which can be approved, generated as PDFs via pdf-lib, and stored on Google Drive with shareable links.",
     role: "Personal full-stack project",
-    liveUrl: "https://certificate-generator1.netlify.app/",
+    liveUrl: "https://certificate-generator1.netlify.app",
     githubUrl: "https://github.com/rd273001/Certificate_Generator",
     technologies: [
       "React",
@@ -358,63 +375,262 @@ export const projects: Project[] = [
       "Node.js",
       "Express.js",
       "MongoDB",
-      "Google APIs",
       "Google Drive API",
       "Redux Toolkit",
       "pdf-lib",
-      "Axios"
+      "Axios",
     ],
     highlights: [
       "CRUD and REST APIs for certificate requests (Express, MongoDB, Mongoose).",
       "PDF generation with pdf-lib.",
       "Google APIs client and Google Drive API to upload and manage issued certificates in Drive.",
-      "400+ pending requests and 466+ generated certificates.",
     ],
     metricIds: [
       "certificate-generator-requests",
       "certificate-generator-issued",
     ],
-    story: {
-      eyebrow: "How it works",
-      title: "Request, approve, generate, store.",
-      lead: "A personal learning / full-stack MERN project—not employment. Users request a certificate; an admin reviews it; pdf-lib generates the PDF; Drive stores the issued file.",
-      narrative: [
-        {
-          id: "certificate-generator-request",
-          eyebrow: "01",
-          title: "Request",
-          body: "React and Redux Toolkit post certificate requests to Express REST APIs. MongoDB and Mongoose persist the records.",
-        },
-        {
-          id: "certificate-generator-approval",
-          eyebrow: "02",
-          title: "Approval",
-          body: "Requests stay pending until an admin reviews them. CRUD on that queue is the approval step—not auto-issue.",
-        },
-        {
-          id: "certificate-generator-pdf",
-          eyebrow: "03",
-          title: "PDF",
-          body: "Approved requests generate certificate PDFs with pdf-lib on the Node backend.",
-        },
-        {
-          id: "certificate-generator-drive",
-          eyebrow: "04",
-          title: "Drive",
-          body: "The Google APIs Node client and Google Drive API upload issued PDFs so files stay retrievable.",
-        },
-      ],
-      chapters: [],
-    },
-    caseStudyHref: "/work/certificate-generator",
+    screenshots: [],
+  },
+  {
+    id: "jobdekho",
+    name: "JobDekho",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "mobile",
+    tagline: "Cross-platform mobile job search and discovery app.",
+    summary:
+      "Cross-platform mobile application built with Expo React Native that simplifies job discovery. Features intuitive search, category filters, job detail breakdowns, and application workflows designed with a clean mobile-first UI.",
+    role: "Personal project · Mobile Developer",
+    githubUrl: "https://github.com/rd273001/JobDekho",
+    technologies: [
+      "React Native",
+      "Expo",
+      "JavaScript",
+      "React Navigation",
+      "Axios",
+    ],
+    highlights: [
+      "Built responsive job search UI with instant keyword filtering, location tagging, and job category selectors.",
+      "Structured clean mobile navigation flow using React Navigation across tab bars and stack screens.",
+      "Designed mobile-friendly job cards with salary badges, requirements breakdown, and direct application links.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "quizapp",
+    name: "QuizApp",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "fullstack",
+    featuredPersonal: true,
+    tagline: "Full-stack online quiz platform with automated scoring.",
+    summary:
+      "Full-stack MERN online examination platform. Supports user authentication, category-based multiple-choice quizzes, timed test sessions with auto-submission, and an interactive results dashboard with score history.",
+    role: "Personal project · Full-Stack Developer",
+    liveUrl: "https://quizapp4.netlify.app",
+    githubUrl: "https://github.com/rd273001/QuizApp",
+    technologies: [
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "TanStack Query",
+      "React Hook Form",
+      "React Router",
+      "Zod",
+      "Axios",
+    ],
+    highlights: [
+      "Engineered full-stack auth and test delivery engine with MongoDB schema validation and Express REST APIs.",
+      "Developed interactive quiz runner with active question navigation, countdown timer, and automated submission.",
+      "Built results review dashboard displaying instant score calculations, answer explanations, and past performance history.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "cnapp-dashboard",
+    name: "CNAPP Security Dashboard",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "web",
+    tagline: "Dynamic cloud-native security dashboard with widget controls.",
+    summary:
+      "Frontend dashboard application built with React, Redux Toolkit, and Tailwind CSS. Enables security teams to visualize and manage cloud-native security widgets dynamically across multiple compliance and vulnerability categories.",
+    role: "Personal project · Frontend Developer",
+    liveUrl: "https://cnapp-dashboard1.netlify.app/",
+    githubUrl: "https://github.com/rd273001/CNAPP-Dashboard",
+    technologies: [
+      "React",
+      "Redux Toolkit",
+      "Tailwind CSS",
+      "Chart.js",
+      "React Chartjs 2",
+      "Vite",
+    ],
+    highlights: [
+      "Centralized state management with Redux Toolkit for adding, removing, and toggling security widgets across categories.",
+      "Built search filtering enabling instant keyword queries across all visible widgets and category panels.",
+      "Integrated Chart.js and React Chartjs 2 to render donut and category charts dynamically.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "distance-calculator",
+    name: "Google Maps Distance Calculator",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "web",
+    tagline: "Interactive multi-stop driving distance and route planner.",
+    summary:
+      "Web application that calculates driving distances and travel times between origin and destination with multiple intermediate waypoints using Google Maps JavaScript API and Directions Service.",
+    role: "Personal project · Frontend Developer",
+    liveUrl: "https://distance-calculator-google-maps.netlify.app/",
+    githubUrl: "https://github.com/rd273001/Distance-Calculator-Google-Maps",
+    technologies: [
+      "React",
+      "Google Maps API",
+      "Google Cloud",
+      "Tailwind CSS",
+      "JavaScript",
+    ],
+    highlights: [
+      "Integrated Google Maps Directions API to render interactive multi-stop routes and calculate cumulative driving distance.",
+      "Built dynamic waypoint manager allowing users to add, reorder, and remove intermediate stops with real-time recalculation.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "movies-app",
+    name: "MoviesApp",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "web",
+    tagline: "Responsive movie discovery app with API search and favorites.",
+    summary:
+      "Responsive movie browsing web application built with React, Vite, Redux, and Tailwind CSS. Fetches movie databases via external REST APIs and supports keyword search, details modal, and persistent local favorites.",
+    role: "Personal project · Frontend Developer",
+    liveUrl: "https://movies-app3.netlify.app/",
+    githubUrl: "https://github.com/rd273001/MoviesApp",
+    technologies: [
+      "React",
+      "Vite",
+      "Redux",
+      "React Router",
+      "Tailwind CSS",
+      "Node.js",
+      "REST API",
+    ],
+    highlights: [
+      "Integrated movie database APIs for live title search, genre filters, and poster gallery grids.",
+      "Implemented Redux state management with local storage synchronization for bookmarking favorite movies.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "food-order",
+    name: "FoodOrder Mobile App",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "mobile",
+    tagline: "Cross-platform mobile food catalog and ordering client.",
+    summary:
+      "Cross-platform mobile application for browsing and ordering food, built with React Native for the client interface and Node.js with Express for the catalog and order backend.",
+    role: "Personal project · Mobile Developer",
+    githubUrl: "https://github.com/rd273001/FoodOrder",
+    technologies: [
+      "React Native",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "REST API",
+    ],
+    highlights: [
+      "Built food catalog with real-time search, price range filtering, and dietary tag filters.",
+      "Developed interactive item customization screens with add-on options, cart management, and order summary.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "cached-image-gallery",
+    name: "Cached Image Gallery",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2024",
+    category: "mobile",
+    tagline: "Offline-first mobile image gallery with local caching.",
+    summary:
+      "Offline-first mobile gallery app fetching recent photo streams via the Flickr API. Implements a persistent disk caching layer and drawer navigation so users retain instant offline access to previously loaded images.",
+    role: "Personal project · Mobile Developer",
+    githubUrl: "https://github.com/rd273001/Cached_Image_Gallery",
+    technologies: [
+      "React Native",
+      "Flickr API",
+      "Offline Caching",
+      "React Navigation",
+    ],
+    highlights: [
+      "Engineered offline image caching layer ensuring the last viewed photo stream remains accessible without internet connection.",
+      "Implemented drawer navigation with smooth screen transitions and adaptive image grid rendering.",
+    ],
+    metricIds: [],
+    screenshots: [],
+  },
+  {
+    id: "rent-pe-car",
+    name: "RentPeCar",
+    kind: "personal-project",
+    prominence: 6,
+    year: "2023",
+    category: "fullstack",
+    featuredPersonal: true,
+    tagline: "Full-stack car rental management system with role-based workflows.",
+    summary:
+      "Full-stack car rental application with Spring Boot and React. Features role-based access control (Admin, Employee, User), fleet inventory management, reservation lifecycle tracking, and relational database mapping with MySQL.",
+    role: "Full-Stack Developer",
+    githubUrl: "https://github.com/rd273001/RentPeCar",
+    technologies: [
+      "React",
+      "Java",
+      "Spring Boot",
+      "Spring Data JPA",
+      "Hibernate",
+      "MySQL",
+      "Bootstrap",
+      "REST API",
+      "Axios",
+    ],
+    highlights: [
+      "Architected multi-tier backend with Spring Boot REST controllers, service layers, and Hibernate ORM entities.",
+      "Implemented role-based security separating admin fleet controls, employee booking management, and customer rentals.",
+      "Designed responsive React interface for vehicle browsing, real-time availability checks, and reservation forms.",
+    ],
+    metricIds: [],
     screenshots: [],
   },
 ];
 
+/**
+ * Flagship production case studies ONLY.
+ * DFC and AptiBooster are the only two production case studies.
+ */
 const caseStudyProjectIds = new Set<Project["id"]>([
   "dfc-app",
   "aptibooster",
-  "certificate-generator",
 ]);
 
 export function getProject(id: Project["id"]): Project | undefined {
@@ -441,11 +657,26 @@ export function getCaseStudyProject(id: string): Project | undefined {
   return project;
 }
 
+export function getFeaturedPersonalProjects(): Project[] {
+  return projects.filter((project) => project.featuredPersonal === true);
+}
+
+export function getAllProjects(): Project[] {
+  return getProjectsByProminence();
+}
+
+export function getProjectsByCategory(category: Project["category"] | "all"): Project[] {
+  if (!category || category === "all") {
+    return getAllProjects();
+  }
+  return getAllProjects().filter((project) => project.category === category);
+}
+
 export type CaseStudyNavProject = Project & {
   caseStudyHref: string;
 };
 
-/** Prev/next among case-study routes, in prominence order. */
+/** Prev/next among case-study routes (DFC and AptiBooster only). */
 export function getAdjacentCaseStudies(id: string): {
   previous: CaseStudyNavProject | null;
   next: CaseStudyNavProject | null;
