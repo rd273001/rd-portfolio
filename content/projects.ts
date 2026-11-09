@@ -363,6 +363,7 @@ export const projects: Project[] = [
     prominence: 5,
     year: "2024",
     category: "fullstack",
+    featuredPersonal: true,
     tagline: "Personal MERN stack project for certificate requests and PDF delivery.",
     summary:
       "Personal learning / full-stack MERN project. Users request certificates, which can be approved, generated as PDFs via pdf-lib, and stored on Google Drive with shareable links.",
@@ -425,10 +426,9 @@ export const projects: Project[] = [
     prominence: 6,
     year: "2024",
     category: "fullstack",
-    featuredPersonal: true,
     tagline: "Full-stack online quiz platform with automated scoring.",
     summary:
-      "Full-stack MERN online examination platform. Supports user authentication, category-based multiple-choice quizzes, timed test sessions with auto-submission, and an interactive results dashboard with score history.",
+      "Full-stack MERN online examination platform. Supports user authentication, category-based multiple-choice quizzes, instant score calculation, and an interactive results dashboard.",
     role: "Personal project · Full-Stack Developer",
     liveUrl: "https://quizapp4.netlify.app",
     githubUrl: "https://github.com/rd273001/QuizApp",
@@ -448,8 +448,8 @@ export const projects: Project[] = [
     ],
     highlights: [
       "Engineered full-stack auth and test delivery engine with MongoDB schema validation and Express REST APIs.",
-      "Developed interactive quiz runner with active question navigation, countdown timer, and automated submission.",
-      "Built results review dashboard displaying instant score calculations, answer explanations, and past performance history.",
+      "Developed interactive quiz runner with active question navigation and automated scoring.",
+      "Built results review dashboard displaying instant score calculations and answer explanations.",
     ],
     metricIds: [],
     screenshots: [],

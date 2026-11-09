@@ -76,10 +76,10 @@ export function WorkArchive({ projects }: { projects: Project[] }) {
         <div>
           <Link
             href="/#work"
-            className="group inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
+            className="group inline-flex items-center gap-2 rounded-md text-sm font-medium text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground active:text-foreground focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
-            <ArrowLeftIcon className="size-3.5 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:-translate-x-1 group-active:-translate-x-1.5" />
-            <span>Back to featured work</span>
+            <ArrowLeftIcon className="size-3.5 shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)]:group-hover:-translate-x-1 group-active:!-translate-x-2 group-active:duration-100 motion-reduce:transform-none" />
+            <span>Back to Selected Work</span>
           </Link>
         </div>
 
