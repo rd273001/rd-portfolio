@@ -107,7 +107,11 @@ function ProjectPreviewCard({ project }: { project: Project }) {
       <div>
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
-            {project.category ? categoryLabels[project.category] : "Full-stack project"}
+            {project.id === "portfolio"
+              ? "Portfolio website"
+              : project.category
+                ? categoryLabels[project.category]
+                : "Full-stack project"}
           </span>
           {project.year ? (
             <span className="font-mono text-xs text-muted">{project.year}</span>

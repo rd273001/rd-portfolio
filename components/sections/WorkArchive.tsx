@@ -243,19 +243,21 @@ function ArchiveProjectCard({ project }: { project: Project }) {
                   : "border border-border bg-background text-muted"
                 }`}
             >
-              {project.kind === "production-app"
-                ? "Production App"
-                : project.kind === "internship"
-                  ? "Full-time Internship"
-                  : project.kind === "independent-contribution"
-                    ? "Independent Contribution"
-                    : project.category === "fullstack"
-                      ? "Full-Stack Project"
-                      : project.category === "mobile"
-                        ? "Mobile App"
-                        : project.category === "web"
-                          ? "Web Application"
-                          : "Open-Source Project"}
+              {project.id === "portfolio"
+                ? "Portfolio Website"
+                : project.kind === "production-app"
+                  ? "Production App"
+                  : project.kind === "internship"
+                    ? "Full-time Internship"
+                    : project.kind === "independent-contribution"
+                      ? "Independent Contribution"
+                      : project.category === "fullstack"
+                        ? "Full-Stack Project"
+                        : project.category === "mobile"
+                          ? "Mobile App"
+                          : project.category === "web"
+                            ? "Web Application"
+                            : "Open-Source Project"}
             </span>
 
             {project.downloads ? (
