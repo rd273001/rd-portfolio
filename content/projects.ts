@@ -402,7 +402,7 @@ export const projects: Project[] = [
     category: "web",
     tagline: "High-performance production portfolio built with Next.js App Router, GSAP, and AI-assisted workflows.",
     summary:
-      "Personal software engineer portfolio and hiring product engineered for ravidubey.in. Built using modern AI-assisted engineering workflows (Cursor and Antigravity) with Next.js App Router, TypeScript, Tailwind CSS, GSAP ScrollTrigger pinned case studies, and a hybrid 3D/2D React Three Fiber mobile showcase.",
+      "Personal software engineer portfolio and hiring product engineered for ravidubey.in. Built using modern AI-assisted engineering workflows (Cursor and Antigravity) with Next.js App Router, TypeScript, Tailwind CSS, GSAP ScrollTrigger pinned case studies, a hybrid 3D/2D React Three Fiber mobile showcase, transactional email delivery via Resend, and Supabase data management.",
     role: "Creator & Software Engineer",
     liveUrl: "https://ravidubey.in",
     githubUrl: "https://github.com/rd273001/rd-portfolio",
@@ -414,6 +414,9 @@ export const projects: Project[] = [
       "GSAP",
       "React Three Fiber",
       "Three.js",
+      "Supabase",
+      "Resend",
+      "Auth.js",
       "Cursor",
       "Antigravity",
     ],
@@ -421,6 +424,7 @@ export const projects: Project[] = [
       "Engineered an accessible, high-performance web platform achieving PageSpeed Insights scores of 94 Mobile and 95 Desktop.",
       "Built a hybrid 3D/2D mobile hardware showcase using React Three Fiber, Drei, and WebGL with responsive 2D frame and reduced-motion fallbacks.",
       "Designed pinned case-study storytelling powered by GSAP ScrollTrigger, custom hash routing, and dynamic chapter telemetry.",
+      "Integrated transactional email routing via Resend API handlers and a protected Auth.js + Supabase database workflow for feedback submissions.",
       "Applied structured AI-assisted development (Cursor & Antigravity) with strictly typed content contracts and strict validation pipelines.",
     ],
     metricIds: [
