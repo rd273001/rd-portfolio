@@ -22,7 +22,8 @@ export type ProjectId =
   | "food-order"
   | "cached-image-gallery"
   | "movies-app"
-  | "rent-pe-car";
+  | "rent-pe-car"
+  | "portfolio";
 
 export type ProjectCategory = "production" | "mobile" | "web" | "fullstack" | "tool";
 
