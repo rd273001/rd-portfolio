@@ -194,10 +194,9 @@ export const projects: Project[] = [
       "Release optimization from 23.7 MB to 20.4 MB (3.3 MB / ~13.9%).",
       "On constrained Android devices with limited memory and storage, cold-start Home could scroll while taps stayed unresponsive for a long stretch—an issue that did not surface on mid-range or high-end devices, or on the same hardware under a newer Android version. Deferred navigation stacks with lazy loading and streamlined startup and Home content load so taps register as soon as Home is shown.",
       "Migrated to TanStack Query’s official MMKV persist client: throttled disk writes, selective dehydrate (Home, profile, and analytics summaries persist; large test and analysis payloads stay in memory only), and removed a legacy unbounded on-disk cache blob.",
-      "Engineered app-wide Global Search using TanStack Query useInfiniteQuery with 500ms debounce, in-memory caching, MMKV-persisted recent searches, and pre-warmed Redux headers for zero-flicker deep linking.",
+      "Engineered multi-entity Global Search across tests, chapters, subjects, flashcard decks, and core screens using TanStack Query infinite pagination (15 items/page), 500ms input debounce, MMKV-persisted recent searches, and direct deep linking into target screens.",
     ],
     caseStudyHighlights: [
-      "Engineered multi-entity Global Search across tests, chapters, subjects, flashcard decks, and core screens using TanStack Query infinite pagination (15 items/page), 500ms input debounce, MMKV-persisted search history, and pre-warmed Redux header states for zero-flicker deep linking.",
       "Shipped Google Play in-app updates so users can install new releases from inside the app.",
     ],
     metricIds: [
