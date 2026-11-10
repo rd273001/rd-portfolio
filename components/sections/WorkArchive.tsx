@@ -284,7 +284,7 @@ function ArchiveProjectCard({ project }: { project: Project }) {
           {/* Highlights */}
           {project.highlights.length > 0 ? (
             <ul className="mt-4 space-y-2 border-t border-border/70 pt-4 text-xs leading-5 text-muted sm:text-sm sm:leading-6">
-              {project.highlights.slice(0, 3).map((item) => (
+              {project.highlights.slice(0, 4).map((item) => (
                 <li key={item} className="flex items-start gap-2.5">
                   <BulletDotIcon className="mt-2 size-1.5 shrink-0 text-foreground/60" />
                   <span>{item}</span>

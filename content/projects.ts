@@ -421,10 +421,10 @@ export const projects: Project[] = [
       "Antigravity",
     ],
     highlights: [
-      "Engineered an accessible, high-performance web platform achieving PageSpeed Insights scores of 94 Mobile and 95 Desktop.",
+      "Engineered an accessible, high-performance web platform achieving PageSpeed Insights scores of 94 Mobile and 95 Desktop with GSAP ScrollTrigger pinned storytelling.",
       "Built a hybrid 3D/2D mobile hardware showcase using React Three Fiber, Drei, and WebGL with responsive 2D frame and reduced-motion fallbacks.",
-      "Designed pinned case-study storytelling powered by GSAP ScrollTrigger, custom hash routing, and dynamic chapter telemetry.",
-      "Integrated transactional email routing via Resend API handlers and a protected Auth.js + Supabase database workflow for feedback submissions.",
+      "Engineered a protected Auth.js Google-authenticated admin portal (/admin/feedback) and Supabase database to moderate feedback and dynamically publish testimonials to the live site.",
+      "Built contact form with validated Next.js API route handlers and direct email delivery via Resend.",
       "Applied structured AI-assisted development (Cursor & Antigravity) with strictly typed content contracts and strict validation pipelines.",
     ],
     metricIds: [
