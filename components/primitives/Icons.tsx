@@ -88,6 +88,24 @@ export function ExternalLinkIcon({
   );
 }
 
+export function BulletDotIcon({
+  className = "size-1.5",
+  ...props
+}: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 6 6"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <circle cx="3" cy="3" r="3" />
+    </svg>
+  );
+}
+
 export function GitHubIcon({
   className = "size-3.5",
   ...props

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  BulletDotIcon,
   Button,
   Container,
   ExternalLinkIcon,
@@ -284,11 +285,8 @@ function ArchiveProjectCard({ project }: { project: Project }) {
           {project.highlights.length > 0 ? (
             <ul className="mt-4 space-y-2 border-t border-border/70 pt-4 text-xs leading-5 text-muted sm:text-sm sm:leading-6">
               {project.highlights.slice(0, 3).map((item) => (
-                <li key={item} className="flex gap-2.5">
-                  <span
-                    aria-hidden="true"
-                    className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/60"
-                  />
+                <li key={item} className="flex items-start gap-2.5">
+                  <BulletDotIcon className="mt-2 size-1.5 shrink-0 text-foreground/60" />
                   <span>{item}</span>
                 </li>
               ))}

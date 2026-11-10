@@ -1,4 +1,4 @@
-import { Container } from "@/components/primitives";
+import { BulletDotIcon, Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
 import type { Experience } from "@/content/types";
 import { HOME_EXPERIENCE_TECH_VISIBLE } from "@/lib/home-card-limits";
@@ -117,11 +117,8 @@ export function ExperienceSection() {
                 {item.highlights.length > 0 ? (
                   <ul className="mt-6 grid gap-3 text-sm leading-6 text-foreground sm:grid-cols-2">
                     {item.highlights.map((highlight) => (
-                      <li key={highlight} className="flex gap-3">
-                        <span
-                          aria-hidden="true"
-                          className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"
-                        />
+                      <li key={highlight} className="flex items-start gap-3">
+                        <BulletDotIcon className="mt-2 size-1.5 shrink-0 text-foreground" />
                         <span>{highlight}</span>
                       </li>
                     ))}
