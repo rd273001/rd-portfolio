@@ -94,14 +94,14 @@ export function BulletDotIcon({
 }: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      viewBox="0 0 6 6"
+      viewBox="0 0 16 16"
       fill="currentColor"
-      className={className}
+      className={`overflow-visible ${className}`}
       aria-hidden="true"
       focusable="false"
       {...props}
     >
-      <circle cx="3" cy="3" r="3" />
+      <circle cx="8" cy="8" r="6" />
     </svg>
   );
 }
