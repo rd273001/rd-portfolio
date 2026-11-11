@@ -35,10 +35,10 @@ export function FeedbackFilters({ current, counts }: FeedbackFiltersProps) {
             href={href}
             aria-current={selected ? "page" : undefined}
             className={cn(
-              "inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
+              "inline-flex min-h-10 items-center rounded-full px-4 text-xs font-medium transition duration-150 sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
               selected
                 ? "bg-foreground text-background"
-                : "text-muted [@media(hover:hover)]:hover:text-foreground",
+                : "border border-border bg-surface text-muted hover:border-foreground/20 hover:text-foreground",
             )}
           >
             {tab.label}
