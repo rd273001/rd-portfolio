@@ -106,6 +106,13 @@ export const achievements: Achievement[] = [
     status: "verified",
   },
   {
+    id: "aptibooster-global-search",
+    title: "AptiBooster multi-entity global search",
+    description:
+      "Engineered an app-wide unified search across tests, chapters, subjects, flashcard decks, and core screens. Integrated a 500ms debounce with a 2-character guard, TanStack Query infinite pagination (15 items/page) with in-memory caching, MMKV-persisted recent search history, and direct deep-link navigation into target screens.",
+    status: "verified",
+  },
+  {
     id: "aptibooster-razorpay-subscriptions",
     title: "AptiBooster Razorpay subscriptions",
     description:

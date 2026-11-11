@@ -1,4 +1,4 @@
-export { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from "./Icons";
+export { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, BulletDotIcon, ExternalLinkIcon, GitHubIcon } from "./Icons";
 export { BrandMark } from "./BrandMark";
 export { Button } from "./Button";
 export { Container } from "./Container";

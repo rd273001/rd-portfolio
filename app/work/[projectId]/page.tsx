@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ArrowLeftIcon, Button, Container } from "@/components/primitives";
+import { ArrowLeftIcon, BulletDotIcon, Button, Container } from "@/components/primitives";
 import { PageShell } from "@/components/sections";
 import { CaseStudyAdjacentNav } from "@/components/sections/case-study/CaseStudyAdjacentNav";
 import { CaseStudyStory } from "@/components/sections/case-study/CaseStudyStory";
@@ -242,11 +242,8 @@ export default async function ProjectCaseStudyPage({
                   </h3>
                   <ul className="mt-5 grid gap-3 text-sm leading-6 text-foreground sm:grid-cols-2">
                     {caseStudyHighlights.map((highlight) => (
-                      <li key={highlight} className="flex gap-3">
-                        <span
-                          aria-hidden="true"
-                          className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground"
-                        />
+                      <li key={highlight} className="flex items-start gap-3">
+                        <BulletDotIcon className="mt-2 size-1.5 shrink-0 text-foreground" />
                         <span>{highlight}</span>
                       </li>
                     ))}

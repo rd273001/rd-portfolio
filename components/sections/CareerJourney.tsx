@@ -1,4 +1,4 @@
-import { Container } from "@/components/primitives";
+import { BulletDotIcon, Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
 import { getMetricsByIds } from "@/content/metrics";
 import type { Experience } from "@/content/types";
@@ -152,11 +152,8 @@ export function CareerJourney() {
                       {item.highlights.length > 0 ? (
                         <ul className="mt-4 grid gap-2 text-xs leading-5 text-foreground sm:grid-cols-2">
                           {item.highlights.map((highlight) => (
-                            <li key={highlight} className="flex gap-2">
-                              <span
-                                aria-hidden="true"
-                                className="mt-1.5 size-1.5 shrink-0 rounded-full bg-foreground"
-                              />
+                            <li key={highlight} className="flex items-start gap-2">
+                              <BulletDotIcon className="mt-1.5 size-1.5 shrink-0 text-foreground" />
                               <span>{highlight}</span>
                             </li>
                           ))}

@@ -22,13 +22,22 @@ export const skills: SkillGroup[] = [
       "Tailwind CSS",
       "Redux Toolkit",
       "TanStack Query",
+      "GSAP",
       "Firebase",
     ],
   },
   {
     id: "backend-data",
     label: "Backend & Data",
-    items: ["Node.js", "Express.js", "REST APIs", "MongoDB", "MySQL"],
+    items: [
+      "Node.js",
+      "Express.js",
+      "REST APIs",
+      "Supabase",
+      "MongoDB",
+      "MySQL",
+      "Resend",
+    ],
   },
   {
     id: "tooling",
