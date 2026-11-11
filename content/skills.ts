@@ -34,7 +34,6 @@ export const skills: SkillGroup[] = [
       "Express.js",
       "REST APIs",
       "Supabase",
-      "PostgreSQL",
       "MongoDB",
       "MySQL",
       "Resend",
