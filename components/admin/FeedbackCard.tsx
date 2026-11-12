@@ -71,17 +71,17 @@ export function FeedbackCard({ submission }: FeedbackCardProps) {
       </blockquote>
 
       {/* Author Profile */}
-      <div className="mt-5 flex items-center gap-3.5 rounded-xl border border-border/80 bg-accent/30 p-3.5 sm:p-4">
-        <div className="flex size-10 shrink-0 select-none items-center justify-center rounded-full bg-foreground text-xs font-semibold text-background">
+      <div className="mt-5 inline-flex max-w-full items-center gap-3 rounded-xl border border-border/80 bg-accent/30 p-2.5 sm:px-3.5 sm:py-2.5">
+        <div className="flex size-8 shrink-0 select-none items-center justify-center rounded-full border border-border bg-accent text-[11px] font-semibold text-foreground">
           {getInitials(submission.name)}
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-baseline gap-x-2">
-            <p className="truncate text-sm font-semibold text-foreground">
+            <p className="text-sm font-semibold text-foreground">
               {submission.name}
             </p>
             {submission.role || submission.company ? (
-              <span className="truncate text-xs text-muted">
+              <span className="text-xs text-muted">
                 {submission.role}
                 {submission.company ? ` · ${submission.company}` : ""}
               </span>
