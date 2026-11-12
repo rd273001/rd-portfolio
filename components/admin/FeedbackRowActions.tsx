@@ -17,12 +17,12 @@ export function FeedbackRowActions({ submission }: FeedbackRowActionsProps) {
   const { id, status } = submission;
 
   return (
-    <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+    <div className="flex flex-wrap items-center gap-2.5">
       {status !== "published" ? (
         <form action={publishFeedbackAction}>
           <input type="hidden" name="id" value={id} />
           <ActionSubmitButton variant="primary" busyLabel="Publishing…">
-            Publish
+            Publish to site
           </ActionSubmitButton>
         </form>
       ) : (

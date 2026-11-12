@@ -21,8 +21,8 @@ export function AdminHeader({ email }: AdminHeaderProps) {
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex min-h-14 w-full max-w-5xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Link
-          href="/"
-          aria-label={`${site.name}, home`}
+          href={email ? "/admin/feedback" : "/admin/login"}
+          aria-label={`${site.name}, Feedback admin`}
           className={cn(
             "inline-flex min-h-11 min-w-0 cursor-pointer items-center gap-3 rounded-md",
             brandFocus,
@@ -41,6 +41,15 @@ export function AdminHeader({ email }: AdminHeaderProps) {
 
         {email ? (
           <div className="flex min-w-0 flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-3">
+            <Link
+              href="/"
+              className="text-xs font-medium text-muted underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
+            >
+              Back to portfolio
+            </Link>
+            <span aria-hidden="true" className="hidden text-border sm:inline">
+              ·
+            </span>
             <p className="max-w-44 truncate text-xs text-muted sm:max-w-none sm:text-sm">
               {email}
             </p>

@@ -116,13 +116,11 @@ export default async function AdminFeedbackPage({
             {emptyCopy(filter)}
           </AdminPanel>
         ) : (
-          <ul className="mt-10 divide-y divide-border">
+          <div className="mt-8 space-y-6">
             {submissions.map((submission) => (
-              <li key={submission.id} className="py-8 first:pt-0">
-                <FeedbackCard submission={submission} />
-              </li>
+              <FeedbackCard key={submission.id} submission={submission} />
             ))}
-          </ul>
+          </div>
         )}
       </Container>
     </section>
