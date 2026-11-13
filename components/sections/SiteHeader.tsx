@@ -187,8 +187,8 @@ export function SiteHeader({
       const pageSectionMappings: { sectionId: string; navId: string }[] = [
         { sectionId: "impact", navId: "impact" },
         { sectionId: "work", navId: "work" },
-        { sectionId: "about", navId: "about" },
         { sectionId: "experience", navId: "experience" },
+        { sectionId: "about", navId: "about" },
         { sectionId: "skills", navId: "skills" },
         { sectionId: "education", navId: "education" },
         { sectionId: "collaborators", navId: "" },
@@ -421,9 +421,9 @@ export function SiteHeader({
                   href={item.href}
                   onClick={(event) => onHomeSectionClick(event, item.href)}
                   className={cn(
-                    "relative py-1.5 text-sm transition-colors duration-150",
+                    "relative py-1.5 text-sm font-medium transition-colors duration-150",
                     isActive
-                      ? "font-medium text-foreground"
+                      ? "text-foreground"
                       : "text-muted [@media(hover:hover)]:hover:text-foreground",
                     focusRing,
                   )}
@@ -465,109 +465,109 @@ export function SiteHeader({
             )}
             aria-label="Toggle navigation menu"
           >
-            <div
-              className="relative flex size-5 items-center justify-center"
-              aria-hidden="true"
-            >
-              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out -translate-y-1.5 group-open:translate-y-0 group-open:rotate-45" />
-              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-150 ease-out translate-y-0 group-open:scale-x-0 group-open:opacity-0" />
-              <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out translate-y-1.5 group-open:translate-y-0 group-open:-rotate-45" />
-            </div>
-            <span className="sr-only">
-              <span className="group-open:hidden">Open navigation menu</span>
-              <span className="hidden group-open:inline">Close navigation menu</span>
-            </span>
-          </summary>
+              <div
+                className="relative flex size-5 items-center justify-center"
+                aria-hidden="true"
+              >
+                <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out -translate-y-1.5 group-open:translate-y-0 group-open:rotate-45" />
+                <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-150 ease-out translate-y-0 group-open:scale-x-0 group-open:opacity-0" />
+                <span className="absolute h-0.5 w-5 rounded-full bg-current transition-all duration-200 ease-out translate-y-1.5 group-open:translate-y-0 group-open:-rotate-45" />
+              </div>
+              <span className="sr-only">
+                <span className="group-open:hidden">Open navigation menu</span>
+                <span className="hidden group-open:inline">Close navigation menu</span>
+              </span>
+            </summary>
 
-          <div className="fixed inset-x-0 top-16 z-40">
-            <button
-              type="button"
-              aria-label="Dismiss navigation"
-              className="mobile-menu-overlay fixed inset-0 top-16 z-0"
-              onClick={closeMenu}
-            />
-            <nav
-              id="mobile-navigation"
-              className="mobile-menu-glass relative z-10 mx-3 mt-3 max-h-[calc(100dvh-5.5rem)] rounded-2xl"
-              aria-label="Mobile navigation"
-            >
-              <div className="overflow-y-auto px-3 pb-6 pt-3">
-                <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-1">
-                  {navigation.map((item) => {
-                    const isActive = activeSection === item.id;
-                    return (
-                      <a
-                        key={item.id}
-                        href={item.href}
-                        className={cn(
-                          "flex min-h-12 w-full touch-manipulation items-center justify-between rounded-xl px-4 py-3 text-base transition-[transform,background-color] duration-150 active:scale-[0.99] [@media(hover:hover)]:hover:bg-foreground/5 active:bg-foreground/5",
-                          isActive
-                            ? "font-semibold text-foreground"
-                            : "font-medium text-foreground/80 [@media(hover:hover)]:hover:text-foreground active:text-foreground",
-                          focusRing,
-                        )}
-                        onClick={(event) => onHomeSectionClick(event, item.href)}
-                        aria-current={isActive ? "location" : undefined}
-                      >
-                        <span>{item.label}</span>
-                        {isActive ? (
-                          <span
-                            className="size-1.5 rounded-full bg-foreground"
-                            aria-hidden="true"
-                          />
-                        ) : null}
-                      </a>
-                    );
-                  })}
-                  {showUtilities ? (
-                    <div
-                      className="mt-3 border-t border-border pt-3"
-                      role="group"
-                      aria-label="Professional links"
-                    >
-                      {resume ? (
-                        <ActionLink
-                          href={resume.href}
-                          onClick={closeMenu}
+            <div className="fixed inset-x-0 top-16 z-40">
+              <button
+                type="button"
+                aria-label="Dismiss navigation"
+                className="mobile-menu-overlay fixed inset-0 top-16 z-0"
+                onClick={closeMenu}
+              />
+              <nav
+                id="mobile-navigation"
+                className="mobile-menu-glass relative z-10 mx-3 mt-3 max-h-[calc(100dvh-5.5rem)] rounded-2xl"
+                aria-label="Mobile navigation"
+              >
+                <div className="overflow-y-auto px-3 pb-6 pt-3">
+                  <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-1">
+                    {navigation.map((item) => {
+                      const isActive = activeSection === item.id;
+                      return (
+                        <a
+                          key={item.id}
+                          href={item.href}
                           className={cn(
-                            "inline-flex min-h-12 w-full cursor-pointer touch-manipulation items-center justify-center rounded-xl bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90",
+                            "flex min-h-12 w-full touch-manipulation items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-[transform,background-color] duration-150 active:scale-[0.99] [@media(hover:hover)]:hover:bg-foreground/5 active:bg-foreground/5",
+                            isActive
+                              ? "text-foreground bg-foreground/5"
+                              : "text-foreground/80 [@media(hover:hover)]:hover:text-foreground active:text-foreground",
                             focusRing,
                           )}
+                          onClick={(event) => onHomeSectionClick(event, item.href)}
+                          aria-current={isActive ? "location" : undefined}
                         >
-                          {resume.label}
-                        </ActionLink>
-                      ) : null}
-                      {utilities.length > 0 ? (
-                        <div
-                          className={cn(
-                            "grid gap-2",
-                            resume ? "mt-2" : undefined,
-                            utilities.length > 1 ? "grid-cols-2" : "grid-cols-1",
-                          )}
-                        >
-                          {utilities.map((item) => (
-                            <ActionLink
-                              key={item.id}
-                              href={item.href}
-                              onClick={closeMenu}
-                              className={cn(
-                                "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-xl border border-foreground/20 bg-background/35 px-3 text-sm font-medium text-foreground backdrop-blur-sm transition-[transform,background-color,border-color] duration-150 [@media(hover:hover)]:hover:border-foreground/25 [@media(hover:hover)]:hover:bg-background/90 active:scale-[0.98] active:border-foreground/25 active:bg-background/90",
-                                focusRing,
-                              )}
-                            >
-                              {item.label}
-                            </ActionLink>
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : null}
+                          <span>{item.label}</span>
+                          {isActive ? (
+                            <span
+                              className="size-1.5 rounded-full bg-foreground"
+                              aria-hidden="true"
+                            />
+                          ) : null}
+                        </a>
+                      );
+                    })}
+                    {showUtilities ? (
+                      <div
+                        className="mt-3 border-t border-border pt-3"
+                        role="group"
+                        aria-label="Professional links"
+                      >
+                        {resume ? (
+                          <ActionLink
+                            href={resume.href}
+                            onClick={closeMenu}
+                            className={cn(
+                              "inline-flex min-h-12 w-full cursor-pointer touch-manipulation items-center justify-center rounded-xl bg-foreground px-6 text-sm font-medium text-background transition-[transform,opacity] duration-150 [@media(hover:hover)]:hover:opacity-90 active:scale-[0.98] active:opacity-90",
+                              focusRing,
+                            )}
+                          >
+                            {resume.label}
+                          </ActionLink>
+                        ) : null}
+                        {utilities.length > 0 ? (
+                          <div
+                            className={cn(
+                              "grid gap-2",
+                              resume ? "mt-2" : undefined,
+                              utilities.length > 1 ? "grid-cols-2" : "grid-cols-1",
+                            )}
+                          >
+                            {utilities.map((item) => (
+                              <ActionLink
+                                key={item.id}
+                                href={item.href}
+                                onClick={closeMenu}
+                                className={cn(
+                                  "flex min-h-12 w-full touch-manipulation items-center justify-center rounded-xl border border-foreground/20 bg-background/35 px-3 text-sm font-medium text-foreground backdrop-blur-sm transition-[transform,background-color,border-color] duration-150 [@media(hover:hover)]:hover:border-foreground/25 [@media(hover:hover)]:hover:bg-background/90 active:scale-[0.98] active:border-foreground/25 active:bg-background/90",
+                                  focusRing,
+                                )}
+                              >
+                                {item.label}
+                              </ActionLink>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            </nav>
-          </div>
-        </details>
-      </div>
-    </header>
+              </nav>
+            </div>
+          </details>
+        </div>
+      </header>
   );
-}
+}

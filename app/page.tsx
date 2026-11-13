@@ -19,8 +19,8 @@ export default function Home() {
       <Hero />
       <ImpactDashboard />
       <ProjectsSection />
-      <AboutSection />
       <CareerJourney />
+      <AboutSection />
       <SkillsSection />
       <EducationSection />
       <Suspense fallback={null}>
