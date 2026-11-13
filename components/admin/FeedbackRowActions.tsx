@@ -1,19 +1,26 @@
-import type { FeedbackSubmission } from "@/lib/feedback/types";
+"use client";
 
 import {
   archiveFeedbackAction,
   publishFeedbackAction,
   unpublishFeedbackAction,
 } from "@/app/admin/feedback/actions";
+import { Button } from "@/components/primitives";
+import type { FeedbackSubmission } from "@/lib/feedback/types";
 
 import { ActionSubmitButton } from "./ActionSubmitButton";
-import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
 
 type FeedbackRowActionsProps = {
   submission: FeedbackSubmission;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-export function FeedbackRowActions({ submission }: FeedbackRowActionsProps) {
+export function FeedbackRowActions({
+  submission,
+  onEdit,
+  onDelete,
+}: FeedbackRowActionsProps) {
   const { id, status } = submission;
 
   return (
@@ -32,6 +39,12 @@ export function FeedbackRowActions({ submission }: FeedbackRowActionsProps) {
         </form>
       )}
 
+      {onEdit ? (
+        <Button type="button" variant="secondary" onClick={onEdit}>
+          Edit
+        </Button>
+      ) : null}
+
       {status !== "archived" ? (
         <form action={archiveFeedbackAction}>
           <input type="hidden" name="id" value={id} />
@@ -39,7 +52,11 @@ export function FeedbackRowActions({ submission }: FeedbackRowActionsProps) {
         </form>
       ) : null}
 
-      <ConfirmDeleteButton id={id} name={submission.name} />
+      {onDelete ? (
+        <Button type="button" variant="secondary" onClick={onDelete}>
+          Delete
+        </Button>
+      ) : null}
     </div>
   );
 }

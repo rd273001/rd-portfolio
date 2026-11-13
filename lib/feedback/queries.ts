@@ -2,7 +2,12 @@ import type { FeedbackFields } from "@/lib/contact/validate";
 
 import { getSupabaseAdmin, isFeedbackStoreConfigured } from "./client";
 import { mapFeedbackRow, toTestimonial } from "./map";
-import type { FeedbackListFilter, FeedbackStatus, FeedbackSubmission } from "./types";
+import type {
+  FeedbackListFilter,
+  FeedbackStatus,
+  FeedbackSubmission,
+  UpdateFeedbackInput,
+} from "./types";
 import { FEEDBACK_STATUSES } from "./types";
 
 const TABLE = "feedback_submissions";
@@ -150,6 +155,23 @@ export async function setFeedbackStatus(id: string, status: FeedbackStatus) {
   }
 
   const { error } = await client.from(TABLE).update(patch).eq("id", id);
+
+  if (error) {
+    throw new Error("Could not update feedback.");
+  }
+}
+
+export async function updateFeedback(id: string, input: UpdateFeedbackInput) {
+  const client = requireStore();
+  const { error } = await client
+    .from(TABLE)
+    .update({
+      name: input.name,
+      role: input.role,
+      company: input.company,
+      quote: input.quote,
+    })
+    .eq("id", id);
 
   if (error) {
     throw new Error("Could not update feedback.");

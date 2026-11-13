@@ -20,6 +20,13 @@ export type FeedbackSubmission = {
   archivedAt: string | null;
 };
 
+export type UpdateFeedbackInput = {
+  name: string;
+  role: string;
+  company: string;
+  quote: string;
+};
+
 export type FeedbackListFilter = FeedbackStatus | "all";
 
 export function parseFeedbackFilter(value: unknown): FeedbackListFilter {
