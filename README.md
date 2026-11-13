@@ -83,9 +83,9 @@ Edit verified facts in `content/*.ts`. Search `TODO_` for placeholders that stil
 * [x] **PR B: DFC Storytelling** — on-demand Zoom Dynamic Feature Module scroll story
 * [x] **PR C: AptiBooster & Cert Generator** — test client story, constrained device lab, reading aids
 * [x] **PR D: Contact & Feedback** — Resend email routing for inquiries and feedback
-* [x] **PR E: Admin Dashboard** — Auth.js Google sign-in, Supabase feedback storage, dynamic testimonials
-* [ ] **PR F: Work Archive** — all projects archive and achievement integration (planned)
-* [ ] **PR G: Evidence Interactions** — purposeful animation polish and evidence interactions (planned)
+* [x] **PR E: Admin Dashboard** — Auth.js Google sign-in, Supabase feedback storage, dynamic testimonials, inline edits, and infinite marquee
+* [x] **PR F: Work Archive** — all projects archive, category filters, global search, and achievement integration
+* [ ] **PR G: Evidence Interactions** — purposeful animation polish and evidence interactions (active)
 * [ ] **PR H: Final QA** — final responsive, accessibility, and performance QA (planned)
 
 ## Contact form (Resend)
