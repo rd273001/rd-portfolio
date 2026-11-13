@@ -11,7 +11,7 @@ export async function TestimonialsSection() {
   }
 
   return (
-    <section id="collaborators" className="scroll-mt-20 overflow-hidden py-16 sm:py-20">
+    <section id="collaborators" className="scroll-mt-20 overflow-hidden border-t border-border py-14 sm:py-16">
       <Container>
         <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted">
           Feedback & Endorsements
