@@ -653,7 +653,7 @@ export function MobileShowcaseEnhancement({
             <h4 className="text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
               {activeProject.name}
             </h4>
-            <p className="mt-3.5 min-h-12 text-sm leading-6 text-background/70 sm:mt-4 sm:min-h-14 sm:text-base sm:leading-7">
+            <p className="mt-3.5 min-h-[6rem] text-sm leading-6 text-background/70 sm:mt-4 sm:min-h-[5.25rem] sm:text-base sm:leading-7">
               {activeProject.tagline}
             </p>
 
@@ -773,11 +773,10 @@ export function MobileShowcaseEnhancement({
         </div>
 
         <div
-          className={`relative overflow-hidden border-t border-background/15 bg-[#050505] p-8 sm:p-10 lg:border-l lg:border-t-0 lg:p-10 ${
-            preferWebGLShowcase || capabilities.desktopLayout
+          className={`relative overflow-hidden border-t border-background/15 bg-[#050505] p-8 sm:p-10 lg:border-l lg:border-t-0 lg:p-10 ${preferWebGLShowcase || capabilities.desktopLayout
               ? "min-h-176"
               : "min-h-144 lg:min-h-176"
-          }`}
+            }`}
         >
           <div
             className={
@@ -792,11 +791,10 @@ export function MobileShowcaseEnhancement({
 
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-500 ${
-              preferWebGLShowcase || mobile3DEligible
+            className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-500 ${preferWebGLShowcase || mobile3DEligible
                 ? "flex"
                 : "hidden lg:flex"
-            } ${sceneReady ? "opacity-0" : "opacity-100"}`}
+              } ${sceneReady ? "opacity-0" : "opacity-100"}`}
           >
             {mobile3DEligible ? (
               <MobileProjectPhone
@@ -818,27 +816,24 @@ export function MobileShowcaseEnhancement({
           {canRenderScene ? (
             <>
               <div
-                className={`absolute inset-0 z-0 flex items-center justify-center p-8 transition-opacity duration-500 ${
-                  preferWebGLShowcase || mobile3DEligible
+                className={`absolute inset-0 z-0 flex items-center justify-center p-8 transition-opacity duration-500 ${preferWebGLShowcase || mobile3DEligible
                     ? "flex"
                     : "hidden lg:flex"
-                } ${
-                  sceneReady
+                  } ${sceneReady
                     ? capabilities.finePointer
                       ? "pointer-events-auto opacity-100"
                       : "pointer-events-none opacity-100"
                     : "pointer-events-none opacity-0"
-                }`}
+                  }`}
                 aria-hidden={!sceneReady}
               >
                 <div
-                  className={`${showcaseStageClassName} ${
-                    capabilities.finePointer
+                  className={`${showcaseStageClassName} ${capabilities.finePointer
                       ? sceneReady
                         ? "pointer-events-auto"
                         : "pointer-events-none"
                       : "pointer-events-none"
-                  }`}
+                    }`}
                 >
                   <SceneErrorBoundary onError={markSceneFailed}>
                     <MobileShowcaseScene

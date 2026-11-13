@@ -33,7 +33,7 @@ const SHOWCASE_TAGLINES: Partial<Record<string, string>> = {
   "dfc-app":
     "Coaching institute mobile platform delivering live interactive lectures, batch announcements, and structured study material to 3,554 enrolled students.",
   "aptibooster":
-    "AI-powered exam prep platform featuring timed live tests, AI-driven performance insights, and gamified mastery with flashcards.",
+    "Exam prep platform featuring timed live tests, AI-driven detailed performance insights, in-app subscriptions, and gamified mastery with flashcards.",
 };
 
 export function MobileShowcase() {

@@ -21,14 +21,14 @@ export const site: Site = {
       href: "/#work",
     },
     {
-      id: "about",
-      label: "About",
-      href: "/#about",
-    },
-    {
       id: "experience",
       label: "Experience",
       href: "/#experience",
+    },
+    {
+      id: "about",
+      label: "About",
+      href: "/#about",
     },
     {
       id: "skills",

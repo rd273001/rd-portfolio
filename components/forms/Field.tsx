@@ -44,8 +44,10 @@ export function Field({
     <div className="flex flex-col gap-2">
       <label
         htmlFor={id}
+        onClick={(e) => e.preventDefault()}
+        onMouseDown={(e) => e.preventDefault()}
         className={cn(
-          "text-sm font-medium",
+          "w-fit cursor-default select-none text-sm font-medium",
           onDark ? "text-background" : "text-foreground",
         )}
       >
