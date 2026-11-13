@@ -68,15 +68,14 @@ export function TestimonialModal({ item, onClose }: TestimonialModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       role="presentation"
     >
       <div
-        className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm ${
-          closing
+        className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm ${closing
             ? "animate-[testimonial-backdrop-out_180ms_ease-in_forwards]"
             : "animate-[testimonial-backdrop-in_220ms_ease-out_both]"
-        }`}
+          }`}
         onClick={requestClose}
         aria-hidden="true"
       />
@@ -85,11 +84,10 @@ export function TestimonialModal({ item, onClose }: TestimonialModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={`Feedback from ${item.name}`}
-        className={`relative flex max-h-[85vh] max-h-[85dvh] w-full max-w-xl flex-col rounded-2xl border border-border bg-surface shadow-xl ${
-          closing
+        className={`relative flex max-h-[85vh] max-h-[85dvh] w-full max-w-xl flex-col rounded-2xl border border-border bg-surface shadow-xl ${closing
             ? "animate-[testimonial-dialog-out_180ms_ease-in_forwards]"
             : "animate-[testimonial-dialog-in_260ms_cubic-bezier(0.16,1,0.3,1)_both]"
-        }`}
+          }`}
       >
         <div className="flex items-start justify-between gap-4 px-5 pt-5 sm:px-7 sm:pt-6">
           <div className="flex min-w-0 items-center gap-3">
@@ -101,16 +99,18 @@ export function TestimonialModal({ item, onClose }: TestimonialModalProps) {
                 {item.name}
               </p>
               {item.title || item.company ? (
-                <p className="truncate text-sm text-muted">
-                  {item.title}
+                <p className="flex items-center truncate text-sm text-muted">
+                  {item.title ? <span className="truncate">{item.title}</span> : null}
                   {item.title && item.company ? (
                     <span
-                      className="mx-2 inline-block size-1 shrink-0 rounded-full bg-muted/70 align-middle"
+                      className="mx-1.5 size-1 shrink-0 rounded-full bg-muted/70"
                       aria-hidden="true"
                     />
                   ) : null}
                   {item.company ? (
-                    <span className="font-medium text-foreground/85">{item.company}</span>
+                    <span className="shrink-0 font-medium text-foreground/85">
+                      {item.company}
+                    </span>
                   ) : null}
                 </p>
               ) : null}
@@ -146,4 +146,3 @@ export function TestimonialModal({ item, onClose }: TestimonialModalProps) {
     </div>
   );
 }
-

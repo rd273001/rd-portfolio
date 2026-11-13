@@ -13,6 +13,7 @@ import {
 
 import { ArrowRightIcon } from "@/components/primitives";
 import type { Testimonial } from "@/content/types";
+import { cn } from "@/lib/cn";
 
 import { getInitials } from "./getInitials";
 import { TestimonialModal } from "./TestimonialModal";
@@ -45,6 +46,8 @@ const TestimonialCard = memo(function TestimonialCard({
 }: CardProps) {
   const quoteRef = useRef<HTMLParagraphElement>(null);
   const [truncated, setTruncated] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const node = quoteRef.current;
@@ -56,12 +59,24 @@ const TestimonialCard = memo(function TestimonialCard({
 
     const observer = new ResizeObserver(measure);
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
+    };
   }, [item.quote]);
 
   const handleOpen = () => {
-    if (shouldSuppressClick()) return;
-    onOpen(item);
+    if (shouldSuppressClick()) {
+      setIsPressed(false);
+      return;
+    }
+    // Brief visual press response so touch/mobile gets immediate tactile feedback
+    setIsPressed(true);
+    if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
+    pressTimerRef.current = setTimeout(() => {
+      setIsPressed(false);
+      onOpen(item);
+    }, 90);
   };
 
   return (
@@ -79,9 +94,23 @@ const TestimonialCard = memo(function TestimonialCard({
         aria-haspopup="dialog"
         aria-label={`Read feedback from ${item.name}`}
         onClick={handleOpen}
-        className="peer absolute inset-0 z-0 cursor-grab active:cursor-grabbing rounded-2xl"
+        onPointerDown={() => setIsPressed(true)}
+        onPointerUp={() => {
+          if (!pressTimerRef.current) setIsPressed(false);
+        }}
+        onPointerCancel={() => setIsPressed(false)}
+        className="peer absolute inset-0 z-0 cursor-grab active:cursor-grabbing rounded-2xl touch-manipulation"
       />
-      <div className="pointer-events-none relative flex w-full select-none flex-col justify-between rounded-2xl border border-border bg-surface p-4 shadow-xs transition-[border-color,box-shadow,background-color] duration-300 group-hover:border-foreground/25 group-hover:shadow-md peer-active:border-foreground/40 peer-active:bg-accent/30 peer-active:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-foreground sm:p-5">
+      <div
+        className={cn(
+          "pointer-events-none relative flex w-full select-none flex-col justify-between rounded-2xl border bg-surface p-4 shadow-xs transition-all duration-150 sm:p-5",
+          "group-hover:border-foreground/25 group-hover:shadow-md",
+          "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-foreground",
+          isPressed
+            ? "scale-[0.985] border-foreground/45 bg-accent/60 shadow-inner"
+            : "border-border peer-active:scale-[0.985] peer-active:border-foreground/45 peer-active:bg-accent/60",
+        )}
+      >
         <div>
           <svg
             className="mb-1.5 size-3.5 text-muted/30 sm:size-4"
@@ -103,9 +132,8 @@ const TestimonialCard = memo(function TestimonialCard({
             aria-haspopup="dialog"
             aria-label={`Read full feedback from ${item.name}`}
             onClick={handleOpen}
-            className={`group/read pointer-events-auto relative -ml-1 mt-1 inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-xs font-medium text-muted transition-colors hover:text-foreground active:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground ${
-              truncated ? "" : "invisible"
-            }`}
+            className={`group/read pointer-events-auto relative -ml-1 mt-1 inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-xs font-medium text-muted transition-colors hover:text-foreground active:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground ${truncated ? "" : "invisible"
+              }`}
           >
             Read full feedback
             <ArrowRightIcon className="size-3 transition-transform duration-150 group-hover/read:translate-x-0.5 group-active/read:translate-x-1.5" />
@@ -121,16 +149,16 @@ const TestimonialCard = memo(function TestimonialCard({
               {item.name}
             </p>
             {item.title || item.company ? (
-              <p className="truncate text-xs text-muted">
-                {item.title ? <span>{item.title}</span> : null}
+              <p className="flex items-center truncate text-xs text-muted">
+                {item.title ? <span className="truncate">{item.title}</span> : null}
                 {item.title && item.company ? (
                   <span
-                    className="mx-2 inline-block size-1 shrink-0 rounded-full bg-muted/70 align-middle"
+                    className="mx-1.5 size-1 shrink-0 rounded-full bg-muted/70"
                     aria-hidden="true"
                   />
                 ) : null}
                 {item.company ? (
-                  <span className="font-medium text-foreground/85">
+                  <span className="shrink-0 font-medium text-foreground/85">
                     {item.company}
                   </span>
                 ) : null}
@@ -508,9 +536,8 @@ export function TestimonialsMarquee({ items }: TestimonialsMarqueeProps) {
           }}
           onTouchEnd={pause}
           onTouchCancel={pause}
-          className={`flex overflow-x-auto overscroll-x-contain py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-            looping ? "" : "mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
-          }`}
+          className={`flex overflow-x-auto overscroll-x-contain py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${looping ? "" : "mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
+            }`}
         >
           {looping ? (
             Array.from({ length: copies }, (_, groupIndex) => (
@@ -582,11 +609,10 @@ export function TestimonialsMarquee({ items }: TestimonialsMarqueeProps) {
                     e.preventDefault();
                     scrollToItem(i);
                   }}
-                  className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground ${
-                    isSelected
+                  className={`cursor-pointer rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground ${isSelected
                       ? "h-1.5 w-5 bg-foreground/75"
                       : "size-1.5 bg-border hover:bg-muted/50"
-                  }`}
+                    }`}
                 />
               );
             })}

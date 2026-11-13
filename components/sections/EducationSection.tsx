@@ -30,7 +30,7 @@ export function EducationSection() {
   }
 
   return (
-    <section id="education" className="scroll-mt-20 border-t border-border py-16 sm:py-20">
+    <section id="education" className="scroll-mt-20 border-t border-border pt-16 pb-12 sm:pt-20 sm:pb-14">
       <Container>
         {verifiedEducation.length > 0 ? (
           <>
