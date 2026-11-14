@@ -115,4 +115,4 @@ Full agent workflow, model usage, and copy-paste prompts: **`AGENTS.md`**.
 
 ## Author
 
-**Ravi Dubey** — [GitHub](https://github.com/rd273001) · [LinkedIn](https://www.linkedin.com/in/ravi-dubey-948130174)
+**Ravi Dubey** — [GitHub](https://github.com/rd273001) · [LinkedIn](https://www.linkedin.com/in/ravidubeys-profile)
