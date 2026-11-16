@@ -360,10 +360,10 @@ Measured 2026-09-26 from disk / GLB JSON. Fill After in the perf PR, then set `p
 
 | What | Before | After |
 | --- | --- | --- |
-| `public/models/android-phone.glb` | 6,010,980 bytes (5.73 MiB) | |
-| GLB topology | 58 meshes, 183,704 vertices, 68,056 triangles | |
+| `public/models/android-phone.glb` | 9,363,152 bytes (8.93 MiB) | |
+| GLB topology | 120 meshes, 269,207 vertices, 135,275 triangles | |
 | `public/hdri/studio_small_08_1k.hdr` | 1,508,872 bytes (1.44 MiB) | |
-| 3D critical-path download (GLB + HDR) | 7,519,852 bytes (7.17 MiB) | |
+| 3D critical-path download (GLB + HDR) | 10,872,024 bytes (10.37 MiB) | |
 
 Builder tessellation in `scripts/build-android-phone-glb.mjs` (Before): main extrude `curveSegments` **64**, `bevelSegments` **12**; screen `ShapeGeometry` segments **64**; camera-bar extrude `curveSegments` **28** / `bevelSegments` **8**.
 
