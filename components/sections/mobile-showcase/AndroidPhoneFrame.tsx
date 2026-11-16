@@ -113,9 +113,9 @@ export function AndroidPhoneFrame({
               padding: phoneFrontLayout.glass.padding,
             }}
           >
-            {/* Front speaker ear-piece micro-slit */}
+            {/* Front speaker ear-piece micro-slit flush at top seam */}
             <span
-              className="pointer-events-none absolute top-[0.15cqw] left-1/2 z-20 -translate-x-1/2 rounded-full"
+              className="pointer-events-none absolute top-[0.06cqw] left-1/2 z-20 -translate-x-1/2 rounded-full"
               style={{
                 width: phoneFrontLayout.speaker.width,
                 height: phoneFrontLayout.speaker.height,
@@ -200,53 +200,27 @@ export function AndroidPhoneFrame({
                 />
               ))}
 
-              {/* Physical front camera punch-hole with sapphire lens optics & subtle specular catchlight */}
+              {/* Physical front camera punch-hole: single-shader concentric circle so sub-pixel box rounding never creates ovals */}
               <span
-                className="pointer-events-none absolute left-1/2 z-20 flex items-center justify-center rounded-full"
+                className="pointer-events-none absolute left-1/2 z-20 block rounded-full"
                 style={{
                   top: phoneFrontLayout.punchHole.centerTop,
                   width: phoneFrontLayout.punchHole.size,
-                  aspectRatio: "1",
+                  height: phoneFrontLayout.punchHole.size,
                   transform: "translate(-50%, -50%)",
-                  background:
-                    "radial-gradient(circle at 50% 50%, #0d1017 0%, #06080c 65%, #020305 100%)",
-                  boxShadow:
-                    "inset 0 1px 1.5px rgba(0, 0, 0, 0.9), inset 0 -0.5px 1px rgba(255, 255, 255, 0.08), 0 0 0.5px rgba(0, 0, 0, 0.8)",
+                  background: [
+                    // Ring mask (top): transparent lens window (0–37.4% of radius), soft dark lens lip,
+                    // graphite barrel (to 68%), pitch-black bezel, anti-aliased outer edge.
+                    "radial-gradient(circle closest-side at 50% 50%, transparent 0%, transparent 35.5%, rgba(4, 6, 11, 0.9) 38.5%, #0c0f18 42%, #161922 50%, #242832 63%, #1a1d25 66.5%, #08090c 68.5%, #020203 70.5%, #020203 95%, rgba(2, 2, 3, 0) 100%)",
+                    // AR glints inside the lens window (upper-left blue, lower-right violet).
+                    "radial-gradient(circle closest-side at 41% 41%, rgba(59, 130, 246, 0.88) 0%, rgba(37, 99, 235, 0.34) 36%, transparent 57%)",
+                    "radial-gradient(circle closest-side at 59.4% 59%, rgba(168, 85, 247, 0.76) 0%, rgba(126, 34, 206, 0.26) 37%, transparent 58%)",
+                    // Lens base: dark pupil (fades out past the lens so corners stay transparent).
+                    "radial-gradient(circle closest-side at 50% 50%, #030408 0%, #070b16 32.8%, #0a0e19 37.4%, rgba(10, 14, 25, 0) 40%)",
+                  ].join(", "),
                 }}
                 aria-hidden="true"
-              >
-                {/* Subtle lens-barrel aperture ring with soft blur */}
-                <span
-                  className="absolute h-[82%] w-[82%] rounded-full"
-                  style={{
-                    background:
-                      "radial-gradient(circle, transparent 58%, rgba(60, 80, 110, 0.18) 78%, rgba(20, 30, 45, 0.25) 92%, transparent 100%)",
-                    filter: "blur(0.35px)",
-                  }}
-                />
-                {/* Optical lens element: moody dark sapphire, non-solid translucency */}
-                <span
-                  className="relative flex h-[60%] w-[60%] items-center justify-center rounded-full"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 50% 50%, rgba(40, 70, 115, 0.65) 0%, rgba(20, 36, 62, 0.55) 45%, rgba(8, 16, 30, 0.82) 75%, rgba(3, 6, 12, 0.96) 100%)",
-                    boxShadow:
-                      "inset 0 0.5px 1px rgba(180, 215, 255, 0.22), inset 0 -0.5px 1px rgba(40, 95, 160, 0.2), 0 0 1.5px rgba(0, 0, 0, 0.6)",
-                    filter: "blur(0.3px)",
-                  }}
-                >
-                  {/* Concentric centered white inner spot, soft feathered falloff */}
-                  <span
-                    className="block h-[40%] w-[40%] rounded-full"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.65) 0%, rgba(205, 230, 255, 0.3) 40%, rgba(110, 175, 245, 0.08) 70%, transparent 100%)",
-                      filter: "blur(0.4px)",
-                    }}
-                    aria-hidden="true"
-                  />
-                </span>
-              </span>
+              />
             </div>
           </div>
         </div>

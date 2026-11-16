@@ -163,7 +163,7 @@ function useBackgroundSceneAssets(
     const glb = document.createElement("link");
     glb.rel = "prefetch";
     glb.as = "fetch";
-    glb.href = "/models/android-phone.glb?v=aspect-9-19.5";
+    glb.href = "/models/android-phone.glb?v=rear-camera-island-v15";
     glb.crossOrigin = "anonymous";
     document.head.appendChild(glb);
 
@@ -816,7 +816,7 @@ export function MobileShowcaseEnhancement({
           {canRenderScene ? (
             <>
               <div
-                className={`absolute inset-0 z-0 flex items-center justify-center p-8 transition-opacity duration-500 ${preferWebGLShowcase || mobile3DEligible
+                className={`absolute inset-0 z-0 flex items-stretch justify-center px-8 transition-opacity duration-500 ${preferWebGLShowcase || mobile3DEligible
                     ? "flex"
                     : "hidden lg:flex"
                   } ${sceneReady
@@ -828,7 +828,7 @@ export function MobileShowcaseEnhancement({
                 aria-hidden={!sceneReady}
               >
                 <div
-                  className={`${showcaseStageClassName} ${capabilities.finePointer
+                  className={`relative mx-auto h-full w-full max-w-[38.5rem] ${capabilities.finePointer
                       ? sceneReady
                         ? "pointer-events-auto"
                         : "pointer-events-none"

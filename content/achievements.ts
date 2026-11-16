@@ -123,7 +123,7 @@ export const achievements: Achievement[] = [
     id: "site-3d-assets",
     title: "Original Android phone 3D showcase",
     description:
-      "Procedural GLB for the Work section phone: 5.73 MB (68,056 triangles) plus a 1.44 MB studio HDR — 7.17 MB on the desktop WebGL path. Mobile keeps the 2D frame. Baseline 26 Sep 2026; intended to shrink in the asset perf pass without changing the look.",
+      "Procedural GLB for the Work section phone: 8.93 MB (135,275 triangles) plus a 1.44 MB studio HDR — 10.37 MB on the desktop WebGL path. Mobile keeps the 2D frame. Intended to shrink in the asset perf pass without changing the look.",
     metricId: "site-3d-payload",
     status: "verified",
   },

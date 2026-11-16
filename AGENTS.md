@@ -225,9 +225,9 @@ Full numbered brief (sections 1–36): `docs/product-polish-pass.md` (also refer
 | B | Case-study content model + DFC scroll storytelling | `feat/case-study-storytelling` | merged |
 | C | AptiBooster + Certificate Generator storytelling + case-study navigation | `feat/aptibooster-case-study` | merged |
 | D | Contact form + feedback collection (Resend; no DB) | `feat/contact-and-feedback` | merged |
-| E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | this PR |
-| F | All projects / archive + achievement integration | `feat/work-archive` | planned |
-| G | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | planned |
+| E | Admin feedback dashboard + dynamic testimonials | `feat/admin-feedback` | merged |
+| F | All projects / archive + achievement integration | `feat/work-archive` | merged |
+| G | Purposeful animation polish + evidence-driven interactions | `feat/evidence-interactions` | this PR |
 | H | Final responsive / a11y / performance QA | `chore/final-qa` | planned |
 
 **PR C notes:** AptiBooster pin story, Certificate Generator static how-it-works (`story.narrative` only; empty `chapters`), and case-study reading aids are done. Arc: timed test → telemetry → API-backed analysis/report UX (no Gemini / backend AI ownership claims), then constrained-device Home lab figures and selective TanStack Query persistence from `content/metrics.ts` / achievements, then the verified release-size metric. Do not treat the Home lab as the cause of the 23.7 MB → 20.4 MB release change. Certificate Generator is personal/learning, not a flagship pin—no heavy TOC. Verified 400+ pending / 466+ issued stay in `content/metrics.ts` on the standard metrics section. Reading aids: prev/next between case studies at the end of Scope (tight bottom padding). Do not add a sticky chapter TOC or “Chapters” chrome in the pin story—scroll and the progress bar carry the beats. The site header stays sticky on case studies with the same homepage nav; `/#` links use hash scroll (`HashScroll` + `SiteHeader`) so sections land correctly from `/work/*`.
@@ -288,8 +288,10 @@ For `.ts`, `.tsx`, `.js`, `.jsx`, and `.css`: use normal endings — one newline
 - [x] PR B DFC case-study scroll story (`project.story`, GSAP pin)
 - [x] PR C AptiBooster pin + Certificate Generator how-it-works + case-study reading aids
 - [x] PR D contact form + private feedback (`feat/contact-and-feedback`)
-- [x] PR E admin feedback dashboard + dynamic testimonials
-- [ ] PR F–H (see **Product polish phase** table)
+- [x] PR E admin feedback dashboard + dynamic testimonials (plus admin edit & testimonials polish)
+- [x] PR F all projects / archive + achievement integration (`feat/work-archive`)
+- [ ] PR G purposeful animation polish + evidence-driven interactions (`feat/evidence-interactions`)
+- [ ] PR H final responsive / a11y / performance QA (`chore/final-qa`)
 
 PR 6 ships Metadata/Open Graph (canonical `https://ravidubey.in`), robots,
 sitemap, icons, skip-to-content, and route loading/error/not-found states.
@@ -358,10 +360,10 @@ Measured 2026-09-26 from disk / GLB JSON. Fill After in the perf PR, then set `p
 
 | What | Before | After |
 | --- | --- | --- |
-| `public/models/android-phone.glb` | 6,010,980 bytes (5.73 MiB) | |
-| GLB topology | 58 meshes, 183,704 vertices, 68,056 triangles | |
+| `public/models/android-phone.glb` | 9,363,152 bytes (8.93 MiB) | |
+| GLB topology | 120 meshes, 269,207 vertices, 135,275 triangles | |
 | `public/hdri/studio_small_08_1k.hdr` | 1,508,872 bytes (1.44 MiB) | |
-| 3D critical-path download (GLB + HDR) | 7,519,852 bytes (7.17 MiB) | |
+| 3D critical-path download (GLB + HDR) | 10,872,024 bytes (10.37 MiB) | |
 
 Builder tessellation in `scripts/build-android-phone-glb.mjs` (Before): main extrude `curveSegments` **64**, `bevelSegments` **12**; screen `ShapeGeometry` segments **64**; camera-bar extrude `curveSegments` **28** / `bevelSegments` **8**.
 
