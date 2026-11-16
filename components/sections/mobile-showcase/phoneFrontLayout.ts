@@ -15,10 +15,8 @@ const frontFrameRim = 0.012;
 const displayBezel = 0.054;
 
 const frameR = bodyRadius + Math.max(0, (frameW - bodyWidth) / 2);
-const glassW = frameW - frontFrameRim * 2;
 const glassH = frameH - frontFrameRim * 2;
 const glassR = frameR - frontFrameRim;
-const screenW = glassW - displayBezel * 2;
 const screenH = glassH - displayBezel * 2;
 const screenR = glassR - displayBezel;
 
@@ -34,8 +32,6 @@ const visibleHeight =
 const viewportHeightPct = ((frameH * meshScale) / visibleHeight) * 100;
 
 const cqw = (value: number) => `${((value / frameW) * 100).toFixed(4)}cqw`;
-const pctOfWidth = (value: number, width: number) =>
-  `${(value / width) * 100}%`;
 
 /** Front aspect — GLB body + Work panel placeholder + screenshot stacks. */
 const phoneAspectRatio = "9 / 19.5";
@@ -62,7 +58,8 @@ export const phoneFrontLayout = {
     padding: cqw(frontFrameRim),
     borderRadius: cqw(frameR),
     background: "linear-gradient(180deg, #6e7278 0%, #5c6066 100%)",
-    boxShadow: "0 28px 70px -36px rgba(0,0,0,0.85)",
+    boxShadow:
+      "0 24px 64px -16px rgba(0,0,0,0.88), 0 44px 100px -20px rgba(0,0,0,0.72), 0 6px 20px -4px rgba(0,0,0,0.6)",
   },
   glass: {
     padding: cqw(displayBezel),
@@ -74,7 +71,7 @@ export const phoneFrontLayout = {
   },
   punchHole: {
     centerTop: `${(punchOffsetFromScreenTop / screenH) * 100}%`,
-    size: pctOfWidth(punchOuterRadius * 2, screenW),
+    size: cqw(punchOuterRadius * 2),
   },
   speaker: {
     width: "14%",

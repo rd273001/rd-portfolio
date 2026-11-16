@@ -2,6 +2,7 @@
 
 import {
   Suspense,
+  lazy,
   useCallback,
   useEffect,
   useMemo,
@@ -23,6 +24,7 @@ import {
   Color,
   DoubleSide,
   LinearFilter,
+  LinearMipmapLinearFilter,
   MathUtils,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -76,7 +78,13 @@ type MobileShowcaseSceneProps = {
   onReady: () => void;
 };
 
-const MODEL_URL = "/models/android-phone.glb?v=aspect-9-19.5";
+const LimelightLamp = lazy(() =>
+  import("./LimelightLamp").then((module) => ({
+    default: module.LimelightLamp,
+  })),
+);
+
+const MODEL_URL = "/models/android-phone.glb?v=rear-camera-island-v15";
 const HDR_URL = "/hdri/studio_small_08_1k.hdr";
 const restPose = { x: 0.12, y: -0.52 };
 const frontPose = { x: 0, y: 0 };
@@ -246,6 +254,17 @@ function applyBackGlassFinish(root: Group) {
       return;
     }
 
+    if (mesh.name === "BackLogoRD") {
+      const next = source.clone();
+      next.side = DoubleSide;
+      next.polygonOffset = true;
+      next.polygonOffsetFactor = -1;
+      next.polygonOffsetUnits = -1;
+      next.needsUpdate = true;
+      mesh.material = next;
+      return;
+    }
+
     if (mesh.name === "Frame") {
       applySideChromeFrame(mesh);
       return;
@@ -271,6 +290,44 @@ function applyBackGlassFinish(root: Group) {
       mesh.material = next;
       return;
     }
+
+    if (mesh.name.startsWith("LensCoverGlass")) {
+      const next = source.clone();
+      next.transparent = true;
+      next.depthWrite = false;
+      next.needsUpdate = true;
+      mesh.material = next;
+      mesh.renderOrder = 4;
+      return;
+    }
+
+    const isChamferOrWall =
+      mesh.name === "PunchOuterWall" ||
+      mesh.name === "PunchBarrelWall" ||
+      mesh.name === "PunchBarrelChamfer" ||
+      mesh.name.endsWith("Chamfer") ||
+      mesh.name.endsWith("BoreWall") ||
+      mesh.name.endsWith("Floor") ||
+      mesh.name.endsWith("Grill");
+    const isDarkInterior =
+      mesh.name === "PunchWell" ||
+      mesh.name.endsWith("Hole") ||
+      mesh.name.endsWith("Floor") ||
+      mesh.name.endsWith("BoreWall") ||
+      mesh.name.includes("Slit");
+
+    if (isChamferOrWall || isDarkInterior) {
+      const next = source.clone();
+      if (isChamferOrWall) {
+        next.side = DoubleSide;
+      }
+      if (isDarkInterior && "envMapIntensity" in next) {
+        next.envMapIntensity = 0;
+      }
+      next.needsUpdate = true;
+      mesh.material = next;
+      return;
+    }
   });
 }
 
@@ -284,9 +341,9 @@ function getScreenshotSrc(screenshot: string) {
   }).props.src;
 }
 
-const SCREEN_MAP_MAX_WIDTH = 720;
+const SCREEN_MAP_MAX_WIDTH = 1080;
 
-async function createScreenMap(image: HTMLImageElement) {
+async function createScreenMap(image: HTMLImageElement, maxAnisotropy: number) {
   const scale = Math.min(1, SCREEN_MAP_MAX_WIDTH / Math.max(image.naturalWidth, 1));
   const width = Math.max(1, Math.round(image.naturalWidth * scale));
   const height = Math.max(1, Math.round(image.naturalHeight * scale));
@@ -300,13 +357,13 @@ async function createScreenMap(image: HTMLImageElement) {
   }
 
   context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = "medium";
+  context.imageSmoothingQuality = "high";
 
   if (typeof createImageBitmap === "function") {
     const bitmap = await createImageBitmap(image, {
       resizeWidth: width,
       resizeHeight: height,
-      resizeQuality: "medium",
+      resizeQuality: "high",
     });
     context.drawImage(bitmap, 0, 0);
     bitmap.close();
@@ -317,16 +374,20 @@ async function createScreenMap(image: HTMLImageElement) {
   const map = new CanvasTexture(canvas);
   map.colorSpace = SRGBColorSpace;
   map.flipY = true;
-  map.generateMipmaps = false;
-  map.minFilter = LinearFilter;
+  map.generateMipmaps = true;
+  map.minFilter = LinearMipmapLinearFilter;
   map.magFilter = LinearFilter;
+  map.anisotropy = maxAnisotropy;
   map.needsUpdate = true;
   return map;
 }
 
 const screenMapCache = new Map<string, Texture>();
 
-async function loadScreenTexture(src: string): Promise<Texture | null> {
+async function loadScreenTexture(
+  src: string,
+  maxAnisotropy = 4,
+): Promise<Texture | null> {
   const cached = screenMapCache.get(src);
   if (cached) {
     return cached;
@@ -337,7 +398,7 @@ async function loadScreenTexture(src: string): Promise<Texture | null> {
     image.decoding = "async";
 
     const handleLoad = () => {
-      void createScreenMap(image)
+      void createScreenMap(image, maxAnisotropy)
         .then((nextMap) => {
           if (nextMap) {
             screenMapCache.set(src, nextMap);
@@ -369,17 +430,73 @@ function applyScreenMap(root: Group, map: Texture) {
     mesh.visible = true;
     const current = mesh.material;
 
-    if (current instanceof MeshBasicMaterial) {
+    if (
+      current instanceof MeshBasicMaterial &&
+      current.name === "DisplayGlassBasicV5"
+    ) {
       current.map = map;
-      current.toneMapped = false;
       current.needsUpdate = true;
       return;
     }
 
-    mesh.material = new MeshBasicMaterial({
+    const screenMaterial = new MeshBasicMaterial({
       map,
       toneMapped: false,
     });
+    screenMaterial.name = "DisplayGlassBasicV5";
+    screenMaterial.customProgramCacheKey = () => "display-glass-basic-v5";
+    screenMaterial.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader.replace(
+        "#include <common>",
+        `#include <common>
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPos;`,
+      );
+      shader.vertexShader = shader.vertexShader.replace(
+        "#include <project_vertex>",
+        `#include <project_vertex>
+        vWorldNormal = normalize(mat3(modelMatrix) * normal);
+        vWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`,
+      );
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <common>",
+        `#include <common>
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPos;`,
+      );
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+        vec3 N = normalize(vWorldNormal);
+        vec3 V = normalize(cameraPosition - vWorldPos);
+        vec3 R = reflect(-V, N);
+        float ndotv = max(dot(N, V), 0.0);
+
+        // Preserve OLED headroom so glass sheen & lamp reflection stay visible on white UIs
+        diffuseColor.rgb *= 0.88;
+
+        // Subtle laminated cover-glass Fresnel sheen at oblique angles
+        float glassFresnel = pow(1.0 - ndotv, 3.0) * 0.085;
+        diffuseColor.rgb += vec3(0.95, 0.97, 1.0) * glassFresnel;
+
+        // Ray-traced circular reflection of the hanging LimelightLamp disc at (0.06, 2.34, -0.68)
+        if (R.y > 0.05) {
+          float t = (2.34 - vWorldPos.y) / R.y;
+          if (t > 0.0) {
+            vec3 hit = vWorldPos + R * t;
+            float dist = length(hit.xz - vec2(0.06, -0.68));
+            float lampDisc = 1.0 - smoothstep(0.12, 0.21, dist);
+            float lampHalo = exp(-dist * dist * 4.5) * 0.28;
+            float upFade = smoothstep(0.05, 0.25, R.y);
+            float refl = (lampDisc * 0.85 + lampHalo) * upFade;
+            float luma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+            float weight = mix(0.22, 0.15, luma);
+            diffuseColor.rgb += vec3(1.0, 0.96, 0.88) * refl * weight;
+          }
+        }`,
+      );
+    };
+    mesh.material = screenMaterial;
   });
 }
 
@@ -450,6 +567,8 @@ function ScreenTexture({
   const readyRef = useRef(false);
   const requestIdRef = useRef(0);
   const invalidate = useThree((state) => state.invalidate);
+  const gl = useThree((state) => state.gl);
+  const maxAnisotropy = Math.min(16, gl.capabilities.getMaxAnisotropy());
 
   // Background pre-warming of all showcase screen textures on idle
   useEffect(() => {
@@ -467,7 +586,7 @@ function ScreenTexture({
         if (cancelled) break;
         const itemSrc = getScreenshotSrc(item);
         if (!screenMapCache.has(itemSrc)) {
-          await loadScreenTexture(itemSrc);
+          await loadScreenTexture(itemSrc, maxAnisotropy);
           await yieldToMain();
         }
       }
@@ -476,7 +595,7 @@ function ScreenTexture({
     return () => {
       cancelled = true;
     };
-  }, [allScreenshots]);
+  }, [allScreenshots, maxAnisotropy]);
 
   useEffect(() => {
     const requestId = requestIdRef.current + 1;
@@ -506,7 +625,7 @@ function ScreenTexture({
     apply(getLoadingScreenTexture());
 
     let cancelled = false;
-    void loadScreenTexture(src).then((nextMap) => {
+    void loadScreenTexture(src, maxAnisotropy).then((nextMap) => {
       if (cancelled || requestId !== requestIdRef.current || !nextMap) {
         return;
       }
@@ -516,7 +635,7 @@ function ScreenTexture({
     return () => {
       cancelled = true;
     };
-  }, [invalidate, onTextureReady, root, src]);
+  }, [invalidate, maxAnisotropy, onTextureReady, root, src]);
 
   return null;
 }
@@ -583,12 +702,24 @@ function ShowcaseWarmup({
   return (
     <Suspense fallback={null}>
       <Environment files={HDR_URL} environmentIntensity={0.9} />
+      <Suspense fallback={null}>
+        <LimelightLamp />
+      </Suspense>
       <ContactShadows
         position={[0, -1.98, 0]}
         opacity={0.28}
         scale={7}
         blur={2.8}
         far={3.8}
+      />
+      {/* Soft backdrop shadow cast behind the phone onto the studio wall from the overhead lamp */}
+      <ContactShadows
+        position={[0, 0, -1.85]}
+        rotation={[Math.PI / 2, 0, 0]}
+        opacity={0.52}
+        scale={[3.6, 6.2]}
+        blur={2.4}
+        far={2.8}
       />
       <CompileAfterEnvironment onReady={onReady} />
     </Suspense>
@@ -911,7 +1042,7 @@ export function MobileShowcaseScene({
         frameloop={
           playIntro || grabbing || idleMotion ? "always" : "demand"
         }
-        camera={{ position: [0.1, 0.04, 10.2], fov: 26 }}
+        camera={{ position: [0.1, 0.04, 10.2], fov: 28.5 }}
         dpr={isMobileProfile || idleMotion ? 1 : [1, 1.5]}
         gl={{
           alpha: true,
