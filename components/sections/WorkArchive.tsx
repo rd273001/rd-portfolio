@@ -103,7 +103,7 @@ export function WorkArchive({ projects }: { projects: Project[] }) {
           <div
             role="tablist"
             aria-label="Project categories"
-            className="flex flex-wrap items-center gap-1.5"
+            className="flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pb-0"
           >
             {(Object.keys(categoryTabLabels) as CategoryTab[]).map((tab) => {
               const count = counts[tab];
@@ -116,7 +116,7 @@ export function WorkArchive({ projects }: { projects: Project[] }) {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveTab(tab)}
-                  className={`inline-flex cursor-pointer select-none items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition duration-150 ease-out active:scale-[0.98] will-change-transform ${isActive
+                  className={`inline-flex shrink-0 cursor-pointer select-none items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition duration-150 ease-out active:scale-[0.98] will-change-transform ${isActive
                       ? "bg-foreground text-background active:opacity-90"
                       : "border border-border bg-surface text-muted hover:border-foreground/20 hover:text-foreground active:border-foreground/30 active:bg-foreground/[0.06]"
                     }`}
@@ -231,15 +231,15 @@ function ArchiveProjectCard({ project }: { project: Project }) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-10">
         {/* Project Meta & Details */}
         <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {project.year ? (
-              <span className="font-mono text-xs text-muted">
+              <span className="font-mono text-[11px] text-muted sm:text-xs">
                 {project.year}
               </span>
             ) : null}
 
             <span
-              className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium tracking-wide uppercase ${isProduction
+              className={`rounded-full px-2 py-0.5 text-[10.5px] font-medium tracking-wide uppercase sm:px-2.5 sm:text-[11px] ${isProduction
                   ? "border border-foreground/30 bg-foreground/10 text-foreground"
                   : "border border-border bg-background text-muted"
                 }`}
@@ -262,7 +262,7 @@ function ArchiveProjectCard({ project }: { project: Project }) {
             </span>
 
             {project.downloads ? (
-              <span className="rounded-full border border-border bg-background px-2.5 py-0.5 font-mono text-[11px] text-muted">
+              <span className="rounded-full border border-border bg-background px-2 py-0.5 font-mono text-[10.5px] text-muted sm:px-2.5 sm:text-[11px]">
                 {project.downloads} downloads
               </span>
             ) : null}
