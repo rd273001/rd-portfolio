@@ -4,6 +4,8 @@ export {
   ArrowRightIcon,
   ArrowUpRightIcon,
   BulletDotIcon,
+  CheckIcon,
+  CopyIcon,
   ExternalLinkIcon,
   GitHubIcon,
   LinkedInIcon,

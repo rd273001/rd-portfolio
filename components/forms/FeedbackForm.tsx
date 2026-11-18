@@ -31,6 +31,15 @@ const FEEDBACK_FIELD_ORDER: FeedbackFieldKey[] = [
   "message",
 ];
 
+const SUGGESTED_ROLES = [
+  "Software Engineer",
+  "Frontend Developer",
+  "Engineering Manager",
+  "Tech Lead",
+  "Founder",
+  "Recruiter",
+] as const;
+
 type Draft = {
   name: string;
   role: string;
@@ -181,6 +190,7 @@ export function FeedbackForm({
           maxLength={FIELD_LIMITS.name}
           value={draft.name}
           onChange={(event) => updateField("name", event.target.value)}
+          placeholder="Your name"
           aria-invalid={fieldErrors.name ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "feedback-name",
@@ -200,6 +210,7 @@ export function FeedbackForm({
           maxLength={FIELD_LIMITS.role}
           value={draft.role}
           onChange={(event) => updateField("role", event.target.value)}
+          placeholder="e.g. Engineering Manager"
           aria-invalid={fieldErrors.role ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "feedback-role",
@@ -208,6 +219,29 @@ export function FeedbackForm({
           )}
           className={controlClassName(Boolean(fieldErrors.role))}
         />
+        <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pt-1 pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {SUGGESTED_ROLES.map((suggestedRole) => {
+            const isSelected = draft.role === suggestedRole;
+            return (
+              <button
+                key={suggestedRole}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() =>
+                  updateField("role", isSelected ? "" : suggestedRole)
+                }
+                className={cn(
+                  "inline-flex shrink-0 cursor-pointer select-none items-center rounded-lg border px-2.5 py-1 text-xs font-medium transition-[color,border-color,background-color] duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground",
+                  isSelected
+                    ? "border-foreground bg-background/50 text-foreground"
+                    : "border-border/80 bg-background/50 text-muted hover:border-foreground/30 hover:text-foreground active:bg-foreground/5",
+                )}
+              >
+                {suggestedRole}
+              </button>
+            );
+          })}
+        </div>
       </Field>
 
       <Field id="feedback-company" label="Company" optional>
@@ -218,6 +252,7 @@ export function FeedbackForm({
           maxLength={FIELD_LIMITS.company}
           value={draft.company}
           onChange={(event) => updateField("company", event.target.value)}
+          placeholder="e.g. Stripe"
           className={controlClassName()}
         />
       </Field>
@@ -238,6 +273,7 @@ export function FeedbackForm({
           maxLength={FIELD_LIMITS.email}
           value={draft.email}
           onChange={(event) => updateField("email", event.target.value)}
+          placeholder="you@example.com"
           aria-invalid={fieldErrors.email ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "feedback-email",
@@ -257,6 +293,7 @@ export function FeedbackForm({
           maxLength={FIELD_LIMITS.message}
           value={draft.message}
           onChange={(event) => updateField("message", event.target.value)}
+          placeholder="What was it like working together, or what stood out in my engineering work?"
           aria-invalid={fieldErrors.message ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "feedback-message",

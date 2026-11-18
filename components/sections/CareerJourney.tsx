@@ -1,8 +1,9 @@
-import { BulletDotIcon, Container } from "@/components/primitives";
+import { Container } from "@/components/primitives";
 import { experience } from "@/content/experience";
 import { getMetricsByIds } from "@/content/metrics";
 import type { Experience } from "@/content/types";
 import { HOME_EXPERIENCE_TECH_VISIBLE } from "@/lib/home-card-limits";
+import { CareerJourneyHighlights } from "./career-journey/CareerJourneyHighlights";
 import { CareerJourneyMotion } from "./career-journey/CareerJourneyMotion";
 
 function getExperienceCertificateUrl(credentialUrl?: string) {
@@ -149,16 +150,7 @@ export function CareerJourney() {
                         </a>
                       ) : null}
 
-                      {item.highlights.length > 0 ? (
-                        <ul className="mt-4 grid gap-2 text-xs leading-5 text-foreground sm:grid-cols-2">
-                          {item.highlights.map((highlight) => (
-                            <li key={highlight} className="flex items-start gap-2">
-                              <BulletDotIcon className="mt-1.5 size-1.5 shrink-0 text-foreground" />
-                              <span>{highlight}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
+                      <CareerJourneyHighlights highlights={item.highlights} initialVisibleCount={2} />
 
                       {relatedMetrics.length > 0 ? (
                         <dl className="mt-5 grid gap-3 sm:grid-cols-2">

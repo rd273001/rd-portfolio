@@ -13,7 +13,7 @@ export const profile: Profile = {
   locationStatus: "verified",
   headline: "Specializing in Web & Mobile Experiences.",
   summary:
-    "Software engineer with 2+ years of experience building and scaling web and mobile applications. At Dnyandeep Foundation Centre, I owned development, native builds, and Play Store releases for DFC (10K+ downloads; 3,554 enrolled students) and AptiBooster (1K+ downloads) — executing the full TypeScript revamp, in-app payments, and Android delivery with verified Play Console results.",
+    "Building and scaling web and mobile products with end-to-end production ownership — focusing on what matters after release: performance, crash reliability, and real-world delivery.",
   currentRoleStarted: "Apr 2025",
   currentRoleStartedStatus: "verified",
   photo: {
