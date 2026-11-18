@@ -25,6 +25,7 @@ type AndroidPhoneFrameProps = {
   sizes?: string;
   priority?: boolean;
   className?: string;
+  frameShadow?: string;
 };
 
 /**
@@ -42,6 +43,7 @@ export function AndroidPhoneFrame({
   sizes = "(min-width: 1024px) 280px, 55vw",
   priority = false,
   className,
+  frameShadow,
 }: AndroidPhoneFrameProps) {
   const [loadedScreens, setLoadedScreens] = useState<Record<string, boolean>>({});
   const isPanel = size === "panel";
@@ -101,7 +103,7 @@ export function AndroidPhoneFrame({
             background: phoneFrontLayout.frame.background,
             borderRadius: phoneFrontLayout.frame.borderRadius,
             padding: phoneFrontLayout.frame.padding,
-            boxShadow: phoneFrontLayout.frame.boxShadow,
+            boxShadow: frameShadow ?? phoneFrontLayout.frame.boxShadow,
           }}
         >
           <div
