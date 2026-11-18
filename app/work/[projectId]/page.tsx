@@ -252,7 +252,7 @@ export default async function ProjectCaseStudyPage({
               ) : null}
 
               {visibleScreenshots.length > 0 ? (
-                <article className="rounded-3xl border border-border bg-surface p-5 sm:p-6">
+                <article className="overflow-hidden rounded-3xl border border-border bg-surface p-5 pb-7 sm:p-6 sm:pb-8">
                   <h3 className="text-lg font-semibold tracking-[-0.03em]">
                     Screenshots
                   </h3>

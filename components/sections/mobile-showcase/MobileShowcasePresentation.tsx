@@ -67,13 +67,22 @@ export function MobileShowcaseHeader() {
   );
 }
 
-/** Desktop Work slot — same visual as 3D front while the scene loads. */
+/**
+ * Luminous warm limelight floor wash for the showcase phone on dark backgrounds (#050505).
+ * Downward-led with tight side spread so the phone feels elevated from the surface.
+ */
+export const SHOWCASE_PHONE_LIGHT_SHADOW =
+  "0 16px 38px -10px rgba(255, 241, 216, 0.20), 0 8px 18px -4px rgba(255, 255, 255, 0.14), 0 0 16px -2px rgba(255, 241, 216, 0.08), 0 16px 32px -10px rgba(0, 0, 0, 0.9)";
+
+/** Desktop Work slot — matches 3D front without 2D glow while the scene loads. */
 export function ProductPhonePlaceholder({
   project,
   screenshotIndex = 0,
+  frameShadow,
 }: {
   project: MobileShowcaseProject;
   screenshotIndex?: number;
+  frameShadow?: string;
 }) {
   return (
     <AndroidPhoneFrame
@@ -82,6 +91,7 @@ export function ProductPhonePlaceholder({
       alt={`${project.name} app screen`}
       size="panel"
       sizes="40vw"
+      frameShadow={frameShadow}
     />
   );
 }
@@ -90,9 +100,11 @@ export function ProductPhonePlaceholder({
 export function MobileProjectPhone({
   project,
   screenshotIndex = 0,
+  frameShadow = SHOWCASE_PHONE_LIGHT_SHADOW,
 }: {
   project: MobileShowcaseProject;
   screenshotIndex?: number;
+  frameShadow?: string;
 }) {
   return (
     <AndroidPhoneFrame
@@ -101,6 +113,7 @@ export function MobileProjectPhone({
       alt={`${project.name} production app screen`}
       size="stack"
       sizes="(min-width: 1024px) 272px, (min-width: 640px) 40vw, 80vw"
+      frameShadow={frameShadow}
     />
   );
 }

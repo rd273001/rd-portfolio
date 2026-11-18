@@ -59,7 +59,7 @@ export const phoneFrontLayout = {
     borderRadius: cqw(frameR),
     background: "linear-gradient(180deg, #6e7278 0%, #5c6066 100%)",
     boxShadow:
-      "0 24px 64px -16px rgba(0,0,0,0.88), 0 44px 100px -20px rgba(0,0,0,0.72), 0 6px 20px -4px rgba(0,0,0,0.6)",
+      "var(--phone-frame-shadow, 0 28px 60px -28px rgba(0, 0, 0, 0.65))",
   },
   glass: {
     padding: cqw(displayBezel),

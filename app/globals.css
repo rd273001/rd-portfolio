@@ -7,6 +7,13 @@
   --border: #e6e6e6;
   --accent: #f0f0f0;
   --surface: #ffffff;
+  --phone-frame-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.58), 0 8px 16px -8px rgba(0, 0, 0, 0.38);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --phone-frame-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.65), 0 10px 20px -14px rgba(0, 0, 0, 0.4);
+  }
 }
 
 @theme inline {
