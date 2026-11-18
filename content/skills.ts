@@ -22,7 +22,6 @@ export const skills: SkillGroup[] = [
       "Tailwind CSS",
       "Redux Toolkit",
       "TanStack Query",
-      "GSAP",
       "Firebase",
     ],
   },
@@ -36,7 +35,6 @@ export const skills: SkillGroup[] = [
       "Supabase",
       "MongoDB",
       "MySQL",
-      "Resend",
     ],
   },
   {

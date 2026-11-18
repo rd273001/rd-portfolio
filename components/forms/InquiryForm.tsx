@@ -176,6 +176,7 @@ export function InquiryForm({
           maxLength={FIELD_LIMITS.name}
           value={draft.name}
           onChange={(event) => updateField("name", event.target.value)}
+          placeholder="Your name"
           aria-invalid={fieldErrors.name ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "inquiry-name",
@@ -202,6 +203,7 @@ export function InquiryForm({
           maxLength={FIELD_LIMITS.email}
           value={draft.email}
           onChange={(event) => updateField("email", event.target.value)}
+          placeholder="you@example.com"
           aria-invalid={fieldErrors.email ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "inquiry-email",
@@ -248,6 +250,7 @@ export function InquiryForm({
           maxLength={FIELD_LIMITS.message}
           value={draft.message}
           onChange={(event) => updateField("message", event.target.value)}
+          placeholder="Tell me about your team, role, or project..."
           aria-invalid={fieldErrors.message ? true : undefined}
           aria-describedby={fieldDescribedBy(
             "inquiry-message",

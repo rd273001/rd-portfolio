@@ -315,6 +315,7 @@ function EditFeedbackModal({
                 type="text"
                 value={name}
                 disabled={isSaving}
+                placeholder="Name"
                 onChange={(e) => {
                   setName(e.target.value);
                   if (errors.name) {
@@ -364,6 +365,7 @@ function EditFeedbackModal({
                   type="text"
                   value={role}
                   disabled={isSaving}
+                  placeholder="e.g. Engineering Manager"
                   onChange={(e) => {
                     setRole(e.target.value);
                     if (errors.role) {
@@ -414,6 +416,7 @@ function EditFeedbackModal({
                   type="text"
                   value={company}
                   disabled={isSaving}
+                  placeholder="e.g. Stripe"
                   onChange={(e) => {
                     setCompany(e.target.value);
                     if (errors.company) {
@@ -464,6 +467,7 @@ function EditFeedbackModal({
                 rows={5}
                 value={quote}
                 disabled={isSaving}
+                placeholder="Testimonial or feedback quote..."
                 onChange={(e) => {
                   setQuote(e.target.value);
                   if (errors.quote) {

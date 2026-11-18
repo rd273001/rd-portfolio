@@ -4,14 +4,19 @@ import { InquiryForm } from "@/components/forms/InquiryForm";
 import { ArrowRightIcon, Container } from "@/components/primitives";
 import { profile } from "@/content/profile";
 import { site } from "@/content/site";
-import { socials } from "@/content/socials";
+import { getInboxEmail, socials } from "@/content/socials";
+
+import { DirectEmailCopy } from "./DirectEmailCopy";
 
 export function ContactCta() {
   const primaryCta = socials.find(
     (social) => social.id === site.contact.primarySocialId,
   );
+  const inboxEmail = getInboxEmail();
   const visibleSocials = socials.filter(
-    (social) => social.status === "verified",
+    (social) =>
+      social.status === "verified" &&
+      (!inboxEmail || social.id !== "email"),
   );
   const emailHref = primaryCta?.href.startsWith("mailto:")
     ? primaryCta.href
@@ -37,8 +42,14 @@ export function ContactCta() {
                   {site.contact.description}
                 </p>
 
+                {inboxEmail ? (
+                  <div className="mt-6">
+                    <DirectEmailCopy email={inboxEmail} />
+                  </div>
+                ) : null}
+
                 {visibleSocials.length > 0 ? (
-                  <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-3">
+                  <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-3">
                     {visibleSocials.map((social) => {
                       const isWebUrl = social.href.startsWith("http");
 
