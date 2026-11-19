@@ -42,13 +42,16 @@ export function Hero() {
             </div>
 
             {heroMetrics.length > 0 ? (
-              <dl className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
+              <dl className="mt-10 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:mt-12">
                 {heroMetrics.map((metric) => (
-                  <div key={metric.id} className="bg-surface px-5 py-5">
-                    <dd className="text-2xl font-semibold tracking-tight">
+                  <div
+                    key={metric.id}
+                    className="bg-surface px-3 py-3.5 sm:px-5 sm:py-5"
+                  >
+                    <dd className="text-lg font-semibold tracking-tight sm:text-2xl">
                       {metric.value}
                     </dd>
-                    <dt className="mt-1 text-sm leading-5 text-muted">
+                    <dt className="mt-1 text-xs leading-4 text-muted sm:text-sm sm:leading-5">
                       {metric.label}
                     </dt>
                   </div>
